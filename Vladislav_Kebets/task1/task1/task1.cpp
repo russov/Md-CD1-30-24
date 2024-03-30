@@ -140,10 +140,7 @@ std::string PrintCenter(std::string str, int width) {
 	space = (width - size(str)) / 2;
 	for (int i = 0; i < width; i++) {
 		if (i < space) res+=" ";
-		else {
-			if (i > space + size(str)) break;
-			else res +=str[i - space];
-		}
+			else { res += str; break; };
 	}
 	return res;
 }

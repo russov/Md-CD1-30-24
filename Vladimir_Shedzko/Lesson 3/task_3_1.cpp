@@ -5,29 +5,28 @@
 #define FILE_NAME "numbers.txt"
 
 void readBackwards(){
-    std::ifstream inNums(FILE_NAME, std::ios::ate);
+    std::cout << "Reversed file contents: " << std::endl;
+    std::ifstream inNums(FILE_NAME, std::ifstream::ate | std::ifstream::binary);
     std::string num;
-    int count = 0;
     char curchar;
     int pos = inNums.tellg();
+    // откат в конец файла и побитовое чтение
     inNums.seekg(-1, std::ios::end);
-    for (int i=0; i < pos; i++){
-        curchar = inNums.get();
-        count -= 1;
-        std::cout << inNums.cur << std::endl;
-        std::cout << curchar << std::endl;
-        if (curchar != '\n'){
+    for (int i=0; i < pos; i++) {
+        inNums.get(curchar);
+        inNums.seekg(-2, std::ios::cur);
+        if (curchar != '\n' && curchar != '\r') {
             num.insert (0, 1, curchar);
             continue;
         }
-        inNums.seekg(-2, std::ios::cur);
-        
-        
-        std::cout << num << std::endl;
-        num.clear();
-
-        // num = inNums + 
+        if (num.length()) {
+            std::cout << num << std::endl;
+            num.clear();
+        }
     }
+    // вывод первого числа
+    if (num.length())
+        std::cout << num << std::endl;
     inNums.close();
 }
 
@@ -41,15 +40,40 @@ void getSum(){
     std::cout << "Sum of numbers in file: " << sum << std::endl;
 }
 
+void getAvg(){
+    int sum = 0;
+    int count = 0;
+    std::ifstream inNums(FILE_NAME, std::ios::beg);
+    int a;
+    while (inNums >> a){
+        sum += a;
+        count++;
+    }
+    inNums.close();
+    std::cout << "Average of numbers in file: " << (float)sum/count << std::endl;
+}
+
 int main(){
     std::ofstream outNums(FILE_NAME, std::ios::app); 
     std::cout << "Enter numbers here" << std::endl;
-    int num;
-    while (std::cin){
-        std::cin >> num;
-        outNums << num << std::endl;
+    std::string line;
+    bool isNumeric;
+    // читаем значения до ввода пустой строки
+    while (std::getline(std::cin, line)) {
+        if (line.length() == 0)
+            break;
+        isNumeric = true;
+        for (int i = 0; i < line.length(); i++)
+            if (!isdigit(line[i])) {
+                std::cout << "Line " << line << " is not numeric!" << std::endl;
+                isNumeric = false;
+                break;
+            }
+        if (isNumeric)
+            outNums << line << std::endl;
     }
     outNums.close();
-    getSum();
     readBackwards();
+    getSum();
+    getAvg();
 }

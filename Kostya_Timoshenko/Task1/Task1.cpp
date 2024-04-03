@@ -3,13 +3,20 @@
 #include <string>
 
 bool isInteger(const std::string& s) {
-	for (char c : s) {
-		if (s[0] == '-') {
-			return true;
+	if (s.empty()) {
+		return false;
+	}
+	size_t st = 0;
+	if (s[0] == '-') {
+		if (s.length() == 1) {
+			return false;
 		}
-			if (!std::isdigit(c)) {
-				return false;
-			}
+		st = 1;
+	}
+	for (size_t i = st; i < s.length(); i++) {
+		if (!std::isdigit(s[i])) {
+			return false;
+		}
 	}
 	return true;
 }

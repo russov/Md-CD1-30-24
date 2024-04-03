@@ -125,41 +125,38 @@
 //    std::cout << result << "\n";
 //}
 
-//#include <iostream>
+//Побитовые операторы
 //
-//int main()
-//{
-//	int x = 5;
-//	int y = 7;
-//
-//	if (!x == y)
-//		std::cout << "x does not equal y";
-//	else
-//		std::cout << "x equals y";
-//
-//	return 0;
-//}
-
-
-
-
-
-// задача
-
 //#include <iostream>
 //
 //int main() {
-//    int array[] = { 10, 5, 45, 20, 15, 30 };
-//    int maxElement = array[0]; // Предполагаем, что первый элемент массива - максимальный
+//    // Исходные числа для демонстрации операций
+//    unsigned int a = 12; // 1100 в двоичном формате
+//    unsigned int b = 10; // 1010 в двоичном формате
 //
-//    // Проходим по всем элементам массива, начиная со второго
-//    for (int i = 1; i < sizeof(array) / sizeof(array[0]); ++i) {
-//        if (array[i] > maxElement) {
-//            maxElement = array[i]; // Обновляем максимальный элемент, если находим больший
-//        }
-//    }
+//    // Побитовое И (AND)
+//    unsigned int result_and = a & b; // 1100 & 1010 = 1000
+//    std::cout << "a & b = " << result_and << std::endl;
 //
-//    std::cout << "Максимальный элемент массива: " << maxElement << std::endl;
+//    // Побитовое ИЛИ (OR)
+//    unsigned int result_or = a | b; // 1100 | 1010 = 1110
+//    std::cout << "a | b = " << result_or << std::endl;
+//
+//    // Побитовое исключающее ИЛИ (XOR)
+//    unsigned int result_xor = a ^ b; // 1100 ^ 1010 = 0110
+//    std::cout << "a ^ b = " << result_xor << std::endl;
+//
+//    // Побитовый сдвиг влево
+//    unsigned int result_left_shift = a << 2; // 1100 << 2 = 110000
+//    std::cout << "a << 2 = " << result_left_shift << std::endl;
+//
+//    // Побитовый сдвиг вправо
+//    unsigned int result_right_shift = b >> 1; // 1010 >> 1 = 0101
+//    std::cout << "b >> 1 = " << result_right_shift << std::endl;
+//
+//    // Побитовое НЕ (NOT)
+//    unsigned int result_not_a = ~a; // ~1100 = 0011
+//    std::cout << "~a = " << result_not_a << std::endl;
 //
 //    return 0;
 //}

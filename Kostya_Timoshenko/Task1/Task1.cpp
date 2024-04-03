@@ -2,11 +2,14 @@
 #include <fstream>
 #include <string>
 
-bool isInteger(const std::string& s) { // Функция проверки каждого элемента строки, является ли числом
+bool isInteger(const std::string& s) {
 	for (char c : s) {
-		if (!std::isdigit(c)) {
-			return false;
+		if (s[0] == '-') {
+			return true;
 		}
+			if (!std::isdigit(c)) {
+				return false;
+			}
 	}
 	return true;
 }

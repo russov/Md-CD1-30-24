@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-
+#include <vector>
 using namespace std;
 
 int sum(string s)
@@ -34,6 +34,23 @@ double average(string s)
     return avar;
 }
 
+void print(string s)
+{
+    ifstream fin(s);
+    vector <int> v;
+    while (!fin.eof())
+    {
+        int x;
+        fin >> x;
+        v.push_back(x);
+    }
+    for (int i = v.size() - 1; i > 0; i--)
+    {
+        cout<<v[i]<<' ';
+    }
+    cout<<endl;
+}
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -61,6 +78,8 @@ int main()
         cout<<"Данные добавлены в файл\n";
     }
     fout.close();
+    cout<<"Числа в файле:"<<endl;
+    print("numbers.txt");
     cout<<"Сумма чисел: "<<sum("numbers.txt")<<endl;
     cout<<"Среднее арифмитическое: "<<average("numbers.txt");
 }

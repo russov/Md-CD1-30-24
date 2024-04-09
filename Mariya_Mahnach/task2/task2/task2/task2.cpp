@@ -30,7 +30,7 @@ double average(string s)
         n++;
     }
     fin.close();
-    double avar=1.0*sum/n;
+    double avar=(double)sum/n;
     return avar;
 }
 
@@ -42,9 +42,11 @@ void print(string s)
     {
         int x;
         fin >> x;
+        if (fin.eof()) break;
         v.push_back(x);
     }
-    for (int i = v.size() - 1; i > 0; i--)
+    fin.close();
+    for (int i = v.size()-1; i >= 0; i--)
     {
         cout<<v[i]<<' ';
     }
@@ -54,6 +56,7 @@ void print(string s)
 int main()
 {
     setlocale(LC_ALL, "Russian");
+    string filename = "numbers.txt";
     cout<<"Введите набор целых чисел (через пробел):\n";
     string str;
     getline(cin,str,'\n');
@@ -66,7 +69,7 @@ int main()
             return 0;
         }
     }
-    ofstream fout("numbers.txt",ios::app);
+    ofstream fout(filename,ios::app);
     if(fout.is_open()) 
     {
         for(int i=0;i<n;i++)
@@ -79,8 +82,8 @@ int main()
     }
     fout.close();
     cout<<"Числа в файле:"<<endl;
-    print("numbers.txt");
-    cout<<"Сумма чисел: "<<sum("numbers.txt")<<endl;
-    cout<<"Среднее арифмитическое: "<<average("numbers.txt");
+    print(filename);
+    cout<<"Сумма чисел: "<<sum(filename)<<endl;
+    cout<<"Среднее арифмитическое: "<<average(filename);
 }
 

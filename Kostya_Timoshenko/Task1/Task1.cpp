@@ -1,110 +1,104 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <string>
 
-bool isInteger(const std::string& s) {
-	if (s.empty()) {
+bool inputcheck(const std::string& s) 
+{
+	if (s.empty()) { //Если пустая строка
 		return false;
 	}
 	size_t st = 0;
-	if (s[0] == '-') {
-		if (s.length() == 1) {
+	if (s[0] == '-') { 
+		if (s.length() == 1) { //Если там просто минус
 			return false;
 		}
-		st = 1;
+		st = 1; //Пропускаем первый символ если есть минус
 	}
-	for (size_t i = st; i < s.length(); i++) {
-		if (!std::isdigit(s[i])) {
+	for (size_t i = st; i < s.length(); i++) { //Проходим по каждому символу
+		if (!std::isdigit(s[i])) { //Если символ не цифра
 			return false;
 		}
 	}
 	return true;
 }
 
-int main() {
-	char ofile;
-	int count = 0;
+void outfile(std::ofstream& outf) 
+{
+	if (!outf) //Проверка на открытие файла
+	{
+		std::cerr << "Uh oh, file could not be opened for writing!" << std::endl; 
+		exit(1); 
+	}
+	std::cin.ignore();
+	std::cout << "If you want to stop entering values, write stop." << "\n";
+	while (true) {  //Цикл на ввод значений
+		std::cout << "Please number: ";
+		std::string input;
+		std::getline(std::cin, input);
+		if (input == "stop") //Прервать цикл ввода
+			break; 
+		else if (inputcheck(input)) {
+			outf << input << "\n";
+		}
+		else {
+			std::cout << "Please enter only whole numbers." << "\n";
+		}
+	}
+}
+
+int main() 
+{
+	char ofile; 
 	int a;
 	int sum = 0;
 	double ave;
+	int count = 0;
 
-	do { // Цикл что бы узнать перезаписываем ли мы файл
-		std::cout << "Overwrite the file? (Y/N): ";
-		std::cin >> ofile;
-	} while (ofile != 'Y' && ofile != 'y' && ofile != 'N' && ofile != 'n');
-
-	if (ofile == 'y' || ofile == 'Y') { // Если перезаписать
-		std::ofstream outf("numbers.txt");
-		if (!outf) {
-			std::cerr << "Uh oh, file could not be opened for writing!" << std::endl;
-			exit(1);
+	while (true) {
+		std::cout << "Overwrite the file? (Y/N): "; //Перезаписывать ли файл
+		std::cin >> ofile; 
+		if (ofile == 'y' || ofile == 'Y') //Если да
+		{
+			std::ofstream outf("numbers.txt");	
+			outfile(outf);
+			outf.close();
+			break;
 		}
-		std::cin.ignore();
-		std::cout << "If you want to stop entering values, write stop." << "\n";
-		while (true) {  // Цикл на ввод данных
-			std::cout << "Please number: ";
-			std::string input;
-			std::getline(std::cin, input);
-			if (input == "stop")
-				break;
-			else if (isInteger(input)) {
-				outf << input << "\n";
-			}
-			else {
-				std::cout << "Please enter only whole numbers." << "\n";
-			}
+		else if (ofile == 'n' || ofile == 'N') //Если нет
+		{
+			std::ofstream outf("numbers.txt", std::ios::app);	
+			outfile(outf);
+			outf.close();
+			break;
 		}
-		outf.close();
 	}
 
-	else if (ofile == 'n' || ofile == 'N') { // Если не перезаписывать
-		std::ofstream outp("numbers.txt", std::ios::app);
-		if (!outp) {
-			std::cerr << "Uh oh, file could not be opened for writing!" << std::endl;
-			exit(1);
-		}
-		std::cin.ignore();
-		std::cout << "If you want to stop entering values, write stop." << "\n";
-		while (true) {  // Цикл на ввод данных
-			std::cout << "Please number: ";
-			std::string input;
-			std::getline(std::cin, input);
-			if (input == "stop")
-				break;
-			else if (isInteger(input)) {
-				outp << input << "\n";
-			}
-			else {
-				std::cout << "Please enter only whole numbers." << "\n";
-			}
-		}
-		outp.close();
-	}
-
-	std::ifstream inf("numbers.txt");
+	std::ifstream inf("numbers.txt"); 
 	if (!inf) {
 		std::cerr << "Uh oh, file could not be opened for reading!" << std::endl;
 		exit(1);
 	}
-	while (inf >> a)
-	{
+	while (inf >> a) {
 		count++;
 	}
 	inf.clear();
 	inf.seekg(0);
-	int* mas = new int[count];
-	for (int i = 0; i < count; i++)
-		inf >> mas[i];
-
-	for (int i = count - 1; i != -1; i--) // Обратный порядок
+	int* mas = new int[count]; //Динамический массив
+	for (int i = 0; i < count; i++) {
+		inf >> mas[i]; 
+	}
+	for (int i = count - 1; i != -1; i--) //Зеркалим
 		std::cout << mas[i] << " ";
 
-	for (int i = 0; i < count; i++) // Сумма чисел
+	for (int i = 0; i < count; i++) // Сумма массива
 		sum = sum + mas[i];
-
 	std::cout << "\n" << "Sum of all numbers: " << sum << std::endl;
-	ave = (double)sum / count; // Средне арифметическое всех чисел
-	std::cout << "The arithmetic mean of all numbers: " << ave << std::endl;
-	inf.close(); //Закрыть файл
+
+	ave = (double)sum / count; //Average
+	std::cout << "The arithmetic mean of all numbers: " << ave << std::endl; 
+
+	delete[] mas;
+	system("pause");
+	inf.close();
 	return 0;
 }

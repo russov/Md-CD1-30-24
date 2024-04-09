@@ -16,7 +16,7 @@ bool isStrNumber(std::string str)
 	return true;
 }
 
-void writeNumbersToFile(std::_Iosb<int>::_Openmode mode)
+void writeNumbersToFile(std::ios_base::openmode mode)
 {
 	std::string filename = "numbers.txt";
 	std::ofstream fout;
@@ -144,6 +144,4 @@ int main()
 			break;
 		}
 	}
-
-	//std::cout << typeid(std::ios::in).name();
 }

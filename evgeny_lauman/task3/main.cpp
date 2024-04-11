@@ -29,6 +29,15 @@ void genArray(int** arr, int N)
 	}
 }
 
+void deleteArray(int** arr, int N)
+{
+	for (int i = 0; i < N; i++)
+	{
+		delete arr[i];
+	}
+	delete arr;
+}
+
 void printArray(int** arr, int N)
 {
 	std::cout << std::endl;
@@ -112,6 +121,7 @@ int main()
 	printArray(arr, N);
 	replaceArrRows(arr, findRowWithMinElem(arr, N));
 	printArray(arr, N);
+	deleteArray(arr, N);
 
 	checkScopesInCppFile("file.cpp");
 	return 0;

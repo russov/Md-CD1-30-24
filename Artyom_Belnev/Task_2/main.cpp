@@ -12,35 +12,37 @@ int getOutRevNumb() {
 	fin.open("numbers.txt");
 
 	if (!fin.is_open()) {
-		cout << "Ошибка открытия файла!!!" << endl;
+		cout << "Error opening file!!!" << endl;
 		return 1;
 	}
 
-	vector<string>myVector;
+	vector<string>vector;
 
-	cout << endl << "Числа из файла:" << endl;
+	cout << endl << "Numbers from file:" << endl;
 
 	while (fin) {
 		string x;
 		getline(fin, x);
 
-		myVector.push_back(x);
+		vector.push_back(x);
 	}
 
 	fin.close();
 
-	double sum = 0, sizeVector = myVector.size(), sra = 0;
+	int sum = 0;
+	int sizeVector = vector.size();
+	double sra = 0;
 
 	for (int i = sizeVector - 2; i >= 0; --i) {
-		sum += stoi(myVector[i]);
-		cout << myVector[i] << endl;
+		sum += stoi(vector[i]);
+		cout << vector[i] << endl;
 	}
 
-	cout << endl << "Cумма всех чисел = " << sum << endl;
+	cout << endl << "Sum of numbers = " << sum << endl;
 
-	sra = sum / (sizeVector - 1);
+	sra = (sum * 1.0)  / (sizeVector - 1);
 
-	cout << "Cреднее арифметическое = " << sra << endl;
+	cout << "Arithmetic mean = " << sra << endl;
 }
 
 
@@ -48,9 +50,7 @@ int getOutRevNumb() {
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
-
-	double numb = 0;
+	int numb = 0;
 	int count = 0;
 	bool countCheck = false;
 
@@ -59,44 +59,46 @@ int main()
 
 	if (!fout.is_open())
 	{
-		cout << "Ошибка открытия файла!" << endl;
+		cout << "Error opening file!" << endl;
 		return 1;
 	}
 
-	cout << "Введите количество чисел:" << endl;
+	cout << "Enter the number of numbers:" << endl;
 
 	while (countCheck == false) {
+		double x;
+		cin >> x;
 
-		cin >> count;
-
-		if (!cin.fail() && count == int(count)) {
+		if (!cin.fail() && x == int(x)) {
+			count = x;
 			countCheck = true;
 			break;
 		}
 		else {
-			cout << "Ошибка ввода числа!" << endl;
+			cout << "Number error!" << endl;
 			cin.clear();
 			cin.ignore(10000000, '\n');
 		}
 	}
 
-	cout << "Введите целые числа:" << endl;
+	cout << "Enter integers:" << endl;
 
 	for (int i = 0; i < count;)
 	{
-		cin >> numb;
+		double x;
+		cin >> x;
 
-		if (!cin.fail() && numb == int(numb)) {
+		if (!cin.fail() && x == int(x)) {
+			numb = x;
 			fout << numb << "\n";
 			i++;
 		}
 		else {
-			cout << "Ошибка ввода числа!" << endl;
+			cout << "Number error!" << endl;
 			cin.clear();
 			cin.ignore(10000000, '\n');
 		}
 	}
-
 
 	fout.close();
 	getOutRevNumb();

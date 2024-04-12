@@ -2,26 +2,24 @@
 #include <windows.h>
 #include <conio.h>
 #include <fstream>
+#include <string>
 #define lineAmount 5
+#define CenterWidth 110
 void menu();
-void file_Contnue();
+void file_Continue();
 void file_FromBegin();
-int getnum(int num, bool cycle, bool firstcycle, bool minus);
 void SumAndAver();
 void GetFromFile();
 std::string PrintCenter(std::string str, int width);
 void PrintCenterCC(std::string str, int width, int lineNumber, int nchoose);
 
 
-bool newline = 0;
-bool go_to_menu = 0;
-int CenterWidth = 70;
+
 int main()
 {
 	setlocale(0, "");
 	menu();
 }
-
 
 
 
@@ -55,7 +53,7 @@ void menu() {
 		case VK_RETURN:switch (choose)
 		{
 		case 0: file_FromBegin(); break;
-		case 1: file_Contnue(); break;
+		case 1: file_Continue(); break;
 		case 2: GetFromFile();  break;
 		case 3: SumAndAver(); break;
 		case 4: exit(0); break;
@@ -64,114 +62,68 @@ void menu() {
 	}
 }
 
-int getnum(int num, bool cycle, bool firstcycle, bool minus) {
-	cycle = 1;
-	firstcycle = 1;
-	minus = 0;
-	num = 0;
-	do {
-		system("cls");
-		std::cout << "Чтобы выйти нажмите escape\n" << PrintCenter("Введите число(а) через Enter", CenterWidth) << '\n';
-		if (minus)std::cout << '-';
-		if (num > 0)std::cout << num;
-		switch (_getch())
-		{
-		case '-':if (firstcycle)minus = 1; break;
-		case VK_ESCAPE: go_to_menu = 1; break;
-		case '0':num = num * 10 + 0; firstcycle = 0; break;
-		case '1':num = num * 10 + 1; firstcycle = 0; break;
-		case '2':num = num * 10 + 2; firstcycle = 0; break;
-		case '3':num = num * 10 + 3; firstcycle = 0; break;
-		case '4':num = num * 10 + 4; firstcycle = 0; break;
-		case '5':num = num * 10 + 5; firstcycle = 0; break;
-		case '6':num = num * 10 + 6; firstcycle = 0; break;
-		case '7':num = num * 10 + 7; firstcycle = 0; break;
-		case '8':num = num * 10 + 8; firstcycle = 0; break;
-		case '9':num = num * 10 + 9; firstcycle = 0; break;
-		case VK_BACK:num /= 10;
-			if (num == 0 && minus) { minus = 0; firstcycle = 1; }
-			else if (num == 0 && !minus) { firstcycle = 1; }
-			break;
-		case VK_RETURN: cycle = 0; break;
-		}
-	} while (cycle && !go_to_menu);
-	if (!cycle) {
-		if (minus)num *= (-1);
-		return num;
-	}
-	else return 0;
-}
+bool newline = 1;
 
 void file_FromBegin() {
-	std::ofstream outf("Numbers.txt");
-	int num = 0, res;
-	bool cycle = 1, firstcycle = 1, minus = 0;
-	do {
-		res = getnum(num, cycle, firstcycle, minus);
-		if (res != 0) {
-			if (!newline) { outf << res; newline = 1; }
-			else outf << '\n' << res;
-		}
-	} while (!go_to_menu);
-	go_to_menu = 0;
-	outf.close();
-	menu();
-}
-
-void file_Contnue() {
-	std::ofstream outf("Numbers.txt", std::ios::app);
-	int num = 0, res;
-	bool cycle = 1, firstcycle = 1, minus = 0;
-	do {
-		res = getnum(num, cycle, firstcycle, minus);
-		if (res != 0) {
-			if (!newline) { outf << res; newline = 1; }
-			else outf << '\n' << res;
-		}
-	} while (!go_to_menu);
-	go_to_menu = 0;
-	outf.close();
-	menu();
-}
-
-std::string PrintCenter(std::string str, int width) {
-	int space;
-	std::string res{ "" };
-	space = (width - size(str)) / 2;
-	for (int i = 0; i < width; i++) {
-		if (i < space) res += " ";
-		else { res += str; break; };
-	}
-	return res;
-}
-
-void SumAndAver() {
 	system("cls");
-	std::ifstream fin("Numbers.txt");
-	if (!fin) {
-		std::cout << PrintCenter("Ошибка при открытии файла!\n", CenterWidth);
-		Sleep(2500);
-	}
-	else {
-		std::cout << PrintCenter("Назад в меню - escape\n", CenterWidth);
-		std::string a;
-		int sum = 0, number, numbers_amount = 0;
-		while (fin >> number)
+	std::ofstream outf("Numbers.txt");
+	std::cout << "Для выхода напишите back\n" << PrintCenter("Введите числа:\n", CenterWidth);
+	std::string strnumber;
+	long long number;
+	do
+	{
+		std::cin >> strnumber;
+		if (strnumber != "back")try
 		{
-			sum += number;
-			numbers_amount++;
+			number = std::stoll(strnumber);
+			if (newline) { outf << number; newline = 0; }
+			else outf << '\n' << number;
 		}
-		double average = static_cast<double>(sum) / numbers_amount;
-		std::cout << "сумма: " << sum << "\nсреднее значение: " << average;
-		while (_getch() != VK_ESCAPE) {}
-	}
+		catch (const std::exception&)
+		{
+			std::cout << "Допущена ошибка при вводе\n";
+		}
+	} while (strnumber != "back");
+	outf.close();
 }
 
-void PrintCenterCC(std::string str, int width, int lineNumber, int nchoose) {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (lineNumber == nchoose) SetConsoleTextAttribute(hConsole, 5);
-	std::cout << PrintCenter(str, width);
-	SetConsoleTextAttribute(hConsole, 7);
+void file_Continue() {
+	system("cls");
+	std::ofstream outf("Numbers.txt", std::ios::app);
+	std::cout << "Для выхода напишите back\n" << PrintCenter("Введите числа:\n", CenterWidth);
+	std::string strnumber;
+	long long number;
+	//bool sym{ 0 };
+	do
+	{
+		//sym = 0;
+		std::cin >> strnumber;
+		try
+		{
+			/* В случае, когда мы вводим, например, 422f65, функция stoll возвращает только 422, а данный
+			код не позволяет с такой строкой чтото делать, что мне нравиться больше, но тогда страдает оптимизация,
+			поэтому я его закомментировал(можно сделать чтоб код просто убирал все символы, но оптимизация тогда будет еще хуже)
+			for (int i = 0; i < size(strnumber); ++i) {
+				if (strnumber[i] != '-' && strnumber[i] != '1' && strnumber[i] != '2' &&
+					strnumber[i] != '3' && strnumber[i] != '4' && strnumber[i] != '5' &&
+					strnumber[i] != '6' && strnumber[i] != '7' && strnumber[i] != '8' &&
+					strnumber[i] != '9' && strnumber[i] != '0') {  sym = 1;  break;}
+			}
+			if (sym)std::cout << "Допущена ошибка при вводе\n";
+			else {number = std::stoll(strnumber);
+				if (newline) { outf << number; newline = 0; }
+				else outf << '\n' << number;
+			}*/
+			number = std::stoll(strnumber);
+			if (newline) { outf << number; newline = 0; }
+			else outf << '\n' << number;
+		}
+		catch (const std::exception&)
+		{
+			std::cout << "Допущена ошибка при вводе\n";
+		}
+	} while (strnumber != "back");
+	outf.close();
 }
 
 void GetFromFile() {
@@ -191,14 +143,53 @@ void GetFromFile() {
 			numbers_amount++;
 		}
 		fin.seekg(0);
-		int* numbers = new int[numbers_amount];
+		long long* numbers = new long long[numbers_amount];
 		for (int i = 0; i < numbers_amount; i++) {
 			fin >> numbers[i];
 		}
 		for (int i = 0; i < numbers_amount; i++) {
 			std::cout << numbers[numbers_amount - i - 1] << " ";
 		}
-		while (_getch() != VK_ESCAPE) {}
+		while (_getch() != VK_ESCAPE) { Sleep(1); }
 	}
 
+}
+
+void SumAndAver() {
+	system("cls");
+	std::ifstream fin("Numbers.txt");
+	if (!fin) {
+		std::cout << PrintCenter("Ошибка при открытии файла!\n", CenterWidth);
+		Sleep(2500);
+	}
+	else {
+		std::cout << PrintCenter("Назад в меню - escape\n", CenterWidth);
+		std::string a;
+		int numbers_amount = 0;
+		long long sum = 0, number;
+		while (fin >> number)
+		{
+			sum += number;
+			numbers_amount++;
+		}
+		double average = static_cast<double>(sum) / numbers_amount;
+		std::cout << PrintCenter("сумма: " + std::to_string(sum) + "\t\tсреднее значение:" + std::to_string(average), CenterWidth);
+
+		while (_getch() != VK_ESCAPE) { Sleep(1); }
+	}
+}
+
+std::string PrintCenter(std::string str, int width) {
+	int space;
+	space = (width - size(str)) / 2;
+	std::string res(space, ' ');
+	res += str;
+	return res;
+}
+
+void PrintCenterCC(std::string str, int width, int lineNumber, int nchoose) {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (lineNumber == nchoose) SetConsoleTextAttribute(hConsole, 5);
+	std::cout << PrintCenter(str, width);
+	SetConsoleTextAttribute(hConsole, 7);
 }

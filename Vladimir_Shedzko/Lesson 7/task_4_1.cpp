@@ -34,10 +34,18 @@ int drawCard(){
     return card;
 }
 
-void showCards(std::stack<int> &cards){
-    while (cards.top()){
-        std::cout << cards.top() << ' ';
-        cards.pop();
+void showCards(std::stack<int> *cards, int amount){
+    while (cards->size()){
+        std::cout << cards->top() << ' ';
+        cards->pop();
+    }
+    std::cout << std::endl;
+    std::cout << "Total amount: " << amount;
+    if (amount > 21){
+        std::cout << " - Overdrawn.";
+    }
+    else if (amount == 21){
+        std::cout << " - Blackjack.";
     }
     std::cout << std::endl;
 }
@@ -45,10 +53,8 @@ void showCards(std::stack<int> &cards){
 bool checkForEnd(int *curS, int lastI, int cardCount){
     if (cardCount >= 5)
         return true;
-    if (*curS == 22 && lastI == 11){
-        std::cout << "here" << std::endl;
+    if (*curS == 22 && lastI == 11)
         *curS = 21;
-    }
     if (*curS >= 21)
         return true;
     return false;
@@ -99,10 +105,22 @@ int main() {
         dealer_sum += dealer_last;
         dealer_cards.push(dealer_last);
         dealer_cnt++;
+        if (checkForEnd(&dealer_sum, dealer_last, dealer_cnt))
+            break;
     }
-    std::cout << "" << std::endl;
+    std::cout << "Game over" << std::endl;
+    std::cout << "Your cards: ";
+    showCards(&player_cards, player_sum);
+    std::cout << "Dealer cards: ";
+    showCards(&dealer_cards, dealer_sum);
     if (dealer_sum > 21 && player_sum > 21 || dealer_sum == player_sum){
         std::cout << "Draw" << std::endl;
+    }
+    else if (dealer_sum > 21 || player_sum > dealer_sum  && player_sum <=21 ){
+        std::cout << "You win" << std::endl;
+    }
+    else{
+        std::cout << "Dealer wins" << std::endl;
     }
     return 0;
 }

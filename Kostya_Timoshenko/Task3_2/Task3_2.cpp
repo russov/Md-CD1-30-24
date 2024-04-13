@@ -4,15 +4,15 @@
 #include <string>
 #include <ctime>
 
-void read_file(int& count, int& count2) //Функция чтения файла
+void read_file(int& count, int& count2) //File reading function
 {
 	std::string a;
-	std::ifstream readf("c.txt"); //Открытие файла для чтения
+	std::ifstream readf("c.txt");
 	if (!readf) {
 		std::cerr << "Uh oh, file could not be opened for reading!" << std::endl;
 		exit(1);
 	}
-	while (getline(readf, a)) { //Считаем в строках { и }
+	while (getline(readf, a)) { //We count in the lines { and }
 		for (char c : a) {
 			if (c == '{') {
 				count++;
@@ -22,7 +22,7 @@ void read_file(int& count, int& count2) //Функция чтения файла
 			}
 		}
 	}
-	readf.close(); //Закрыть файл
+	readf.close(); //Close file
 }
 
 int main()
@@ -41,13 +41,13 @@ int main()
 	int minutes = now_local_time->tm_min;
 	int seconds = now_local_time->tm_sec;
 
-	std::ofstream openf("result.txt", std::ios::app); //Открытие файла на запись
+	std::ofstream openf("result.txt", std::ios::app); //Opening a file for writing
 	if (!openf) {
 		std::cerr << "Uh oh, file could not be opened for writing!" << std::endl;
 		exit(1);
 	}
 
-	if (count == count2) { //Выводим на экран
+	if (count == count2) { //Display on screen
 		openf << "Its fine!" << "  " << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 		std::cout << "Its fine! " << "\n" << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 	}

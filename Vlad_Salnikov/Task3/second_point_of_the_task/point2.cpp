@@ -9,6 +9,7 @@ int main()
 	int counter{ 0 };
 	std::string result;
 	std::string str;
+
 	std::ifstream file;
 	file.open("test.txt");
 	while (!file.eof())
@@ -16,14 +17,18 @@ int main()
 		getline(file, str);
 		for (int i = 0; i < str.size(); i++)
 		{
-			if (str[i] == '{' || str[i] == '}')
+			if (str[i] == '{')
 			{
 				++counter;
+			}
+			if (str[i] == '}')
+			{
+				--counter;
 			}
 		}
 	}
 
-	if (counter % 2) 
+	if (counter != 0) 
 	{
 		result = "Не все скобки закрыты!";
 		std::cout << result;
@@ -34,10 +39,10 @@ int main()
 		std::cout << result;
 	}
 
-	std::ofstream fileOUT;
-	fileOUT.open("out.txt", std::ios::out);
-	fileOUT << result << std::endl;
-	fileOUT.close();
+	std::ofstream fileOut;
+	fileOut.open("out.txt", std::ios::out);
+	fileOut << result << std::endl;
+	fileOut.close();
 
 	return 0;
 }

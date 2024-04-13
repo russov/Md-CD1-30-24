@@ -87,11 +87,10 @@ int main()
 	for (int i = 0; i < count; i++) {
 		inf >> mas[i]; 
 	}
-	for (int i = count - 1; i != -1; i--) //Зеркалим
-		std::cout << mas[i] << " ";
-
-	for (int i = 0; i < count; i++) // Сумма массива
-		sum = sum + mas[i];
+	for (int i = count - 1; i >= 0; i--) {//Зеркалим и находим сумму
+	std::cout << mas[i] << " ";
+	sum += mas[i];
+	}
 	std::cout << "\n" << "Sum of all numbers: " << sum << std::endl;
 
 	ave = (double)sum / count; //Average

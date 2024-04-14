@@ -1,4 +1,4 @@
-#include "file.h"
+ï»¿#include "file.h"
 #include "numCheck.h"
 #include <fstream>
 #include <iostream>
@@ -86,25 +86,25 @@ void editFile()
 	std::string file_name;
 	int count{ 0 };
 	int num{ 0 };
-	std::cout << "Ââåäèòå èìÿ ôàéëà êîòîðûé âû õîòèòå îòðåäàêòèðîâàòü\n";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¸Ð¼Ñ Ñ„Ð°Ð¹Ð»Ð° ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð²Ñ‹ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ Ð¾Ñ‚Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ\n";
 	std::cin >> file_name;
 	std::fstream file;
 	file.open(file_name + ".txt", std::ios::app);
 	if (!file.is_open())
 	{
-		std::cout << "Íåâåðíîå èìÿ! Âîçâðàò â ìåíþ\n";
+		std::cout << "ÐÐµÐ²ÐµÑ€Ð½Ð¾Ðµ Ð¸Ð¼Ñ! Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‚ Ð² Ð¼ÐµÐ½ÑŽ\n";
 	}
 
-	std::cout << "Ââåäèòå ÷èñëî ñèìâîëîâ, êîòîðîå âû õîòèòå äîáàâèòü\n";
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð¾Ð², ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ð²Ñ‹ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ\n";
 	std::cin >> count;
 	for (int i = 0; i < count; i++)
 	{
-		std::cout << "Ââåäèòå " << i + 1 << '\n';
+		std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ " << i + 1 << '\n';
 		std::cin >> num;
 		num = checkingAndCorrectingInputErrors(num);
 		file << num << '\n';
 	}
 
 	file.close();
-	std::cout << "Âîçâðàò â ìåíþ\n";
+	std::cout << "Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‚ Ð² Ð¼ÐµÐ½ÑŽ\n";
 }

@@ -10,8 +10,8 @@ int main()
 	int choice{ 1000 };
 	std::vector<int> numbers;
 
-	std::cout << "Menu:\n" << "1) Create file\n" << "2) Fill file\n" << "3) Read file\n";
-	std::cout << "4) Edit file\n" << "5) Task2\n" << "0) Exit" << std::endl;
+	std::cout << "Меню:\n" << "1) Создать файл\n" << "2) Заполнить файл\n" << "3) Заполнение из внешнего файла\n";
+	std::cout << "4) Редактировать файл\n" << "5) Задание 2\n" << "0) Выход" << std::endl;
 	while (choice != 0)
 	{
 		std::cin >> choice;

@@ -1,11 +1,11 @@
-#include "numCheck.h"
+ï»¿#include "numCheck.h"
 #include <iostream>
 
  int checkingAndCorrectingInputErrors(int num)
 {
 	while (std::cin.fail())
 	{
-		std::cout << "Íåâåðíûé òèï\n";
+		std::cout << "ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ñ‚Ð¸Ð¿\n";
 		std::cin.clear();
 		std::cin.ignore(100000000, '\n');
 		std::cin >> num;

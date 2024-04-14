@@ -20,7 +20,7 @@ void createFile()
 void fillFile(std::vector<int>& numbers)
 {
 	std::string file_name;
-	std::ofstream file;
+	std::ifstream file;
 	int count{ 0 };
 	int num{ 0 };
 
@@ -88,7 +88,7 @@ void editFile()
 	int num{ 0 };
 	std::cout << "Введите имя файла который вы хотите отредактировать\n";
 	std::cin >> file_name;
-	std::fstream file;
+	std::ifstream file;
 	file.open(file_name + ".txt", std::ios::app);
 	if (!file.is_open())
 	{

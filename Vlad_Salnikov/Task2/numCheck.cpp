@@ -1,11 +1,11 @@
 #include "numCheck.h"
 #include <iostream>
 
- int numCheck(int num)
+ int checkingAndCorrectingInputErrors(int num)
 {
-	while (!num)
+	while (std::cin.fail())
 	{
-		std::cout << "Incorrect type\n";
+		std::cout << "Неверный тип\n";
 		std::cin.clear();
 		std::cin.ignore(100000000, '\n');
 		std::cin >> num;

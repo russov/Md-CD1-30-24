@@ -1,3 +1,3 @@
 #pragma once
 
- int numCheck(int num);
+ int checkingAndCorrectingInputErrors(int num);

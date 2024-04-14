@@ -18,9 +18,9 @@ void task2(std::vector<int>& numbers)
 	{
 		sum += numbers[i];
 	}
-	std::cout << "Sum of numbers = " << sum << '\n';
+	std::cout << "Сумма чисал = " << sum << '\n';
 	std::cout << "Напишите функцию, которая считывает числа из файла numbers.txt и находит среднее арифметическое всех чисел.";
 	std::cout << "Результат должен быть выведен на экран.\n";
 	std::cout << "Average is " << (double)sum / 2 << '\n';
-	std::cout << "Back to memu\n";
+	std::cout << "Возврат в меню\n";
 }

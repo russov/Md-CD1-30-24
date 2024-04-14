@@ -30,7 +30,6 @@ void fillFile(std::vector<int>& numbers)
 	if (!file.is_open())
 	{
 		std::cout << "Incorrect name. Back to menu\n";
-		//break;
 	}
 
 	std::cout << "Enter count of numbers\n";
@@ -39,7 +38,7 @@ void fillFile(std::vector<int>& numbers)
 	{
 		std::cout << "Enter " << i + 1 << " number\n";
 		std::cin >> num;
-		num = numCheck(num);
+		num = checkingAndCorrectingInputErrors(num);
 		numbers.push_back(num);
 	}
 
@@ -65,7 +64,6 @@ void readFile(std::vector<int>& numbers)
 	if (!file.is_open())
 	{
 		std::cout << "Incorrect name. Back to menu\n";
-		//break;
 	}
 
 	while (!file.eof())
@@ -88,26 +86,25 @@ void editFile()
 	std::string file_name;
 	int count{ 0 };
 	int num{ 0 };
-	std::cout << "Enter file name that you want edit\n";
+	std::cout << "Введите имя файла который вы хотите отредактировать\n";
 	std::cin >> file_name;
 	std::fstream file;
 	file.open(file_name + ".txt", std::ios::app);
 	if (!file.is_open())
 	{
-		std::cout << "Incorrect name. Back to menu\n";
-		//break;
+		std::cout << "Неверное имя! Возврат в меню\n";
 	}
 
-	std::cout << "Enter count of numbers that you want to add\n";
+	std::cout << "Введите число символов, которое вы хотите добавить\n";
 	std::cin >> count;
 	for (int i = 0; i < count; i++)
 	{
-		std::cout << "Enter " << i + 1 << '\n';
+		std::cout << "Введите " << i + 1 << '\n';
 		std::cin >> num;
-		num = numCheck(num);
+		num = checkingAndCorrectingInputErrors(num);
 		file << num << '\n';
 	}
 
 	file.close();
-	std::cout << "Back to menu\n";
+	std::cout << "Возврат в меню\n";
 }

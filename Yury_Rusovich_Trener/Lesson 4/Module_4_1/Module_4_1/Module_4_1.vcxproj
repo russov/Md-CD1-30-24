@@ -21,13 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-<<<<<<<< HEAD:Vladislav_Kebets/task3/task3.2/task3.2/task3.2.vcxproj
-    <ProjectGuid>{9fd90dd8-758e-4b3c-b53e-f003c0777793}</ProjectGuid>
-    <RootNamespace>task32</RootNamespace>
-========
-    <ProjectGuid>{0d88ee6d-bd8d-440a-9f12-e0096276a055}</ProjectGuid>
-    <RootNamespace>HW2</RootNamespace>
->>>>>>>> main:Yury_Rusovich_Trener/Lesson 3/HW_2/HW_2/HW_2.vcxproj
+    <ProjectGuid>{6f0b793b-4259-42ed-8ab3-b3fb09744663}</ProjectGuid>
+    <RootNamespace>Module41</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -132,11 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<<< HEAD:Vladislav_Kebets/task3/task3.2/task3.2/task3.2.vcxproj
-    <ClCompile Include="task3.2.cpp" />
-========
-    <ClCompile Include="HW_2.cpp" />
->>>>>>>> main:Yury_Rusovich_Trener/Lesson 3/HW_2/HW_2/HW_2.vcxproj
+    <ClCompile Include="Module_4_1.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

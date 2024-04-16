@@ -4,7 +4,7 @@
 #include <string>
 #include <numeric>
 
-int input (int num)
+int input(int num)
 {
 	std::cin >> num;
 	while (std::cin.fail())
@@ -30,21 +30,25 @@ void creatingFile()
 void fileFilling()
 {
 	std::string file_name;
-	std::fstream file;
+	std::ofstream file;
+	std::ifstream fileExistence;
 	int count{ 0 };
 	int num{ 0 };
 
 	std::cout << "Введите имя файла\n";
 	std::cin >> file_name;
-	file.open(file_name + ".txt", std::ios::out);
-	file.close();
-	file.open(file_name + ".txt",std::ios::out | std::ios::_Nocreate);
-	if (!file.is_open())
+	fileExistence.open(file_name + ".txt", std::ios::ate);
+	if (!fileExistence.is_open())
 	{
 		std::cout << "Такого файла не существует. Возврат в меню\n";
 		return;
 	}
+	fileExistence.close();
 
+
+	file.open(file_name + ".txt", std::ios::out);
+	file.close();
+	file.open(file_name + ".txt", std::ios::out | std::ios::_Nocreate);
 	std::cout << "Введите количиство чисел\n";
 	count = input(count);
 	for (int i = 0; i < count; i++)
@@ -68,18 +72,18 @@ void fillingVectorFromFile(std::vector<int>& numbers)
 	if (!file.is_open())
 	{
 		std::cout << "Такого файла не существует. Возврат в меню\n";
-		return ;
+		return;
 	}
 
 	while (!file.eof())
 	{
-		std::string buffer{""};
+		std::string buffer{ "" };
 		file >> buffer;
 		if (!buffer.empty())
 		{
 			numbers.push_back(stoi(buffer));
 		}
-		
+
 	}
 	std::cout << "Вектор заполнен.\n";
 	file.close();
@@ -97,7 +101,7 @@ void addNumberToFile()
 		return;
 	}
 
-    int count{ 0 };
+	int count{ 0 };
 	int num{ 0 };
 	std::cout << "Введите количество символов, которое вы хотите добавить\n";
 	count = input(count);
@@ -116,9 +120,9 @@ void addNumberToFile()
 	file.close();
 	std::cout << "Число(а) было(и) добавлено(ы). Возврат в меню\n";
 }
-void reversVector(std::vector<int> &numbers)
+void reversVector(std::vector<int>& numbers)
 {
-	for (int i = numbers.size() -1 ; i >= 0; --i)
+	for (int i = numbers.size() - 1; i >= 0; --i)
 	{
 		std::cout << numbers[i] << ' ';
 	}
@@ -134,7 +138,7 @@ void menu()
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	int choice{ 0 }; 
+	int choice{ 0 };
 	std::vector<int> numbers;
 	menu();
 

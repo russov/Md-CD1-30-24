@@ -6,16 +6,26 @@ int main()
     std::cout << "Enter file name(example: in.cpp): ";
     std::cin >> FileName;
     std::ifstream inf(FileName);
+
     if (!inf) {
         std::cout << "ERROR! FAILED TO OPEN FILE";
         exit(1);
     }
+
     char sym;
-    int count{0};
+    int count{ 0 };
+
     while (inf >> sym) {
-            if (sym == '{')++count;
-            else if (sym == '}')--count;
+        if (sym == '{') ++count;
+        else if (sym == '}') --count;
+
+        if (count < 0) {
+            std::cout << "file is NOT ok";
+            exit(1);
+        }
     }
+    inf.close();
+
     std::ofstream outf("out.txt");
     if (count == 0) {
         std::cout << "File is ok";
@@ -25,4 +35,5 @@ int main()
         std::cout << "File is NOT ok";
         outf << "File is NOT ok";
     }
+    outf.close();
 }

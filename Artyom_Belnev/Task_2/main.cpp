@@ -6,17 +6,17 @@
 using namespace std;
 
 
-int getOutRevNumb() {
+void getOutRevNumb() {
 
 	ifstream fin;
 	fin.open("numbers.txt");
 
 	if (!fin.is_open()) {
 		cout << "Error opening file!!!" << endl;
-		return 1;
+		exit(1);
 	}
 
-	vector<string>vector;
+	vector<string>numbersIsFile;
 
 	cout << endl << "Numbers from file:" << endl;
 
@@ -24,23 +24,23 @@ int getOutRevNumb() {
 		string x;
 		getline(fin, x);
 
-		vector.push_back(x);
+		numbersIsFile.push_back(x);
 	}
 
 	fin.close();
 
 	int sum = 0;
-	int sizeVector = vector.size();
+	int sizeVector = numbersIsFile.size();
 	double sra = 0;
 
 	for (int i = sizeVector - 2; i >= 0; --i) {
-		sum += stoi(vector[i]);
-		cout << vector[i] << endl;
+		sum += stoi(numbersIsFile[i]);
+		cout << numbersIsFile[i] << endl;
 	}
 
 	cout << endl << "Sum of numbers = " << sum << endl;
 
-	sra = (sum * 1.0)  / (sizeVector - 1);
+	sra = (sum * 1.0) / (sizeVector - 1);
 
 	cout << "Arithmetic mean = " << sra << endl;
 }
@@ -102,6 +102,8 @@ int main()
 
 	fout.close();
 	getOutRevNumb();
+
+	return 0;
 }
 
 

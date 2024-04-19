@@ -53,8 +53,7 @@ void print(string s)
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
-    cout<<"Введите набор целых чисел (через пробел):\n";
+    cout<<"Enter a set of integers (separated by spaces):\n";
     string str;
     getline(cin,str,'\n');
     int n=str.size();
@@ -62,7 +61,7 @@ int main()
     {
         if(str[i]!=' ' && (str[i]<'0' || str[i]>'9') && str[i]!='-')
         {
-            cout<<"Неправильное значение!";
+            cout<<"Wrong value!";
             return 0;
         }
     }
@@ -72,15 +71,15 @@ int main()
         for(int i=0;i<n;i++)
         {
             if(str[i]==' ') fout<<'\n';
-            else fout<<str[i];
+            else fout << str[i]; 
         }
         if(str[n-1]!=' ') fout<<'\n';
-        cout<<"Данные добавлены в файл\n";
+        cout<<"Data added to file\n";
     }
     fout.close();
-    cout<<"Числа в файле:"<<endl;
+    cout<<"Numbers in the file:"<<endl;
     print("numbers.txt");
-    cout<<"Сумма чисел: "<<sum("numbers.txt")<<endl;
-    cout<<"Среднее арифмитическое: "<<average("numbers.txt");
+    cout<<"Sum of numbers: "<<sum("numbers.txt")<<endl;
+    cout<<"Arithmetic mean: "<<average("numbers.txt");
 }
 

@@ -4,37 +4,26 @@
 #include <vector>
 using namespace std;
 
-int sum(string s)
+int sum(vector<int> v)
 {
-    ifstream fin(s);
-    int sum=0;
-    while(!fin.eof())
-    {
-        int x=0;
-        fin>>x;
-        sum+=x;
-    }
-    fin.close();
+    int sum = 0;
+    int n = v.size();
+    for (int i = 0; i < n; i++)
+        sum += v[i];
     return sum;
 }
 
-double average(string s)
+double average(vector<int> v)
 {
-    ifstream fin(s);
-    int sum=0,n=-1;
-    while(!fin.eof())
-    {
-        int x=0;
-        fin>>x;
-        sum+=x;
-        n++;
-    }
-    fin.close();
-    double avar=(double)sum/n;
+    int sum = 0;
+    int n = v.size();
+    for (int i = 0; i < n; i++)
+        sum += v[i];
+    double avar = (double)sum / n;
     return avar;
 }
 
-void print(string s)
+vector<int> readNum(string s)
 {
     ifstream fin(s);
     vector <int> v;
@@ -46,44 +35,50 @@ void print(string s)
         v.push_back(x);
     }
     fin.close();
-    for (int i = v.size()-1; i >= 0; i--)
+    return v;
+}
+
+void print(vector<int> v)
+{
+    for (int i = v.size() - 1; i >= 0; i--)
     {
-        cout<<v[i]<<' ';
+        cout << v[i] << ' ';
     }
-    cout<<endl;
+    cout << endl;
 }
 
 int main()
 {
     setlocale(LC_ALL, "Russian");
     string filename = "numbers.txt";
-    cout<<"Введите набор целых чисел (через пробел):\n";
+    cout << "Enter a set of integers (separated by spaces):\n";
     string str;
-    getline(cin,str,'\n');
-    int n=str.size();
-    for(int i=0;i<n;i++)
+    getline(cin, str, '\n');
+    int n = str.size();
+    for (int i = 0; i < n; i++)
     {
-        if(str[i]!=' ' && (str[i]<'0' || str[i]>'9') && str[i]!='-')
+        if (str[i] != ' ' && (str[i] < '0' || str[i]>'9') && str[i] != '-')
         {
-            cout<<"Неправильное значение!";
+            cout << "Wrong value!";
             return 0;
         }
     }
-    ofstream fout(filename,ios::app);
-    if(fout.is_open()) 
+    ofstream fout(filename, ios::app);
+    if (fout.is_open())
     {
-        for(int i=0;i<n;i++)
+        for (int i = 0; i < n; i++)
         {
-            if(str[i]==' ') fout<<'\n';
-            else fout<<str[i];
+            if (str[i] == ' ') fout << '\n';
+            else fout << str[i];
         }
-        if(str[n-1]!=' ') fout<<'\n';
-        cout<<"Данные добавлены в файл\n";
+        if (str[n - 1] != ' ') fout << '\n';
+        cout << "Data added to file\n";
     }
     fout.close();
-    cout<<"Числа в файле:"<<endl;
-    print(filename);
-    cout<<"Сумма чисел: "<<sum(filename)<<endl;
-    cout<<"Среднее арифмитическое: "<<average(filename);
+    vector<int> v = readNum(filename);
+    cout << "Numbers in the file:" << endl;
+    print(v);
+    cout << "Sum of numbers: " << sum(v) << endl;
+    cout << "Arithmetic mean: " << average(v);
 }
 

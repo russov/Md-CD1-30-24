@@ -2,8 +2,7 @@
 #include <fstream>
 #include <string>
 
-
-int CharNum(std::string s, char c)
+int CharNum(const std::string &s, const char c)
 {
     static bool gIscom = false;
     int n = s.size(), k = 0;
@@ -15,43 +14,43 @@ int CharNum(std::string s, char c)
         if (s[i] == '*' && s[i + 1] == '/' && !iscom) { gIscom = false; }
         if (!iscom && !gIscom && s[i] == c) k++;
     }
+    if (s[n - 1] == c) k++;
     return k;
 }
 
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
     int open = 0, close = 0,k=0;
     std::ifstream infile("task2.cpp");
-    if (!infile.is_open()) { std::cout << "Не удалось открыть файл ввода"; return 0; }
+    if (!infile.is_open()) { std::cout << "Failed to open input file"; return 0; }
     while (!infile.eof())
     {
         k++;
         std::string str;
         getline(infile, str, '\n');
         if(k==1) str.erase(0,3);
-        //std::cout<<str<<"\n";
+        str.push_back(' ');
         open += CharNum(str, '{');
         close += CharNum(str, '}');
     }
     infile.close();
     std::ofstream outfile("out.txt");
-    if (!outfile.is_open()) { std::cout << "Не удалось открыть файл вывода"; return 0; }
+    if (!outfile.is_open()) { std::cout << "Failed to open output file"; return 0; }
     if (open == close)
     {
-        std::cout << "Со скобками всё в порядке";
-        outfile << "Со скобками всё в порядке";
+        std::cout << "The parentheses are fine";
+        outfile << "The parentheses are fine";
     }
     else if (open > close)
     {
-        std::cout << "Не хватает '}' или есть лишние '{'";
-        outfile << "Не хватает '}' или есть лишние '{'";
+        std::cout << "Missing '}' or extra '{'";
+        outfile << "Missing '}' or extra '{'";
     }
     else
     {
-        std::cout << "Не хватает '{' или есть лишние '}'";
-        outfile << "Не хватает '{' или есть лишние '}'";
+        std::cout << "Missing '{' or extra '}'";
+        outfile << "Missing '{' or extra '}'";
     }
     outfile.close();
 }

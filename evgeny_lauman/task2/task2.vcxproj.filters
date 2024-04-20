@@ -15,11 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-<<<<<<<< HEAD:Vladislav_Kebets/task3/task3.2/task3.2/task3.2.vcxproj.filters
-    <ClCompile Include="task3.2.cpp">
-========
     <ClCompile Include="main.cpp">
->>>>>>>> main:evgeny_lauman/task2/task2.vcxproj.filters
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

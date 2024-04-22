@@ -1,25 +1,25 @@
 ﻿// Module_3_1.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
-#include <clocale>
-#include <Windows.h>
-
-int main()
-{
-    std::cout << "bool:\t\t" << sizeof(bool) << " bytes" << std::endl;
-    std::cout << "char:\t\t" << sizeof(char) << " bytes" << std::endl;
-    std::cout << "wchar_t:\t" << sizeof(wchar_t) << " bytes" << std::endl;
-    std::cout << "char16_t:\t" << sizeof(char16_t) << " bytes" << std::endl;
-    std::cout << "char32_t:\t" << sizeof(char32_t) << " bytes" << std::endl;
-    std::cout << "short:\t\t" << sizeof(short) << " bytes" << std::endl;
-    std::cout << "int:\t\t" << sizeof(int) << " bytes" << std::endl;
-    std::cout << "long:\t\t" << sizeof(long) << " bytes" << std::endl;
-    std::cout << "long long:\t" << sizeof(long long) << " bytes" << std::endl;
-    std::cout << "float:\t\t" << sizeof(float) << " bytes" << std::endl;
-    std::cout << "double:\t\t" << sizeof(double) << " bytes" << std::endl;
-    return 0;
-}
+//#include <iostream>
+//#include <clocale>
+//#include <Windows.h>
+//
+//int main()
+//{
+//    std::cout << "bool:\t\t" << sizeof(bool) << " bytes" << std::endl;
+//    std::cout << "char:\t\t" << sizeof(char) << " bytes" << std::endl;
+//    std::cout << "wchar_t:\t" << sizeof(wchar_t) << " bytes" << std::endl;
+//    std::cout << "char16_t:\t" << sizeof(char16_t) << " bytes" << std::endl;
+//    std::cout << "char32_t:\t" << sizeof(char32_t) << " bytes" << std::endl;
+//    std::cout << "short:\t\t" << sizeof(short) << " bytes" << std::endl;
+//    std::cout << "int:\t\t" << sizeof(int) << " bytes" << std::endl;
+//    std::cout << "long:\t\t" << sizeof(long) << " bytes" << std::endl;
+//    std::cout << "long long:\t" << sizeof(long long) << " bytes" << std::endl;
+//    std::cout << "float:\t\t" << sizeof(float) << " bytes" << std::endl;
+//    std::cout << "double:\t\t" << sizeof(double) << " bytes" << std::endl;
+//    return 0;
+//}
 
 
 
@@ -28,16 +28,16 @@ int main()
 
 //#include <iostream>
 //#include <cstdint>
-
+//
 //int main()
 //{
-//    char c = 65;
-//    char c2 = 'A';
+//    char c = 128;
+//    char c2 = '\t';
 //    std::cout << c << std::endl;
-//    std::cout << c2 << std::endl;  
+//    std::cout << (int)c2 << std::endl;  
 //    
-//   // std::int8_t h;
-//   // char16_t g{5};
+//    std::int8_t h;
+//    char16_t g{5};
 //
 //    // как вывести 65?
 //
@@ -49,12 +49,12 @@ int main()
 // переполнение
 
 //#include <iostream>
-
+//
 // void doSomething(unsigned int x)
 // {
 //     std::cout << x;
 // }
-// 
+ 
 // int main()
 // {
 //     {
@@ -69,6 +69,8 @@ int main()
 //         x = x - 1;
 //         std::cout << "x is now: " << x << std::endl;
 //     }
+//
+//     int8_t f;
 //
 //     // что будет выведено на экран?
 //     doSomething(-1);
@@ -140,10 +142,10 @@ int main()
 //	const bool b{ true };
 //    int y = !x;
 //
-//    if (x == 0) 
+//    //if (x == 0) 
 //    //if (b)
 //    //if (x)
-//    //if (!x)
+//    if (!x)
 //        std::cout << "true" << std::endl;
 //    else
 //        std::cout << "false" << std::endl;
@@ -220,13 +222,36 @@ int main()
 //    return 0;
 //}
 
-// цикл for
+ //цикл for
 //#include <iostream>
 //
 //int main()
 //{
-//    for (int count = 0; count < 10; ++count)
+//
+//   // int i = 0;
+//   //// auto ii = ++i;
+//   // auto ii = i++;
+//   // std::cout << "i = " << i << " ii = " << ii << std::endl;
+//
+//    //size_t
+//    ////
+//    //    for (size_t i = 0; i < length; i++)
+//    //    {
+//
+//    //    }
+//
+//    int count(0);
+//
+//    for (count = 0; count < 10; count++) {
 //        std::cout << count << " ";
+//
+//    }
+//
+//    for (count = 0; count < 10; count++) {
+//        std::cout << count << " ";
+//
+//    }
+//
 //
 //    return 0;
 //}
@@ -261,7 +286,7 @@ int main()
 //int main()
 //{
 //	int aaa, bbb;
-//	for (aaa = 0, bbb = 9; aaa < 10; ++aaa, --bbb)
+//	for (aaa = 0, bbb = 9; aaa < 10 && bbb>10; ++aaa, --bbb)
 //		std::cout << aaa << " " << bbb << std::endl;
 //
 //	return 0;
@@ -371,7 +396,7 @@ int main()
 //------------------------------------------------------------------------------------
 // Арифметические операторы
 
-// унарный оператор
+ //унарный оператор
 //#include <iostream>
 //
 //int main() {
@@ -445,7 +470,7 @@ int main()
 
 //возведение в степень
 //#include <iostream>
-//#include <cmath>
+////#include <cmath>
 //
 //int main() {
 //    double base = 2.0;
@@ -493,4 +518,23 @@ int main()
 //    std::cout << "Max (ternary): " << max << std::endl;
 //
 //    return 0;
+//}
+
+
+
+
+//#include <iostream>
+//#include <string>
+//
+//void main() {
+//	int i = 5.0;
+//	double d = 5.0;
+//	std::string s = "e";
+//
+//	//std::t
+//
+//	if (i == std::stoi(s))
+//		std::cout << "true";
+//
+//
 //}

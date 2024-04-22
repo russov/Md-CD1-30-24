@@ -36,6 +36,9 @@
 #include <cstdlib>
 #include <string>
 
+
+#define SUM_5_5 5+5
+
 int main()
 {
 	using namespace std;
@@ -85,22 +88,28 @@ int main()
 	outf << "Additional information" << endl;
 	outf.close();
 
+
+	std::cout << "!!!!!!!!!!!!1 --- " << SUM_5_5 << std::endl;
+
+
+
+
 	// debuging
 
-	//struct S {
-	//	int y = 5;
-	//	double f = 6.9;
-	//	std::string s = "text";
-	//	bool i = true;
-	//} str;
+	struct S {
+		int y = 5;
+		double f = 6.9;
+		std::string s = "text";
+		bool i = true;
+	} str;
 
-	//int y = 5;
-	//double f = 6.9;
-	//std::string s = "text";
-	//bool i = true;
-
-
+	int y = 5;
+	double f = 6.9;
+	std::string s = "text";
+	bool i = true;
 
 
-//	return 0;
+
+
+	return 0;
 }

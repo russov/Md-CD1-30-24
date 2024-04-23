@@ -4,8 +4,8 @@
 int main() {
 	setlocale(LC_ALL, "rus");
 	int array[10][10];
-	int a;
-	int b;
+	int a{ 0 };
+	int b{ 0 };
 
 	std::cout << "Введите интервал чисел: ";
 	std::cin >> a >> b;
@@ -38,8 +38,7 @@ int main() {
 	{
 		for (int i = 0; i < 10; ++i) 
 		{
-			int num;
-			num = array[0][i];
+			int num = array[0][i];
 			array[0][i] = array[str][i];
 			array[str][i] = num;
 		}

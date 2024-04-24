@@ -9,7 +9,6 @@ int main() {
     std::ifstream inp(g_ifname);
     char c;
     int count = 0;
-    // std::string content(std::istreambuf_iterator<char>{inp}, {});
     while(inp >> c){
         if (c == '{')
             count++;
@@ -22,10 +21,14 @@ int main() {
     inp.close();
 
     std::ofstream out(g_ofname);
-    if (count != 0)
+    if (count != 0){
         out << "File is incorrect";
-    else
+        std::cout << "File is incorrect" << std::endl;
+    }
+    else{
         out << "File is correct";
+        std::cout << "File is correct" << std::endl;
+    }
     out.close();
     return 0;
 }

@@ -11,7 +11,10 @@ void printArr(const int arr[g_arr_size][g_arr_size]){
     }
 }
 int main() {
-    int a, b, minRow, minEl;
+    int a = 0;
+    int b = 0;
+    int minRow = 0;
+    int minEl = 0;
     int arr[g_arr_size][g_arr_size];
     std::cout << "Enter the boundaries for the segment [a, b]" << std::endl;
     std::cin >> a >> b;

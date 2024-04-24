@@ -16,6 +16,7 @@
 //{
 //    int x = 5; // переменная x функции main() создается здесь
 //    int y = 6;
+//    auto ya = 5;
 //    std::cout << add(x, y) << std::endl; // значение x функции main() копируется в переменную x функции add()
 //    return 0;
 //} // переменная x функции main() уничтожается здесь
@@ -34,11 +35,13 @@
 //        std::cout << x << " + " << y << " = " << x + y;
 //    } // переменная y уничтожается здесь
 //
+//    ++y;
+//
 //    // Переменную y здесь нельзя использовать, поскольку она уже уничтожена!
 //
 //    return 0;
 //} // переменная x уничтожается здесь
-
+//
 
 //#include <iostream>
 //
@@ -88,11 +91,11 @@
 //	return 0;
 //}
 
-//// глобальные переменные
+// глобальные переменные
 //#include <iostream>
 //
 //// Переменные, определенные вне блока, являются глобальными переменными 
-//int g_x; // глобальная переменная g_x
+//int g_x{1}; // глобальная переменная g_x
 //const int g_y(3); // константная глобальная переменная g_y
 //
 //void doSomething()
@@ -107,13 +110,14 @@
 //	doSomething();
 //
 //	// Глобальные переменные можно использовать в любом месте программы
+//	std::cout << g_x << "\n";
 //	g_x = 7;
 //	std::cout << g_y << "\n";
 //
 //	return 0;
 //}
 
-//// static 
+// static 
 //#include <iostream>
 //
 //extern int g_m; // предварительное объявление g_m. Теперь g_m можно использовать в любом месте этого файла  
@@ -136,12 +140,12 @@
 //}
 
 //---------------------------------------------------------------------------------
-//// статические переменные
+// статические переменные
 //#include <iostream>
 //
 //void incrementAndPrint()
 //{
-//    int value = 1; // автоматическая продолжительность жизни (по умолчанию)
+//    static int value = 1; // автоматическая продолжительность жизни (по умолчанию)
 //    ++value;
 //    std::cout << value << std::endl;
 //} // переменная value уничтожается здесь
@@ -178,7 +182,7 @@
 //
 //int main()
 //{
-//    std::cout << doOperation(5, 4); // какая версия doOperation() выполнится здесь?
+//    std::cout << B::doOperation(5, 4); // какая версия doOperation() выполнится здесь?
 //    return 0;
 //}
 
@@ -213,6 +217,14 @@
 //
 //int main()
 //{
+//	int* f = new int;
+//
+//	(f) & 1;
+//
+//	if(&f & 1)
+//	{
+//	}
+//
 //	std::cout << Foo::g_x; // это, на самом деле, Boo::Doo::g_x
 //	return 0;
 //}
@@ -228,16 +240,16 @@
 //	COLOR_YELLOW, // присваивается 0
 //	COLOR_WHITE,  // присваивается 1
 //	COLOR_ORANGE, // присваивается 2
-//	COLOR_GREEN,  // присваивается 3
-//	COLOR_RED,    // присваивается 4
-//	COLOR_GRAY,   // присваивается 5
-//	COLOR_PURPLE, // присваивается 6
+//	COLOR_GREEN=0x000001,  // присваивается 3
+//	COLOR_RED = 0x000002,    // присваивается 4
+//	COLOR_GRAY= 0x000004,   // присваивается 5
+//	COLOR_PURPLE , // присваивается 6
 //	COLOR_BROWN   // присваивается 7
 //};
 //
 //int main()
 //{
-//	Colors paint(COLOR_RED);
+//	Colors paint(COLOR_WHITE);
 //	std::cout << paint;
 //
 //	return 0;
@@ -256,9 +268,20 @@
 //	ANIMAL_COW // присваивается 7
 //};
 //
+//enum Animals1
+//{
+//	ANIMAL_PIG = -4,
+//	ANIMAL_LION, // присваивается -3
+//	ANIMAL_CAT, // присваивается -2
+//	ANIMAL_HORSE = 6,
+//	ANIMAL_ZEBRA = 6, // имеет то же значение, что и ANIMAL_HORSE
+//	ANIMAL_COW // присваивается 7
+//};
+//
+//
 //int main()
 //{
-//	int mypet = ANIMAL_PIG;
+//	int mypet = Animals1::ANIMAL_PIG;
 //	std::cout << ANIMAL_HORSE; // конвертируется в int, а затем выводится на экран
 //
 //	//Animals animal = 7; // приведет к ошибке компиляции
@@ -290,6 +313,22 @@ std::string getItemName(ItemType itemType)
 
 int main()
 {
+
+
+
+    //const std::vector<std::pair<std::string, std::string>> g;
+    //
+    //
+    //const auto g;
+    //const auto gg;
+
+
+    //auto x{foo(5,5)};
+    //int x = 4;
+    const int &y = 6;
+    const auto x = &y;
+
+
     // ItemType - это перечисляемый тип, который мы объявили выше.
     // itemType (с маленькой i) - это имя переменной, которую мы определяем ниже (типа ItemType).
     // ITEMTYPE_GUN - это значение перечислителя, которое мы присваиваем переменной itemType

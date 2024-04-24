@@ -4,21 +4,21 @@
 #include <string>
 #include <ctime>
 
-void read_file(int& count, int& count2) //File reading function
+void read_file(int& CountOpen, int& CountClose) //File reading function
 {
-	std::string a;
+	std::string line;
 	std::ifstream readf("c.txt");
 	if (!readf) {
 		std::cerr << "Uh oh, file could not be opened for reading!" << std::endl;
 		exit(1);
 	}
-	while (getline(readf, a)) { //We count in the lines { and }
-		for (char c : a) {
-			if (c == '{') {
-				count++;
+	while (getline(readf, line)) { //We count in the lines { and }
+		for (char bracket : line) {
+			if (bracket == '{') {
+				CountOpen++;
 			}
-			else if (c == '}') {
-				count2++;
+			else if (bracket == '}') {
+				CountClose++;
 			}
 		}
 	}
@@ -28,9 +28,9 @@ void read_file(int& count, int& count2) //File reading function
 int main()
 {
 	int diff = 0;
-	int count = 0;
-	int count2 = 0;
-	read_file(count, count2);
+	int CountOpen = 0;
+	int CountClose = 0;
+	read_file(CountOpen, CountClose);
 
 	time_t now = time(0);
 	tm* now_local_time = localtime(&now);
@@ -47,17 +47,17 @@ int main()
 		exit(1);
 	}
 
-	if (count == count2) { //Display on screen
+	if (CountOpen == CountClose) { //Display on screen
 		openf << "Its fine!" << "  " << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 		std::cout << "Its fine! " << "\n" << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 	}
-	else if (count < count2) {
-		diff = count2 - count;
+	else if (CountOpen < CountClose) {
+		diff = CountClose - CountOpen;
 		openf << "Missing opening curly braces: " << diff << "  " << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 		std::cout << "Missing opening curly braces: " << diff << "\n" << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 	}
-	else if (count > count2) {
-		diff = count - count2;
+	else if (CountOpen > CountClose) {
+		diff = CountOpen - CountClose;
 		openf << "Missing closing curly braces: " << diff << "  " << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 		std::cout << "Missing closing curly braces: " << diff << "\n" << "Check was in: " << hour << ":" << minutes << "|" << day << "." << month << "." << year << std::endl;
 	}

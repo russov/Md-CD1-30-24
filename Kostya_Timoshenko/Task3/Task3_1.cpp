@@ -2,6 +2,8 @@
 #include <ctime>
 
 const int SIZE = 10;
+const int MaxRand = 99;
+const int MinRand = 1;
 
 void swap_s(int arr[SIZE][SIZE], int str1, int str2) //Function for changing rows of an array
 {
@@ -13,14 +15,9 @@ void swap_s(int arr[SIZE][SIZE], int str1, int str2) //Function for changing row
 	}
 }
 
-int random(int a, int b) //Random function
-{
-	return a + rand() % b;
-}
-
 void good_array(int g_array, int j) //Array beauty function
 {
-	if (g_array < 10)
+	if (g_array < SIZE)
 	{
 		std::cout << " " << g_array;
 	}
@@ -28,7 +25,7 @@ void good_array(int g_array, int j) //Array beauty function
 	{
 		std::cout << g_array;
 	}
-	if (j != SIZE - 1)
+	if (j != SIZE - MinRand)
 	{
 		std::cout << "|";
 	}
@@ -37,22 +34,20 @@ void good_array(int g_array, int j) //Array beauty function
 int main()
 {
 	int arr[SIZE][SIZE];
-	int i, j, imin, jmin;
 	srand(time(0));
 
 	for (int i = 0; i < SIZE; i++) //Filling the array
 	{
 		for (int j = 0; j < SIZE; j++)
 		{
-			arr[i][j] = random(1, 99);
+			arr[i][j] = MinRand + rand() % MaxRand;
 			good_array(arr[i][j], j);
 		}
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
 
-	int min = 0;
-	min = arr[0][0];
+	int min = arr[0][0];
 	for (int i = 0; i < SIZE; i++) //Finding the minimum value
 	{
 		for (int j = 0; j < SIZE; j++)
@@ -70,9 +65,7 @@ int main()
 			if (min == arr[i][j])
 			{
 				swap_s(arr, 0, i);
-				imin = ++i;
-				jmin = ++j;
-				std::cout << "Min:" << min << " String:" << imin << " Column:" << jmin << std::endl;
+				std::cout << "Min:" << min << " String:" << i + 1 << " Column:" << j + 1 << std::endl;
 			}
 		}
 	}

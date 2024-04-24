@@ -1,0 +1,103 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+bool inputcheck(const std::string& s) 
+{
+	if (s.empty()) { //Если пустая строка
+		return false;
+	}
+	size_t st = 0;
+	if (s[0] == '-') { 
+		if (s.length() == 1) { //Если там просто минус
+			return false;
+		}
+		st = 1; //Пропускаем первый символ если есть минус
+	}
+	for (size_t i = st; i < s.length(); i++) { //Проходим по каждому символу
+		if (!std::isdigit(s[i])) { //Если символ не цифра
+			return false;
+		}
+	}
+	return true;
+}
+
+void outfile(std::ofstream& outf) 
+{
+	if (!outf) //Проверка на открытие файла
+	{
+		std::cerr << "Uh oh, file could not be opened for writing!" << std::endl; 
+		exit(1); 
+	}
+	std::cin.ignore();
+	std::cout << "If you want to stop entering values, write stop." << "\n";
+	while (true) {  //Цикл на ввод значений
+		std::cout << "Please number: ";
+		std::string input;
+		std::getline(std::cin, input);
+		if (input == "stop") //Прервать цикл ввода
+			break; 
+		else if (inputcheck(input)) {
+			outf << input << "\n";
+		}
+		else {
+			std::cout << "Please enter only whole numbers." << "\n";
+		}
+	}
+}
+
+int main() 
+{
+	char ofile; 
+	int a;
+	int sum = 0;
+	double ave;
+	int count = 0;
+
+	while (true) {
+		std::cout << "Overwrite the file? (Y/N): "; //Перезаписывать ли файл
+		std::cin >> ofile; 
+		if (ofile == 'y' || ofile == 'Y') //Если да
+		{
+			std::ofstream outf("numbers.txt");	
+			outfile(outf);
+			outf.close();
+			break;
+		}
+		else if (ofile == 'n' || ofile == 'N') //Если нет
+		{
+			std::ofstream outf("numbers.txt", std::ios::app);	
+			outfile(outf);
+			outf.close();
+			break;
+		}
+	}
+
+	std::ifstream inf("numbers.txt"); 
+	if (!inf) {
+		std::cerr << "Uh oh, file could not be opened for reading!" << std::endl;
+		exit(1);
+	}
+	while (inf >> a) {
+		count++;
+	}
+	inf.clear();
+	inf.seekg(0);
+	int* mas = new int[count]; //Динамический массив
+	for (int i = 0; i < count; i++) {
+		inf >> mas[i]; 
+	}
+	for (int i = count - 1; i >= 0; i--) {//Зеркалим и находим сумму
+	std::cout << mas[i] << " ";
+	sum += mas[i];
+	}
+	std::cout << "\n" << "Sum of all numbers: " << sum << std::endl;
+
+	ave = (double)sum / count; //Average
+	std::cout << "The arithmetic mean of all numbers: " << ave << std::endl; 
+
+	delete[] mas;
+	system("pause");
+	inf.close();
+	return 0;
+}

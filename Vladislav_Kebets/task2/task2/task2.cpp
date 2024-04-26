@@ -4,8 +4,11 @@
 #include <fstream>
 #include <string>
 #include <vector>
+
 #define VK_DOWN 72
 #define VK_UP 80
+#define CENTERWIDTH 110
+
 void menu();
 void fileWrite(std::ofstream& outf);
 void sumAndAver();
@@ -17,7 +20,6 @@ void printCenterCC(const std::string str, const int width, const int lineNumber,
 
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 std::string filename = "Numbers.txt";
-int CenterWidth = 110;
 
 int main()
 {
@@ -33,18 +35,18 @@ void menu() {
 	{
 		int lineNumber = 0;
 		system("cls");
-		std::cout << "\n\n" << printCenter("[Main menu]", CenterWidth) << "\n\n";
-		printCenterCC("Перезаписать файл", CenterWidth, lineNumber++, choose);
+		std::cout << "\n\n" << printCenter("[Main menu]", CENTERWIDTH) << "\n\n";
+		printCenterCC("Перезаписать файл", CENTERWIDTH, lineNumber++, choose);
 		std::cout << "\n";
-		printCenterCC("Дописать в конец файла", CenterWidth, lineNumber++, choose);
+		printCenterCC("Дописать в конец файла", CENTERWIDTH, lineNumber++, choose);
 		std::cout << "\n";
-		printCenterCC("Вывод в обратном порядке", CenterWidth, lineNumber++, choose);
+		printCenterCC("Вывод в обратном порядке", CENTERWIDTH, lineNumber++, choose);
 		std::cout << "\n";
-		printCenterCC("Вывод суммы и среднего знечения", CenterWidth, lineNumber++, choose);
+		printCenterCC("Вывод суммы и среднего знечения", CENTERWIDTH, lineNumber++, choose);
 		std::cout << "\n";
-		printCenterCC("завершить программу (escape)", CenterWidth, lineNumber++, choose);
+		printCenterCC("завершить программу (escape)", CENTERWIDTH, lineNumber++, choose);
 		std::cout << "\n";
-		std::cout << "\n\n\n\n" << "\n\n" << printCenter("|Управление стрелочками|", CenterWidth);
+		std::cout << "\n\n\n\n" << "\n\n" << printCenter("|Управление стрелочками|", CENTERWIDTH);
 		switch (_getch()) {
 
 		case VK_UP:choose = (choose + 1) % lineNumber;
@@ -62,14 +64,14 @@ void menu() {
 			switch (choose) {
 			case 0: {
 				system("cls");
-				std::ofstream outf("Numbers.txt");
+				std::ofstream outf(filename);
 				fileWrite(outf);
 				outf.close();
 				break; }
 
 			case 1: {
 				system("cls");
-				std::ofstream outf("Numbers.txt", std::ios_base::app);
+				std::ofstream outf(filename, std::ios_base::app);
 				fileWrite(outf);
 				outf.close();
 				break; }
@@ -88,16 +90,16 @@ void menu() {
 
 
 void fileWrite(std::ofstream& outf) {
-	std::cout << "Для выхода напишите back\n" << printCenter("Введите числа:\n", CenterWidth);
-	std::string strnumber;
+	std::cout << "Для выхода напишите back\n" << printCenter("Введите числа:\n", CENTERWIDTH);
+	std::string str;
 	long long number;
 	do
 	{
-		std::cin >> strnumber;
-		if (strnumber != "back") {
+		std::cin >> str;
+		if (str != "back") {
 			try
 			{
-				number = std::stoll(strnumber);
+				number = std::stoll(str);
 				outf << number << '\n';
 			}
 			catch (const std::exception&)
@@ -105,7 +107,7 @@ void fileWrite(std::ofstream& outf) {
 				std::cout << "Допущена ошибка при вводе\n";
 			}
 		}
-	} while (strnumber != "back");
+	} while (str != "back");
 }
 
 
@@ -123,7 +125,7 @@ void getNumbers(std::vector<int>& numbers) {
 
 void printReversed() {
 	system("cls");
-	std::cout << printCenter("Назад в меню - escape\n", CenterWidth);
+	std::cout << printCenter("Назад в меню - escape\n", CENTERWIDTH);
 	std::vector<int> numbers;
 	getNumbers(numbers);
 	int numbers_amount = size(numbers);
@@ -145,7 +147,7 @@ int getSum(std::vector<int> numbers) {
 
 void sumAndAver() {
 	system("cls");
-	std::cout << printCenter("Назад в меню - escape\n", CenterWidth);
+	std::cout << printCenter("Назад в меню - escape\n", CENTERWIDTH);
 	std::vector<int> numbers;
 	getNumbers(numbers);
 	int sum = getSum(numbers);

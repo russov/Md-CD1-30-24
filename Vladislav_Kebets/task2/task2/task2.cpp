@@ -9,6 +9,18 @@
 #define VK_UP 80
 #define CENTERWIDTH 110
 
+enum Colors {
+	Black = 0,
+	Blue = 1,
+	Green = 2,
+	Cyan = 3,
+	Red = 4,
+	Violet = 5,
+	Yellow = 6,
+	White = 7,
+	Grey = 8,
+};
+
 void menu();
 void fileWrite(std::ofstream& outf);
 void sumAndAver();
@@ -21,8 +33,7 @@ void printCenterCC(const std::string str, const int width, const int lineNumber,
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 std::string filename = "Numbers.txt";
 
-int main()
-{
+int main() {
 	setlocale(0, "");
 	menu();
 }
@@ -169,7 +180,7 @@ std::string printCenter(const std::string str, const int width) {
 
 void printCenterCC(const std::string str, const int width, const int lineNumber, const int nchoose) {
 	if (lineNumber == nchoose)
-		SetConsoleTextAttribute(hConsole, 5);
+		SetConsoleTextAttribute(hConsole, Violet);
 	std::cout << printCenter(str, width);
-	SetConsoleTextAttribute(hConsole, 7);
+	SetConsoleTextAttribute(hConsole, White);
 }

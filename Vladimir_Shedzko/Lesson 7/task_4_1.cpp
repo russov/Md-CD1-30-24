@@ -10,6 +10,11 @@ win condition and finish the game ahead of schedule. Also game finishes
 if player/dealer has number of points bigger than 21 or 5 cards in hand.
 Starting from player.
 */
+const int hand_max {5};
+const int game_max {21};
+const int dealer_max {17};
+const int card_min {2};
+const int card_max {11};
 
 std::map<int, int> deck = {
     { 2, 4 },
@@ -26,9 +31,9 @@ std::map<int, int> deck = {
 
 int drawCard(){
     
-    int card = std::rand()%10 + 1;
+    int card = std::rand()%(card_max - card_min + 1) + card_min;
     while(deck[card] == 0){
-        card = rand()%10 + 1;
+        card = rand()%(card_max - card_min + 1) + card_min;
     }
     deck[card] -= 1;
     return card;
@@ -51,27 +56,29 @@ void showCards(std::stack<int> *cards, int amount){
 }
 
 bool checkForEnd(int *curS, int lastI, int cardCount){
-    if (cardCount >= 5)
+    if (cardCount >= hand_max)
         return true;
-    if (*curS == 22 && lastI == 11)
-        *curS = 21;
-    if (*curS >= 21)
+    if (*curS == game_max + 1 && lastI == card_max)
+        *curS = game_max;
+    if (*curS >= game_max)
         return true;
     return false;
 }
 
 int main() {
+
+    
     std::srand(std::time(nullptr));
     std::cout << "Game starts" << std::endl;
     // Dealer init
     std::stack<int> dealer_cards;
     int dealer_last = drawCard();
     int dealer_sum = dealer_last;
-    int dealer_cnt = 1, player_cnt = 2;
+    int dealer_cnt = 1;
     dealer_cards.push(dealer_last);
     // Player init
     std::stack<int> player_cards;
-    
+    int player_cnt = 2;
     int player_sum = drawCard();
     int player_last = drawCard();
     player_cards.push(player_sum);
@@ -100,7 +107,7 @@ int main() {
         else
             std::cout << "Wrong input: " << curchar << std::endl;
     }
-    while (dealer_sum < 17 && dealer_cnt < 5){
+    while (dealer_sum < dealer_max && dealer_cnt < hand_max){
         dealer_last = drawCard();
         dealer_sum += dealer_last;
         dealer_cards.push(dealer_last);
@@ -113,10 +120,10 @@ int main() {
     showCards(&player_cards, player_sum);
     std::cout << "Dealer cards: ";
     showCards(&dealer_cards, dealer_sum);
-    if (dealer_sum > 21 && player_sum > 21 || dealer_sum == player_sum){
+    if (dealer_sum > game_max && player_sum > game_max || dealer_sum == player_sum){
         std::cout << "Draw" << std::endl;
     }
-    else if (dealer_sum > 21 || player_sum > dealer_sum  && player_sum <=21 ){
+    else if (dealer_sum > game_max || player_sum > dealer_sum  && player_sum <= game_max){
         std::cout << "You win" << std::endl;
     }
     else{

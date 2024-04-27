@@ -617,6 +617,9 @@
 //{
 //    Auto_ptr1<Item> ptr(new Item); // ptr теперь "владеет" Item-ом
 //
+//    auto ptr1 = new Item;
+//
+//    ptr1->sayHi();
 //    // ... но никакого явного delete здесь не нужно
 //
 //    int a{0};
@@ -643,9 +646,9 @@
 
 // проблема с копированием
 
-#include <iostream>
-
-// Шаблон класса тот же, что и в примере, приведенном выше
+//#include <iostream>
+//
+//// Шаблон класса тот же, что и в примере, приведенном выше
 //template<class T>
 //class Auto_ptr1
 //{
@@ -654,6 +657,11 @@
 //    Auto_ptr1(T* ptr = nullptr)
 //        :m_ptr(ptr)
 //    {
+//    }
+//
+//    Auto_ptr(Auto_ptr& ptr)
+//    {
+//        m_ptr = ptr->mptr;
 //    }
 //
 //    ~Auto_ptr1()
@@ -683,7 +691,7 @@
 //}
 
 
-// проблема с копирвоанием
+ //проблема с копирвоанием
 //void passByValue(Auto_ptr1<Item> item)
 //{
 //}
@@ -763,7 +771,7 @@
 //
 //	return 0;
 //}
-
+//
 
 
 // ------------------------------------------------------------------------------------------------------
@@ -828,8 +836,8 @@
 
 
 // make_unique
-//#include <iostream>
-//#include <memory> // для std::unique_ptr и std::make_unique
+#include <iostream>
+#include <memory> // для std::unique_ptr и std::make_unique
 //
 //class Fraction
 //{
@@ -854,13 +862,16 @@
 //int main()
 //{
 //    // Создаем объект с динамически выделенным Fraction с numerator = 7 и denominator = 9
-//    std::unique_ptr<Fraction> f1 = std::make_unique<Fraction>(7, 9);
+//    auto f1 = std::make_unique<Fraction>(7, 9);
 //    std::cout << *f1 << '\n';
-//
+//    int n = 5 + 4;
 //    // Создаем объект с динамически выделенным массивом Fraction длиной 5.
 //    // Используем автоматическое определение типа данных с помощью ключевого слова auto
-//    auto f2 = std::make_unique<Fraction[]>(5);
-//    std::cout << f2[0] << '\n';
+//    auto f2 = std::make_unique<Fraction[]>(n);
+//    
+//    std::unique_ptr<Fraction[]> item(new Fraction[n]);
+//    
+//    //*f2;
 //
 //    return 0;
 //}
@@ -870,6 +881,7 @@
 // Возврат умного указателя std::unique_ptr из функции по значениею
 //std::unique_ptr<Item> createItem()
 //{
+//    //dfg
 //    return std::make_unique<Item>();
 //}
 //
@@ -943,7 +955,8 @@
 //
 //int main()
 //{
-//    auto ptr = std::make_unique<Item>();
+//    std::unique_ptr<Item> ptr(new Item);
+//    //auto ptr = std::make_unique<Item>();
 //
 //    useItem(ptr.get()); // примечание: Метод get() используется для получения указателя на Item
 //
@@ -1008,104 +1021,155 @@
 
 
 // реализация shared_ptr
+#include <iostream>
+
+template<typename T>
+class SharedPtr {
+public:
+    // Конструкторы и деструктор
+    explicit SharedPtr(T* ptr = nullptr) : ptr_(ptr), ref_count_(new size_t(1)) {}
+    SharedPtr(const SharedPtr<T>& other) : ptr_(other.ptr_), ref_count_(other.ref_count_) {
+        ++(*ref_count_);
+    }
+    ~SharedPtr() {
+        if (--(*ref_count_) == 0) {
+            delete ptr_;
+            delete ref_count_;
+        }
+    }
+
+    // Операторы
+    SharedPtr<T>& operator=(const SharedPtr<T>& other) {
+        if (this != &other) {
+            ptr_ = other.ptr_;
+            ref_count_ = other.ref_count_;
+            ++(*ref_count_);
+        }
+        return *this;
+    }
+
+    // Оператор разыменования
+    T& operator*() const { return *ptr_; }
+
+    // Оператор доступа к членам
+    T* operator->() const { return ptr_; }
+
+    // Методы
+    size_t use_count() const { return *ref_count_; }
+
+private:
+    T* ptr_;
+    size_t* ref_count_;
+};
+
+// Пример использования
+int main() {
+    SharedPtr<int> ptr1(new int(42));
+    {
+        SharedPtr<int> ptr2 = ptr1; // Копирующее присваивание
+        std::cout << "Value: " << *ptr2 << std::endl;
+        std::cout << "Use count: " << ptr2.use_count() << std::endl;
+    }
+    std::cout << "Value: " << *ptr1 << std::endl;
+    std::cout << "Use count: " << ptr1.use_count() << std::endl;
+    return 0;
+}
+
+
+
+
+//проюлема weak_ptr
 //#include <iostream>
+//#include <memory> // для std::shared_ptr
+//#include <string>
 //
-//template<typename T>
-//class SharedPtr {
+//class Human
+//{
+//    std::string m_name;
+//    std::shared_ptr<Human> m_partner; // изначально пустой
+//
 //public:
-//    // Конструкторы и деструктор
-//    explicit SharedPtr(T* ptr = nullptr) : ptr_(ptr), ref_count_(new size_t(1)) {}
-//    SharedPtr(const SharedPtr<T>& other) : ptr_(other.ptr_), ref_count_(other.ref_count_) {
-//        ++(*ref_count_);
+//
+//    Human(const std::string& name) : m_name(name)
+//    {
+//        std::cout << m_name << " created\n";
 //    }
-//    ~SharedPtr() {
-//        if (--(*ref_count_) == 0) {
-//            delete ptr_;
-//            delete ref_count_;
-//        }
+//    ~Human()
+//    {
+//        std::cout << m_name << " destroyed\n";
 //    }
 //
-//    // Операторы
-//    SharedPtr<T>& operator=(const SharedPtr<T>& other) {
-//        if (this != &other) {
-//            ptr_ = other.ptr_;
-//            ref_count_ = other.ref_count_;
-//            ++(*ref_count_);
-//        }
-//        return *this;
+//    friend bool partnerUp(std::shared_ptr<Human>& h1, std::shared_ptr<Human>& h2)
+//    {
+//        if (!h1 || !h2)
+//            return false;
+//
+//        h1->m_partner = h2;
+//        h2->m_partner = h1;
+//
+//        std::cout << h1->m_name << " is now partnered with " << h2->m_name << "\n";
+//
+//        return true;
 //    }
-//
-//    // Оператор разыменования
-//    T& operator*() const { return *ptr_; }
-//
-//    // Оператор доступа к членам
-//    T* operator->() const { return ptr_; }
-//
-//    // Методы
-//    size_t use_count() const { return *ref_count_; }
-//
-//private:
-//    T* ptr_;
-//    size_t* ref_count_;
 //};
 //
-//// Пример использования
-//int main() {
-//    SharedPtr<int> ptr1(new int(42));
-//    {
-//        SharedPtr<int> ptr2 = ptr1; // Копирующее присваивание
-//        std::cout << "Value: " << *ptr2 << std::endl;
-//        std::cout << "Use count: " << ptr2.use_count() << std::endl;
-//    }
-//    std::cout << "Value: " << *ptr1 << std::endl;
-//    std::cout << "Use count: " << ptr1.use_count() << std::endl;
+//int main()
+//{
+//    auto anton = std::make_shared<Human>("Anton"); // создание умного указателя с объектом Anton класса Human
+//    auto ivan = std::make_shared<Human>("Ivan"); // создание умного указателя с объектом Ivan класса Human
+//
+//    partnerUp(anton, ivan); // Anton указывает на Ivan-а, а Ivan указывает на Anton-а
+//
 //    return 0;
 //}
 
 
+//#include <iostream>
+//#include <memory> // для std::shared_ptr и std::weak_ptr
+//#include <string>
 
-
-//weak_ptr
-#include <iostream>
-#include <memory> // для std::shared_ptr
-#include <string>
-
-class Human
-{
-    std::string m_name;
-    std::shared_ptr<Human> m_partner; // изначально пустой
-
-public:
-
-    Human(const std::string& name) : m_name(name)
-    {
-        std::cout << m_name << " created\n";
-    }
-    ~Human()
-    {
-        std::cout << m_name << " destroyed\n";
-    }
-
-    friend bool partnerUp(std::shared_ptr<Human>& h1, std::shared_ptr<Human>& h2)
-    {
-        if (!h1 || !h2)
-            return false;
-
-        h1->m_partner = h2;
-        h2->m_partner = h1;
-
-        std::cout << h1->m_name << " is now partnered with " << h2->m_name << "\n";
-
-        return true;
-    }
-};
-
-int main()
-{
-    auto anton = std::make_shared<Human>("Anton"); // создание умного указателя с объектом Anton класса Human
-    auto ivan = std::make_shared<Human>("Ivan"); // создание умного указателя с объектом Ivan класса Human
-
-    partnerUp(anton, ivan); // Anton указывает на Ivan-а, а Ivan указывает на Anton-а
-
-    return 0;
-}
+//class Human
+//{
+//    std::string m_name;
+//    std::weak_ptr<Human> m_partner; // обратите внимание, здесь std::weak_ptr
+//
+//public:
+//
+//    Human(const std::string& name) : m_name(name)
+//    {
+//        std::cout << m_name << " created\n";
+//    }
+//    ~Human()
+//    {
+//        std::cout << m_name << " destroyed\n";
+//    }
+//
+//    friend bool partnerUp(std::shared_ptr<Human>& h1, std::shared_ptr<Human>& h2)
+//    {
+//        if (!h1 || !h2)
+//            return false;
+//
+//        h1->m_partner = h2;
+//        h2->m_partner = h1;
+//
+//        std::cout << h1->m_name << " is now partnered with " << h2->m_name << "\n";
+//
+//        return true;
+//    }
+//
+//    const std::shared_ptr<Human> getPartner() const { return m_partner.lock(); } // используем метод lock() для конвертации std::weak_ptr в std::shared_ptr
+//    const std::string& getName() const { return m_name; }
+//};
+//
+//int main()
+//{
+//    auto anton = std::make_shared<Human>("Anton");
+//    auto ivan = std::make_shared<Human>("Ivan");
+//
+//    partnerUp(anton, ivan);
+//
+//    //auto partner = ivan->getPartner(); // передаем partner-у содержимое умного указателя, которым владеет ivan
+//    //std::cout << ivan->getName() << "'s partner is: " << partner->getName() << '\n';
+//
+//    return 0;
+//}

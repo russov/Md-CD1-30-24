@@ -4,10 +4,6 @@
 
 class Player
 {
-private:
-	std::string name_;
-	std::vector <std::string> hand_;
-	int value_;
 public:
 	explicit Player(std::string);
 	Player();
@@ -21,7 +17,11 @@ public:
 	void setValue(int);
 	int getValue() const;
 
-	void resetHandAndValues();
+	void resetHand();
 	void resetValue();
+private:
+	std::string name_;
+	std::vector <std::string> hand_;
+	int value_;
 };
 

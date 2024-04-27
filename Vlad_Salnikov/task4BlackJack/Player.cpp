@@ -50,9 +50,8 @@ int Player::getValue() const
 	return value_;
 }
 
-void Player::resetHandAndValues()
+void Player::resetHand()
 {
-	value_ = 0;
 	hand_.clear();
 }
 

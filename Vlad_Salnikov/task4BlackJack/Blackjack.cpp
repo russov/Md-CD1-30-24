@@ -10,7 +10,7 @@ int valueCounter(const vector<string>& hand)
 	int valueBuffer{0};
 	for (auto n: hand)
 	{
-		if (n == "Jack" || n == "Qeen" || n == "King")
+		if (n == "Jack" || n == "Queen" || n == "King")
 		{
 			valueBuffer += 10;
 		}
@@ -40,21 +40,25 @@ int main()
 	Player dealer("Tom");
 	Player player;
 	const int blackjack{ 21 };
+	const int firstDeal{ 2 };
+	const int minDealerValue{ 17 };
 
 	while (true)
 	{
 		bool checkEndGame = false;
 		vector <string> deck{
-	     "2","3","4","5","6","7","8","9","10","Jack","Qeen","King","Ace",
-	     "2","3","4","5","6","7","8","9","10","Jack","Qeen","King","Ace",
-	     "2","3","4","5","6","7","8","9","10","Jack","Qeen","King","Ace",
-	     "2","3","4","5","6","7","8","9","10","Jack","Qeen","King","Ace" };
+	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace",
+	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace",
+	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace",
+	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace" };
 		random_shuffle(deck.begin(), deck.end());
 
-		dealer.resetHandAndValues();
-		player.resetHandAndValues();
+		dealer.resetHand();
+		dealer.resetValue();
+		player.resetHand();
+		player.resetValue();
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < firstDeal; i++)
 		{
 			dealer.setHand(deck.back());
 			deck.pop_back();
@@ -164,7 +168,7 @@ int main()
 				checkEndGame = true;
 				break;
 			}
-			else if (dealer.getValue() > 17)
+			else if (dealer.getValue() >= minDealerValue)
 			{
 				break;
 			}

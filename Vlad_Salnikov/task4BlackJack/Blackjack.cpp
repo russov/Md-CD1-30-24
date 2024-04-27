@@ -5,6 +5,12 @@
 #include <algorithm>
 using namespace std;
 
+const int blackjack{ 21 };
+const int firstDeal{ 2 };
+const int minDealerValue{ 17 };
+const int highСard{ 10 };
+const int aceValue{ 11 };
+
 int valueCounter(const vector<string>& hand)
 {
 	int valueBuffer{0};
@@ -12,11 +18,11 @@ int valueCounter(const vector<string>& hand)
 	{
 		if (n == "Jack" || n == "Queen" || n == "King")
 		{
-			valueBuffer += 10;
+			valueBuffer += highСard;
 		}
 		else if (n == "Ace")
 		{
-			valueBuffer += 11;
+			valueBuffer += aceValue;
 		}else 
 			valueBuffer += stoi(n);
 	}
@@ -39,9 +45,6 @@ int main()
 {
 	Player dealer("Tom");
 	Player player;
-	const int blackjack{ 21 };
-	const int firstDeal{ 2 };
-	const int minDealerValue{ 17 };
 
 	while (true)
 	{

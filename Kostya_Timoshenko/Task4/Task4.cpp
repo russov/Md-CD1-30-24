@@ -2,120 +2,128 @@
 #include <ctime>
 #include <vector>
 #include <string>
+#include <array>
 
-const int Ace = 11;
-const int PictureCard = 10;
-const int DealerStand = 16;
-const int WinStand = 21;
+void CreateDeck(std::vector<std::string>& EmptyDeck) {
+	const std::array<std::string, 4> SuitsCards = { "S", "H", "D", "C" };
+	const std::array<std::string, 13> cardValues = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+	for (const auto& card : cardValues) {
+		for (const auto& suit : SuitsCards) {
+			EmptyDeck.push_back(card + suit);
+		}
+	}
+}
 
-std::string TakeCard(std::vector<std::string>& DeckCards) { 
+void TakeCard(std::vector<std::string>& DeckCards, int& SumDeck) {
+	const int Ace = 11;
+	const int PictureCard = 10;
 	int randomIndex = rand() % DeckCards.size();
 	const auto CardTaken = DeckCards[randomIndex];
 	DeckCards.erase(DeckCards.begin() + randomIndex);
 	std::cout << "|" << CardTaken << "|" << " ";
-	return CardTaken;
+	std::string ValueCard = CardTaken.substr(0, CardTaken.size() - 1);
+	if (ValueCard == "A") {
+		SumDeck += Ace;
+	}
+	else if (ValueCard == "K" || ValueCard == "Q" || ValueCard == "J") {
+		SumDeck += PictureCard;
+	}
+	else {
+		SumDeck += std::stoi(ValueCard);
+	}
 }
 
-int DeckSum(std::vector<std::string>& AnyDeck) {
-	int sum = 0;
-	for (const auto& card : AnyDeck) {
-		std::string value = card.substr(0, card.size() - 1);
-		if (value == "A") {
-			sum += Ace;
-		}
-		else if (value == "K" || value == "Q" || value == "J") {
-			sum += PictureCard;
-		}
-		else {
-			sum += std::stoi(value);
-		}
-	}
-	return sum;
-}
-
-int main() {
-	srand(static_cast<unsigned int>(time(0)));
-	std::string AnswerQuestion;
-	std::string Card;
-	std::vector<std::string> DealerCards;
-	std::vector<std::string> PlayerCards;
-	std::vector<std::string> DeckCards;
-	std::vector<std::string> SuitsCards = { "S", "H", "D", "C" };
-	std::vector<std::string> cardValues = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-	for (const auto& card : cardValues) {
-		for (const auto& suit : SuitsCards) {
-			DeckCards.push_back(card + suit);
-		}
-	}
-
-	std::cout << "Dealer: "; 
-	Card = TakeCard(DeckCards);
-	DealerCards.push_back(Card);
-	int DSum = DeckSum(DealerCards);
-	std::cout << std::endl << "Player: ";
+void StartGame(std::vector<std::string>& DeckCards, int& DealerSum, int& PlayerSum) {
+	std::cout << "You cards : ";
 	for (int i = 0; i < 2; ++i) {
-		Card = TakeCard(DeckCards);
-		PlayerCards.push_back(Card);
+		TakeCard(DeckCards, PlayerSum);
 	}
-	int PSum = DeckSum(PlayerCards);
-	std::cout << std::endl << "Sum of cards in dealer's hand: " << DSum << std::endl;
-	std::cout << "Sum of cards in player's hand: " << PSum;
+	std::cout << std::endl << "Dealer cards: ";
+	TakeCard(DeckCards, DealerSum);
+	std::cout << std::endl << "Sum of cards in you hand: " << PlayerSum;
+	std::cout << std::endl << "Sum of cards in dealer's hand: " << DealerSum;
+}
 
-	while (true) { //Цикл hit stand 
+void LogicGame(std::vector<std::string>& DeckCards, int& DealerSum, int& PlayerSum) {
+	const int DealerStand = 16;
+	const int WinStand = 21;
+	const std::string Take = "hit";
+	const std::string NotTake = "stand";
+	std::string AnswerQuestion;
+	while (true) {
+		if (PlayerSum > WinStand) {
+			std::cout << std::endl << "|Dealer win, you lose!|";
+			break;
+		}
 		std::cout << std::endl << "hit or stand? ";
 		std::getline(std::cin, AnswerQuestion);
-		if (AnswerQuestion == "hit") {
+		if (AnswerQuestion == Take) {
 			std::cout << "You take: ";
-			Card = TakeCard(DeckCards);
-			PlayerCards.push_back(Card);
-			PSum = DeckSum(PlayerCards);
-			if (DSum <= DealerStand) {
+			TakeCard(DeckCards, PlayerSum);
+			if (DealerSum <= DealerStand) {
 				std::cout << std::endl << "Dealer take: ";
-				Card = TakeCard(DeckCards);
-				DealerCards.push_back(Card);
-				DSum = DeckSum(DealerCards);
+				TakeCard(DeckCards, DealerSum);
 			}
-			std::cout << std::endl << "Sum of cards in dealer's hand: " << DSum << std::endl;
-			std::cout << "Sum of cards in player's hand: " << PSum;
-			if (DSum > WinStand && PSum > WinStand) {
-				std::cout << std::endl << "DRAW!" << std::endl;
+			std::cout << std::endl << "Sum of cards in you hand: " << PlayerSum;
+			std::cout << std::endl << "Sum of cards in dealer's hand: " << DealerSum;
+			if (DealerSum > WinStand && PlayerSum > WinStand) {
+				std::cout << std::endl << "|Draw!|" << std::endl;
 				break;
 			}
-			else if (PSum > WinStand) {
-				std::cout << std::endl << "Player LOSE!" << std::endl;
+			else if (PlayerSum > WinStand) {
+				std::cout << std::endl << "|Dealer win, you lose!|" << std::endl;
 				break;
 			}
 		}
-		else if (AnswerQuestion == "stand") {
-			while (DSum <= DealerStand) {
+		else if (AnswerQuestion == NotTake) {
+			while (DealerSum <= DealerStand) {
 				std::cout << "Dealer take: ";
-				Card = TakeCard(DeckCards);
-				DealerCards.push_back(Card);
-				DSum = DeckSum(DealerCards);
+				TakeCard(DeckCards, DealerSum);
 				std::cout << std::endl;
 			}
-			std::cout << "Sum of cards in dealer's hand: " << DSum << std::endl;
-			std::cout << "Sum of cards in player's hand: " << PSum << std::endl;
-			if (DSum > WinStand) {
-				std::cout << "Dealer LOSE!" << std::endl;
+			std::cout << "Sum of cards in you hand: " << PlayerSum << std::endl;
+			std::cout << "Sum of cards in dealer's hand: " << DealerSum << std::endl;
+			if (DealerSum > WinStand) {
+				std::cout << "|You win, dealer lose!|" << std::endl;
 				break;
 			}
-			if (PSum > DSum) {
-				std::cout << "Player WIN!" << std::endl;
+			if (PlayerSum > DealerSum) {
+				std::cout << "|You win, dealer lose!|" << std::endl;
 			}
-			else if (DSum > PSum) {
-				std::cout << "Dealer WIN!" << std::endl;
+			else if (DealerSum > PlayerSum) {
+				std::cout << "|Dealer win, you lose!|" << std::endl;
 			}
 			else {
-				std::cout << "DRAW!" << std::endl;
+				std::cout << "|Draw!|" << std::endl;
 			}
 			break;
 		}
 		else {
-			std::cout << "Enter hit or stand!";
+			std::cout << "Enter: hit or stand!";
 			continue;
 		}
 	}
-	system("pause");
+}
+
+int main() {
+	srand(static_cast<unsigned int>(time(0)));
+	std::vector<std::string> DeckCards;
+	int DealerSum = 0;
+	int PlayerSum = 0;
+	std::string PlayAgain = "yes";
+
+	while (PlayAgain == "yes") {
+		DeckCards.clear();
+		DealerSum = 0;
+		PlayerSum = 0;
+
+		CreateDeck(DeckCards);
+		StartGame(DeckCards, DealerSum, PlayerSum);
+		LogicGame(DeckCards, DealerSum, PlayerSum);
+
+		std::cout << "Play Again? (Enter: yes)";
+		std::getline(std::cin, PlayAgain);
+	}
+	std::cin.get();
 	return 0;
 }

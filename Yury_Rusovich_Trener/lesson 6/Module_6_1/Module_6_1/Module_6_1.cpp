@@ -86,24 +86,24 @@
 //}
 
 // 
-#include <iostream>
-int main()
-{
-
-    char* chPtr = new char(); // тип char занимает 1 байт
-    int* iPtr = new int(); // тип int занимает 4 байта
-
-    struct Something
-    {
-        int nX, nY, nZ;
-    };
-    
-    Something* somethingPtr = new Something();
-
-    std::cout << sizeof(chPtr) << " " << chPtr << '\n'; // выведется 4
-    std::cout << sizeof(iPtr) << " " << iPtr << '\n'; // выведется 4
-    std::cout << sizeof(somethingPtr) << " " << somethingPtr << '\n'; // выведется 4
-}
+//#include <iostream>
+//int main()
+//{
+//
+//    char* chPtr = new char(); // тип char занимает 1 байт
+//    int* iPtr = new int(); // тип int занимает 4 байта
+//
+//    struct Something
+//    {
+//        int nX, nY, nZ;
+//    };
+//    
+//    Something* somethingPtr = new Something();
+//
+//    std::cout << sizeof(chPtr) << " " << chPtr << '\n'; // выведется 4
+//    std::cout << sizeof(iPtr) << " " << iPtr << '\n'; // выведется 4
+//    std::cout << sizeof(somethingPtr) << " " << somethingPtr << '\n'; // выведется 4
+//}
 
 
 //------------------------------------------------------------------------------
@@ -572,3 +572,604 @@ int main()
             //    return 0;
             //}
 
+
+
+
+
+
+//---------------------------------------------------------------------------------------------
+// умные указатели
+
+//#include <iostream>
+//
+//template<class T>
+//class Auto_ptr1
+//{
+//    T* m_ptr;
+//public:
+//    // Получаем указатель для "владения" через конструктор
+//    Auto_ptr1(T* ptr = nullptr)
+//        :m_ptr(ptr)
+//    {
+//    }
+//
+//    // Деструктор позаботится об удалении указателя
+//    ~Auto_ptr1()
+//    {
+//        delete m_ptr;
+//    }
+//
+//    // Выполняем перегрузку оператора разыменования и оператора ->, чтобы иметь возможность использовать Auto_ptr1 как m_ptr
+//    T& operator*() const { return *m_ptr; }
+//    T* operator->() const { return m_ptr; }
+//};
+//
+//// Класс для проверки работоспособности вышеприведенного кода
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//    void sayHi() { std::cout << "Hi!\n"; }
+//};
+//
+//void myFunction()
+//{
+//    Auto_ptr1<Item> ptr(new Item); // ptr теперь "владеет" Item-ом
+//
+//    auto ptr1 = new Item;
+//
+//    ptr1->sayHi();
+//    // ... но никакого явного delete здесь не нужно
+//
+//    int a{0};
+//    std::cout << "Enter an integer: ";
+//    std::cin >> a;
+//
+//    if (a == 0)
+//        return; // досрочный возврат функции
+//
+//    // Использование ptr
+//    ptr->sayHi();
+//}
+//// item выходит из области видимости здесь и уничтожает выделенный Item вместо нас
+//
+//int main()
+//{
+//    myFunction();
+//
+//    return 0;
+//}
+
+
+
+
+// проблема с копированием
+
+//#include <iostream>
+//
+//// Шаблон класса тот же, что и в примере, приведенном выше
+//template<class T>
+//class Auto_ptr1
+//{
+//    T* m_ptr;
+//public:
+//    Auto_ptr1(T* ptr = nullptr)
+//        :m_ptr(ptr)
+//    {
+//    }
+//
+//    Auto_ptr(Auto_ptr& ptr)
+//    {
+//        m_ptr = ptr->mptr;
+//    }
+//
+//    ~Auto_ptr1()
+//    {
+//        delete m_ptr;
+//    }
+//    
+//    // нету оператора копирования. Происходит поверхостное копирование
+// 
+//    T& operator*() const { return *m_ptr; }
+//    T* operator->() const { return m_ptr; }
+//};
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//};
+//
+//int main()
+//{
+//    Auto_ptr1<Item> item1(new Item);
+//    Auto_ptr1<Item> item2(item1); // в качестве альтернативы вы можете не инициализировать item2 значением item1, а просто выполнить присваивание item2 = item1
+//
+//    return 0;
+//}
+
+
+ //проблема с копирвоанием
+//void passByValue(Auto_ptr1<Item> item)
+//{
+//}
+//
+//int main()
+//{
+//    Auto_ptr1<Item> item1(new Item);
+//    passByValue(item1)
+//
+//        return 0;
+//}
+
+
+// auto_ptr c семантикой перемещения
+//#include <iostream>
+//
+//template<class T>
+//class Auto_ptr2
+//{
+//	T* m_ptr;
+//public:
+//	Auto_ptr2(T* ptr = nullptr)
+//		:m_ptr(ptr)
+//	{
+//	}
+//
+//	~Auto_ptr2()
+//	{
+//		delete m_ptr;
+//	}
+//
+//	// Конструктор копирования, который реализовывает семантику перемещения
+//	Auto_ptr2(Auto_ptr2& a) // примечание: Ссылка не является константной
+//	{
+//		m_ptr = a.m_ptr; // перемещаем наш глупый указатель от источника к нашему локальному объекту
+//		a.m_ptr = nullptr; // подтверждаем, что источник больше не владеет указателем
+//	}
+//
+//	// Оператор присваивания, который реализовывает семантику перемещения
+//	Auto_ptr2& operator=(Auto_ptr2& a) // примечание: Ссылка не является константной
+//	{
+//		if (&a == this)
+//			return *this;
+//
+//		delete m_ptr; // подтверждаем, что удалили любой указатель, который наш локальный объект имел до этого
+//		m_ptr = a.m_ptr; // затем перемещаем наш глупый указатель из источника к нашему локальному объекту
+//		a.m_ptr = nullptr; // подтверждаем, что источник больше не владеет указателем
+//		return *this;
+//	}
+//
+//	T& operator*() const { return *m_ptr; }
+//	T* operator->() const { return m_ptr; }
+//	bool isNull() const { return m_ptr == nullptr; }
+//};
+//
+//class Item
+//{
+//public:
+//	Item() { std::cout << "Item acquired\n"; }
+//	~Item() { std::cout << "Item destroyed\n"; }
+//};
+//
+//int main()
+//{
+//	Auto_ptr2<Item> item1(new Item);
+//	Auto_ptr2<Item> item2; // начнем с nullptr
+//
+//	std::cout << "item1 is " << (item1.isNull() ? "null\n" : "not null\n");
+//	std::cout << "item2 is " << (item2.isNull() ? "null\n" : "not null\n");
+//
+//	item2 = item1; // item2 теперь является "владельцем" значения item1, объекту item1 присваивается null
+//
+//	std::cout << "Ownership transferred\n";
+//
+//	std::cout << "item1 is " << (item1.isNull() ? "null\n" : "not null\n");
+//	std::cout << "item2 is " << (item2.isNull() ? "null\n" : "not null\n");
+//
+//	return 0;
+//}
+//
+
+
+// ------------------------------------------------------------------------------------------------------
+// std::unique_ptr
+
+//#include <iostream>
+//#include <memory> // для std::unique_ptr
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//};
+//
+//int main()
+//{
+//    std::unique_ptr<Item> item1(new Item); // выделение Item
+//    std::unique_ptr<Item> item2; // присваивается значение nullptr
+//
+//    std::cout << "item1 is " << (static_cast<bool>(item1) ? "not null\n" : "null\n");
+//    std::cout << "item2 is " << (static_cast<bool>(item2) ? "not null\n" : "null\n");
+//
+//    // item2 = item1; // не скомпилируется: семантика копирования отключена
+//    item2 = std::move(item1); // item2 теперь владеет item1, а для item1 присваивается значение null
+//
+//    std::cout << "Ownership transferred\n";
+//
+//    std::cout << "item1 is " << (static_cast<bool>(item1) ? "not null\n" : "null\n");
+//    std::cout << "item2 is " << (static_cast<bool>(item2) ? "not null\n" : "null\n");
+//
+//    return 0;
+//} // Item уничтожается здесь, когда item2 выходит из области видимости
+
+
+// operator << 
+// *
+//#include <iostream>
+//#include <memory> // для std::unique_ptr
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//    friend std::ostream& operator<<(std::ostream& out, const Item& item)
+//    {
+//        out << "I am an Item!\n";
+//        return out;
+//    }
+//};
+//
+//int main()
+//{
+//    std::unique_ptr<Item> item(new Item);
+//
+//    if (item) // используем неявное преобразование item в тип bool, чтобы убедиться, что item владеет Item-ом
+//        std::cout << *item; // выводим Item, которым владеет item
+//
+//    return 0;
+//}
+
+
+// make_unique
+#include <iostream>
+#include <memory> // для std::unique_ptr и std::make_unique
+//
+//class Fraction
+//{
+//private:
+//    int m_numerator = 0;
+//    int m_denominator = 1;
+//
+//public:
+//    Fraction(int numerator = 0, int denominator = 1) :
+//        m_numerator(numerator), m_denominator(denominator)
+//    {
+//    }
+//
+//    friend std::ostream& operator<<(std::ostream& out, const Fraction& f1)
+//    {
+//        out << f1.m_numerator << "/" << f1.m_denominator;
+//        return out;
+//    }
+//};
+//
+//
+//int main()
+//{
+//    // Создаем объект с динамически выделенным Fraction с numerator = 7 и denominator = 9
+//    auto f1 = std::make_unique<Fraction>(7, 9);
+//    std::cout << *f1 << '\n';
+//    int n = 5 + 4;
+//    // Создаем объект с динамически выделенным массивом Fraction длиной 5.
+//    // Используем автоматическое определение типа данных с помощью ключевого слова auto
+//    auto f2 = std::make_unique<Fraction[]>(n);
+//    
+//    std::unique_ptr<Fraction[]> item(new Fraction[n]);
+//    
+//    //*f2;
+//
+//    return 0;
+//}
+
+
+
+// Возврат умного указателя std::unique_ptr из функции по значениею
+//std::unique_ptr<Item> createItem()
+//{
+//    //dfg
+//    return std::make_unique<Item>();
+//}
+//
+//int main()
+//{
+//    std::unique_ptr<Item> ptr = createItem();
+//
+//    // Делаем что-либо
+//
+//    return 0;
+//}
+
+// Передача умного указателя std::unique_ptr в функцию
+// по значению
+//#include <iostream>
+//#include <memory> // для std::unique_ptr
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//    friend std::ostream& operator<<(std::ostream& out, const Item& item)
+//    {
+//        out << "I am an Item!\n";
+//        return out;
+//    }
+//};
+//
+//void takeOwnership(std::unique_ptr<Item> item)
+//{
+//    if (item)
+//        std::cout << *item;
+//} // Item уничтожается здесь
+//
+//int main()
+//{
+//    auto ptr = std::make_unique<Item>();
+//
+//    //    takeOwnership(ptr); // это не скомпилируется. Мы должны использовать семантику перемещения
+//    takeOwnership(std::move(ptr)); // используем семантику перемещения
+//
+//    std::cout << "Ending program\n";
+//
+//    return 0;
+//}
+
+//по адресу
+//#include <iostream>
+//#include <memory> // для std::unique_ptr
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//
+//    friend std::ostream& operator<<(std::ostream& out, const Item& item)
+//    {
+//        out << "I am an Item!\n";
+//        return out;
+//    }
+//};
+//
+//// Эта функция использует только Item, поэтому мы передаем указатель на Item, а не ссылку на весь std::unique_ptr<Item>
+//void useItem(Item* item)
+//{
+//    if (item)
+//        std::cout << *item;
+//}
+//
+//int main()
+//{
+//    std::unique_ptr<Item> ptr(new Item);
+//    //auto ptr = std::make_unique<Item>();
+//
+//    useItem(ptr.get()); // примечание: Метод get() используется для получения указателя на Item
+//
+//    std::cout << "Ending program\n";
+//
+//    return 0;
+//} // Item уничтожается здесь
+
+
+
+////shared_ptr
+//#include <iostream>
+//#include <memory> // для std::shared_ptr
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//};
+//
+//int main()
+//{
+//    Item* item = new Item;
+//    std::shared_ptr<Item> ptr1(item);
+//    {
+//        std::shared_ptr<Item> ptr2(item /*ptr1*/); // создаем ptr2 напрямую из item (вместо ptr1)
+//
+//        std::cout << "Killing one shared pointer\n";
+//    } // ptr2 выходит из области видимости здесь, и выделенный Item уничтожается также здесь
+//
+//    std::cout << "Killing another shared pointer\n";
+//
+//    return 0;
+//} // ptr1 выходит из области видимости здесь, и уже удаленный Item опять уничтожается здесь
+
+// make_shared
+//#include <iostream>
+//#include <memory> // для std::shared_ptr
+//
+//class Item
+//{
+//public:
+//    Item() { std::cout << "Item acquired\n"; }
+//    ~Item() { std::cout << "Item destroyed\n"; }
+//};
+//
+//int main()
+//{
+//    // Выделяем Item и передаем его в std::shared_ptr
+//    auto ptr1 = std::make_shared<Item>();
+//    {
+//        auto ptr2 = ptr1; // создаем ptr2 из ptr1, используя семантику копирования
+//
+//        std::cout << "Killing one shared pointer\n";
+//    } // ptr2 выходит из области видимости здесь, но ничего больше не происходит
+//
+//    std::cout << "Killing another shared pointer\n";
+//
+//    return 0;
+//} // ptr1 выходит из области видимости здесь, и выделенный Item также уничтожается здесь
+
+
+// реализация shared_ptr
+#include <iostream>
+
+template<typename T>
+class SharedPtr {
+public:
+    // Конструкторы и деструктор
+    explicit SharedPtr(T* ptr = nullptr) : ptr_(ptr), ref_count_(new size_t(1)) {}
+    SharedPtr(const SharedPtr<T>& other) : ptr_(other.ptr_), ref_count_(other.ref_count_) {
+        ++(*ref_count_);
+    }
+    ~SharedPtr() {
+        if (--(*ref_count_) == 0) {
+            delete ptr_;
+            delete ref_count_;
+        }
+    }
+
+    // Операторы
+    SharedPtr<T>& operator=(const SharedPtr<T>& other) {
+        if (this != &other) {
+            ptr_ = other.ptr_;
+            ref_count_ = other.ref_count_;
+            ++(*ref_count_);
+        }
+        return *this;
+    }
+
+    // Оператор разыменования
+    T& operator*() const { return *ptr_; }
+
+    // Оператор доступа к членам
+    T* operator->() const { return ptr_; }
+
+    // Методы
+    size_t use_count() const { return *ref_count_; }
+
+private:
+    T* ptr_;
+    size_t* ref_count_;
+};
+
+// Пример использования
+int main() {
+    SharedPtr<int> ptr1(new int(42));
+    {
+        SharedPtr<int> ptr2 = ptr1; // Копирующее присваивание
+        std::cout << "Value: " << *ptr2 << std::endl;
+        std::cout << "Use count: " << ptr2.use_count() << std::endl;
+    }
+    std::cout << "Value: " << *ptr1 << std::endl;
+    std::cout << "Use count: " << ptr1.use_count() << std::endl;
+    return 0;
+}
+
+
+
+
+//проюлема weak_ptr
+//#include <iostream>
+//#include <memory> // для std::shared_ptr
+//#include <string>
+//
+//class Human
+//{
+//    std::string m_name;
+//    std::shared_ptr<Human> m_partner; // изначально пустой
+//
+//public:
+//
+//    Human(const std::string& name) : m_name(name)
+//    {
+//        std::cout << m_name << " created\n";
+//    }
+//    ~Human()
+//    {
+//        std::cout << m_name << " destroyed\n";
+//    }
+//
+//    friend bool partnerUp(std::shared_ptr<Human>& h1, std::shared_ptr<Human>& h2)
+//    {
+//        if (!h1 || !h2)
+//            return false;
+//
+//        h1->m_partner = h2;
+//        h2->m_partner = h1;
+//
+//        std::cout << h1->m_name << " is now partnered with " << h2->m_name << "\n";
+//
+//        return true;
+//    }
+//};
+//
+//int main()
+//{
+//    auto anton = std::make_shared<Human>("Anton"); // создание умного указателя с объектом Anton класса Human
+//    auto ivan = std::make_shared<Human>("Ivan"); // создание умного указателя с объектом Ivan класса Human
+//
+//    partnerUp(anton, ivan); // Anton указывает на Ivan-а, а Ivan указывает на Anton-а
+//
+//    return 0;
+//}
+
+
+//#include <iostream>
+//#include <memory> // для std::shared_ptr и std::weak_ptr
+//#include <string>
+
+//class Human
+//{
+//    std::string m_name;
+//    std::weak_ptr<Human> m_partner; // обратите внимание, здесь std::weak_ptr
+//
+//public:
+//
+//    Human(const std::string& name) : m_name(name)
+//    {
+//        std::cout << m_name << " created\n";
+//    }
+//    ~Human()
+//    {
+//        std::cout << m_name << " destroyed\n";
+//    }
+//
+//    friend bool partnerUp(std::shared_ptr<Human>& h1, std::shared_ptr<Human>& h2)
+//    {
+//        if (!h1 || !h2)
+//            return false;
+//
+//        h1->m_partner = h2;
+//        h2->m_partner = h1;
+//
+//        std::cout << h1->m_name << " is now partnered with " << h2->m_name << "\n";
+//
+//        return true;
+//    }
+//
+//    const std::shared_ptr<Human> getPartner() const { return m_partner.lock(); } // используем метод lock() для конвертации std::weak_ptr в std::shared_ptr
+//    const std::string& getName() const { return m_name; }
+//};
+//
+//int main()
+//{
+//    auto anton = std::make_shared<Human>("Anton");
+//    auto ivan = std::make_shared<Human>("Ivan");
+//
+//    partnerUp(anton, ivan);
+//
+//    //auto partner = ivan->getPartner(); // передаем partner-у содержимое умного указателя, которым владеет ivan
+//    //std::cout << ivan->getName() << "'s partner is: " << partner->getName() << '\n';
+//
+//    return 0;
+//}

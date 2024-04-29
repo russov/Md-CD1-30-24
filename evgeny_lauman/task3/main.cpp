@@ -33,9 +33,9 @@ void deleteArray(int** arr, int N)
 {
 	for (int i = 0; i < N; i++)
 	{
-		delete arr[i];
+		delete[] arr[i];
 	}
-	delete arr;
+	delete[] arr;
 }
 
 void printArray(int** arr, int N)
@@ -72,7 +72,7 @@ void replaceArrRows(int** arr, int num_replacement_row, int num_row_to_replace =
 	arr[num_replacement_row] = buf_arr;
 }
 
-void checkScopesInCppFile(std::string filename)
+void checkScopesInCppFile(const std::string filename)
 {
 	std::ifstream fin;
 	int left_counter = 0;

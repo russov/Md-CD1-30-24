@@ -54,9 +54,11 @@ TEST(StringTests, testFind) {
     
     EXPECT_EQ(s0.find('t'), 0);
     EXPECT_EQ(s0.find('t', 1), 3);
+    EXPECT_EQ(s0.find('z'), std::string::npos);
 
     EXPECT_EQ(s0.find("string"), 5);
     EXPECT_EQ(s0.find("string", 15), 28);
+    EXPECT_EQ(s0.find("strng"), std::string::npos);
 }
 
 TEST(StringTests, testResize) {

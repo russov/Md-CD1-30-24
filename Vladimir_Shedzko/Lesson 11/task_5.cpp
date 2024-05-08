@@ -52,13 +52,13 @@ TEST(StringTests, testSize) {
 TEST(StringTests, testFind) {
     auto s0 = std::string("test string in C is still a string");
     
-    EXPECT_EQ(s0.find('t'), 0);
-    EXPECT_EQ(s0.find('t', 1), 3);
-    EXPECT_EQ(s0.find('z'), std::string::npos);
+    EXPECT_EQ(s0.find('t'), 0); // find a character
+    EXPECT_EQ(s0.find('t', 1), 3); // find a character from pos
+    EXPECT_EQ(s0.find('z'), std::string::npos); // find a non-existent character
 
-    EXPECT_EQ(s0.find("string"), 5);
-    EXPECT_EQ(s0.find("string", 15), 28);
-    EXPECT_EQ(s0.find("strng"), std::string::npos);
+    EXPECT_EQ(s0.find("string"), 5); // find a const string
+    EXPECT_EQ(s0.find("string", 15), 28); // find a const string from pos
+    EXPECT_EQ(s0.find("strng"), std::string::npos); // find a non-existent const string
 }
 
 TEST(StringTests, testResize) {
@@ -66,10 +66,11 @@ TEST(StringTests, testResize) {
     s0.resize(18);
     EXPECT_EQ(s0, "Resize test string");
 
-    std::string s1a {"Resize test string in C"};
+    std::string s1a {"Resize test string in C"}; // resize with defined const char
     s1a.resize(25, '+');
     EXPECT_EQ(s1a, "Resize test string in C++");
-    std::string s1b {"Resize test string in C"};
+    
+    std::string s1b {"Resize test string in C"}; // resize with char code
     s1b.resize(25, 112);
     EXPECT_EQ(s1b, "Resize test string in Cpp");
 }
@@ -79,6 +80,7 @@ TEST(StringTests, testPopBack) {
     
     s0.pop_back();
     s0.pop_back();
+
     EXPECT_EQ(s0, "test string in C");
 }
 

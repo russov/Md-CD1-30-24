@@ -3,10 +3,14 @@
 #include <cstdlib>
 #include <fstream>
 #include <chrono>
+#include <stack>
 
 void ArrayManipulation();
 
 void CheckBracketInFile();
+
+bool IsCorrect (std::string &s);
+
   
 int main(){
 
@@ -29,15 +33,16 @@ void ArrayManipulation(){
     std::cout << "b = ";
     std::cin >> b;
     
+    const int MaxSize = 10;
     int arr[10][10];
-    for(int i=0; i<10; ++i){
-        for(int j=0; j<10; ++j){
+    for(int i=0; i<MaxSize; ++i){
+        for(int j=0; j<MaxSize; ++j){
             arr[i][j] = a + rand()%(b-a+1);
         }                
     }
     std::cout << "Array: \n";
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
+    for (int i = 0; i < MaxSize; ++i) {
+        for (int j = 0; j < MaxSize; ++j) {
             std::cout << arr[i][j] << " ";
         }
         std::cout << "\n";
@@ -45,8 +50,8 @@ void ArrayManipulation(){
 
      int min = arr[0][0];
      int index = 0;
-     for(int i=0; i<10; ++i){
-        for(int j=0; j<10; ++j){
+     for(int i=0; i<MaxSize; ++i){
+        for(int j=0; j<MaxSize; ++j){
             if(min > arr[i][j]){
                 min = arr[i][j];
                 index = i;
@@ -63,64 +68,97 @@ void ArrayManipulation(){
         std::cout << "Replacing the first line with the line where the minimum value is found: \n";
 
         int changer = 0;
-        for(int j=0; j<10; ++j){
+        for(int j=0; j<MaxSize; ++j){
             changer = arr[index][j];
             arr[index][j] = arr[0][j];
             arr[0][j] = changer;
         }
-        for(int i=0; i<10; ++i){
-            for(int j=0; j<10; ++j){
+        for(int i=0; i<MaxSize; ++i){
+            for(int j=0; j<MaxSize; ++j){
                 std::cout << arr[i][j] << " ";
             }
             std::cout << "\n";
         }
-    return;
 
+        return;
     }
-
 }
+
 
 void CheckBracketInFile(){
 
-    std::ifstream file("numbers.cpp");
+    std::ifstream file("for_check.txt");
         if(!file){
-            std::cout << "File can't be opened";
+            std::cout << "File can't be opened/n";
         }
 
-    std::string s;
-    getline(file, s, '\0');
-    int counter = 0;
-    int len = s.length();
-    for(int i=0; i<len; ++i){
-        if(s[i] == '{'){
-            counter++;
-        }
-        else if(s[i] == '}') {
-            counter--;
-        }
-   }
+        std::string s;
+        getline(file, s, '\0');
+        int counter = 0;
+
+    file.close();
 
     std::ofstream outf("out.txt", std::ios::app);
     if(!outf){
-        std::cout << "File can't be opened";
+        std::cout << "File can't be opened/n";
     }
     
     auto now = std::chrono::system_clock::now();
-    std::time_t end_time = std::chrono::system_clock::to_time_t(now); 
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now); 
+    std::tm* local_now = std::localtime(&now_time);
 
-    if(counter == 0){
-        outf << "All brackets were open and closed. " << "Date and time of file check: " << std::ctime(&end_time);
-        std::cout << "All brackets were open and closed. " << "Date and time of file check: " << std::ctime(&end_time);
-    }
-    else if (counter < 0){
-        outf << "There are more open '{' brackets than closed '}' ones. " << "Date and time of file check: " << std::ctime(&end_time);
-        std::cout << "There are more open '{' brackets than closed '}' ones. " << "Date and time of file check: " << std::ctime(&end_time);
+
+   if (IsCorrect(s)){
+        outf << "All brackets were open and closed. " << "Date and time of file check: " << (local_now->tm_year + 1900) << '-'
+                                                                                         << (local_now->tm_mon + 1) << '-'
+                                                                                         << local_now->tm_mday << ' '
+                                                                                         << local_now->tm_hour << ':'
+                                                                                         << local_now->tm_min << ':'
+                                                                                         << local_now->tm_sec << std::endl;
+        std::cout << "All brackets were open and closed. " << "Date and time of file check: " << (local_now->tm_year + 1900) << '-'
+                                                                                              << (local_now->tm_mon + 1) << '-'
+                                                                                              << local_now->tm_mday << ' '
+                                                                                              << local_now->tm_hour << ':'
+                                                                                              << local_now->tm_min << ':'
+                                                                                              << local_now->tm_sec << std::endl;
     }
     else {
-        outf << "There are more closed '}' brackets than open '{' ones. " << "Date and time of file check: " << std::ctime(&end_time);
-        std::cout << "There are more closed '}' brackets than open '{' ones. " << "Date and time of file check: " << std::ctime(&end_time);
+        outf << "Error. Not all brackets are placed correctly. " << "Date and time of file check: " << (local_now->tm_year + 1900) << '-'
+                                                                                                             << (local_now->tm_mon + 1) << '-'
+                                                                                                             << local_now->tm_mday << ' '
+                                                                                                             << local_now->tm_hour << ':'
+                                                                                                             << local_now->tm_min << ':'
+                                                                                                             << local_now->tm_sec << std::endl;;
+        std::cerr << "Error. Not all brackets are placed correctly. " << "Date and time of file check: " << (local_now->tm_year + 1900) << '-'
+                                                                                                                  << (local_now->tm_mon + 1) << '-'
+                                                                                                                  << local_now->tm_mday << ' '
+                                                                                                                  << local_now->tm_hour << ':'
+                                                                                                                  << local_now->tm_min << ':'
+                                                                                                                  << local_now->tm_sec << std::endl;
     }
+
     outf.close();
     
     return;
+}
+
+
+bool IsCorrect (std::string &s){
+    
+    std::stack<char> container;
+
+    for (char bracket : s) {
+        if (bracket == '{') {
+            container.push(bracket); 
+        }
+    
+        else if(bracket == '}') {
+            if (container.empty()){
+                return false;
+            }
+            container.pop();
+        }
+    }
+
+    return container.empty();
 }

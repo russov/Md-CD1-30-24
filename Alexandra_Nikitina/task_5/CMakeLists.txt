@@ -44,7 +44,8 @@ macro(package_add_test_with_libraries TESTNAME FILES LIBRARIES TEST_WORKING_DIRE
     set_target_properties(${TESTNAME} PROPERTIES FOLDER tests)
 endmacro()
 
-add_executable(nikitina_task_5 nikitina_task_5.cpp) # add test executable
+add_executable(nikitina_task_5 nikitina_task_5.cpp NewString.cpp)
+
 
 target_link_libraries(
     nikitina_task_5
@@ -52,4 +53,4 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-gtest_discover_tests(nikitina_task_5) # discovers tests by asking the compiled test executable to enumerate its tests
+gtest_discover_tests(nikitina_task_5)

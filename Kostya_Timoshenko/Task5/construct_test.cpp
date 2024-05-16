@@ -1,25 +1,29 @@
 #include "pch.h"
+#include "MyClass.h"
 
 // construct
 // Testing the default constructor (Empty line)
 TEST(ConstructorStringTest, DefaultString) {
     EXPECT_NO_THROW({
-        std::string EmptyString;
+        MyClass EmptyString;
+        EXPECT_EQ(0, EmptyString.size());
         });
 }
 
 // Testing a constructor that accepts a c-string
 TEST(ConstructorStringTest, BigString) {
     EXPECT_NO_THROW({
-        std::string FilledString("Task!");
+        MyClass FilledString ("Task!");
+        EXPECT_EQ(5, FilledString.size());
         });
 }
 
 // Testing a copy constructor
 TEST(ConstructorStringTest, CopyString) {
-    std::string OriginalString = "Task";
+    MyClass OriginalString ("Task");
     EXPECT_NO_THROW({
-        std::string CopyString(OriginalString);
+        MyClass CopyString(OriginalString);
+        EXPECT_EQ("Task", CopyString);
         });
 }
 
@@ -27,35 +31,36 @@ TEST(ConstructorStringTest, CopyString) {
 TEST(ConstructorStringTest, RepeatSymbolString) {
     char SingleChar = 't';
     EXPECT_NO_THROW({
-        std::string MoreSymbolString(4 ,SingleChar);
+        MyClass MoreSymbolString(SingleChar, 4);
+        EXPECT_EQ("tttt", MoreSymbolString);
         });
 }
 
 // Testing the constructor, creates a substring from a string, at the specified index and length
 TEST(ConstructorStringTest, SubString) {
-    std::string OriginalString("TaskToday");
+    MyClass OriginalString("TaskToday");
     EXPECT_NO_THROW({
-        std::string NewString(OriginalString, 1, 5);
-    // Checking that a substring matches the expected result
-    EXPECT_EQ("askTo", NewString);
+        MyClass NewString(OriginalString, 1, 5);
+        // Checking that a substring matches the expected result
+        EXPECT_EQ("askTo", NewString);
         });
 }
 
 // Testing the constructor, creates a string from a buffer
 TEST(ConstructorStringTest, BufferInString) {
-    const char* Buffer = "Tough task!";
+    const char* Buffer ("Tough task!");
     EXPECT_NO_THROW({
-        std::string OriginalString(Buffer, 5);
-    // Checking that a string matches the expected result
-    EXPECT_EQ("Tough", OriginalString);
+        MyClass OriginalString(Buffer, 5);
+        // Checking that a string matches the expected result
+        EXPECT_EQ("Tough", OriginalString);
         });
 }
 
 // Testing the move constructor, moves data from one string to another
 TEST(ConstructorStringTest, MoveDataInString) {
-    std::string OriginalString = "Tough task!";
+    MyClass OriginalString ("Tough task!");
     EXPECT_NO_THROW({
-        std::string NewString(std::move(OriginalString));
+        MyClass NewString(std::move(OriginalString));
         EXPECT_TRUE(OriginalString.empty());
         EXPECT_EQ("Tough task!", NewString);
         });
@@ -63,9 +68,9 @@ TEST(ConstructorStringTest, MoveDataInString) {
 
 // Testing a constructor with an iterator range that copies characters from an iterator range
 TEST(ConstructorStringTest, RangeString) {
-    std::string OriginalString = "Tough task!";
+    MyClass OriginalString ("Tough task!");
     EXPECT_NO_THROW({
-        std::string NewString(OriginalString.begin(), OriginalString.end());
+        MyClass NewString(OriginalString.begin(), OriginalString.end());
         EXPECT_EQ(OriginalString, NewString);
         });
 }
@@ -74,7 +79,7 @@ TEST(ConstructorStringTest, RangeString) {
 TEST(ConstructorStringTest, InitializerListString) {
     std::initializer_list<char> OriginList = { 'T', 'a', 's', 'k' };
     EXPECT_NO_THROW({
-        std::string OriginString(OriginList);
+        MyClass OriginString(OriginList);
         EXPECT_EQ("Task", OriginString);
         });
 }

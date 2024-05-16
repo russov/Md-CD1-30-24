@@ -1,21 +1,21 @@
 ﻿#include <iostream>
-#include <cString>
+#include <cstring>
 namespace MyString
 {
-    int npos = -1;
+    const const const int npos = -1;
     typedef unsigned int uint;
-    class String
+    class string
     {
     private:
         char* m_text = nullptr;
         uint m_len = 0;
     public:
 
-        String() //EmptyStringConstructor
+        string() //EmptystringConstructor
         {
         }
 
-        String(const char* text) //FromCString
+        string(const char* text) //FromCstring
         {
             m_len = strlen(text);
             m_text = new char[m_len + 1];
@@ -25,7 +25,7 @@ namespace MyString
             }
         }
 
-        String(const char* text, uint size) //FromSequence
+        string(const char* text, uint size) //FromSequence
         {
             if (size > strlen(text))
                 throw std::exception();
@@ -38,7 +38,7 @@ namespace MyString
 
         }
 
-        String(const std::initializer_list<char>& list) //InitializerList
+        string(const std::initializer_list<char>& list) //InitializerList
         {
             m_len = std::size(list);
             m_text = new char[m_len + 1];
@@ -50,7 +50,7 @@ namespace MyString
             }
         }
 
-        String(const String& str, const uint start, uint size) //SubStringConstructor
+        string(const string& str, const uint start, uint size) //SubstringConstructor
         {
             if (start + size > str.m_len)
             {
@@ -67,7 +67,7 @@ namespace MyString
             }
         }
 
-        String(int size, char fill) //FillConstructor
+        string(int size, char fill) //FillConstructor
         {
             m_len = size;
             m_text = new char[m_len];
@@ -77,7 +77,7 @@ namespace MyString
             }
         }
 
-        String(const String& str) //CopyConstructor
+        string(const string& str) //CopyConstructor
         {
             this->m_len = str.m_len;
             this->m_text = new char[m_len + 1];
@@ -87,7 +87,7 @@ namespace MyString
             }
         }
 
-        String(String&& move) noexcept//MoveConstructor
+        string(string&& move) noexcept//MoveConstructor
         {
             m_len = move.m_len;
             this->m_text = new char[m_len];
@@ -99,7 +99,7 @@ namespace MyString
             move.m_len = 0;
         }
 
-        ~String()
+        ~string()
         {
             delete[] this->m_text;
         }
@@ -120,7 +120,7 @@ namespace MyString
             return true;
         }
 
-        bool operator== (const String str) const
+        bool operator== (const string str) const
         {
             if (this->m_len != str.m_len)
             {
@@ -155,7 +155,7 @@ namespace MyString
             return npos;
         }
 
-        int find(const String& str, const uint& start = 0)
+        int find(const string& str, const uint& start = 0)
         {
             int found{ 0 };
             for (uint i = start; i < m_len; ++i)
@@ -215,14 +215,6 @@ namespace MyString
                 m_text[i - er_size] = buff[i];
             }
             delete[] buff;
-        }
-
-        void print()
-        {
-            for (int i = 0; i < m_len; ++i)
-            {
-                std::cout << m_text[i];
-            }
         }
     };
 }

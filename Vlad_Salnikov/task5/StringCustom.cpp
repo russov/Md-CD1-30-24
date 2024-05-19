@@ -15,7 +15,8 @@ StringCustom::~StringCustom()
 StringCustom::StringCustom(const StringCustom& str)
 {
 	this->setSizeStringCustom(str.getSizeStringCustom());
-	this->s = new char[this->getSizeStringCustom()];
+	this->arrayDelete();
+	this->s = new char[this->getSizeStringCustom() + 1];
 	for (auto i = 0; i < this->getSizeStringCustom(); i++)
 	{
 		this->s[i] = str.getCharStringCustom(i);
@@ -46,6 +47,9 @@ StringCustom::StringCustom(const char* cstr)
 		++cstrsize;
 	}
 	setSizeStringCustom(cstrsize + 1);
+
+	this->arrayDelete();
+	this->s = new char[this->getSizeStringCustom()] {'\0'};
 	for (int i = 0; i < strsize; i++)
 	{
 		this->s[i] = cstr[i];
@@ -94,6 +98,10 @@ StringCustom::StringCustom(StringCustom&& str) noexcept
 
 char StringCustom::getCharStringCustom(int num) const
 {
+	if (num > this->getSizeStringCustom())
+	{
+		return this->s[this->getSizeStringCustom() - 1];
+	}
 	return s[num];
 }
 
@@ -174,4 +182,10 @@ int StringCustom::StringCustomFind(char c)
 	}
 	std::cout << "not found" << std::endl;
 	return 0;
+}
+
+void StringCustom::arrayDelete()
+{
+	delete[] s;
+	s = nullptr;
 }

@@ -21,6 +21,7 @@ public:
 	void StringCustomClear();
 	int StringCustomLength();
 	int fastCountCstr(const char* cstr) const;
+	void arrayDelete();
 
 
 	friend bool operator==(const StringCustom& str1, const StringCustom& str2)

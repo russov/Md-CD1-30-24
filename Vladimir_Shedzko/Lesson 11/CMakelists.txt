@@ -1,7 +1,7 @@
 # # version 3.15 or later of CMake is needed
 cmake_minimum_required(VERSION 3.15)
 
-project(Lesson11)
+project(Lesson11 VERSION 1.0.1 DESCRIPTION "string testing")
 
 include(GoogleTest)
 include(CTest)
@@ -45,7 +45,12 @@ macro(package_add_test_with_libraries TESTNAME FILES LIBRARIES TEST_WORKING_DIRE
     set_target_properties(${TESTNAME} PROPERTIES FOLDER tests)
 endmacro()
 
-add_executable(task_5 task_5.cpp) # add test executable
+#Include headers
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+add_executable(task_5 src/task_5.cpp) # add test executable
 
 target_link_libraries(
     task_5
@@ -54,3 +59,48 @@ target_link_libraries(
 
 include(GoogleTest)
 gtest_discover_tests(task_5) # discovers tests by asking the compiled test executable to enumerate its tests
+
+
+# Custom string tests
+
+
+add_library(customString STATIC)
+
+target_sources(customString
+    PRIVATE
+        src/customString.cpp
+)
+# without it public headers won't get installed
+set(public_headers
+    include/customString.h
+)
+
+target_include_directories(customString
+    PRIVATE
+        # where the library itself will look for its internal headers
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+    PUBLIC
+        # where top-level project will look for the library's public headers
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # where external projects will look for the library's public headers
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+# note that ${public_headers} has to be in quotes
+set_target_properties(customString PROPERTIES PUBLIC_HEADER "${public_headers}")
+
+
+set_target_properties(customString PROPERTIES VERSION ${PROJECT_VERSION})
+
+target_include_directories(customString PRIVATE .)
+
+add_executable(customStringTest src/customStringTest.cpp) # add test executable for custom string
+
+target_link_libraries(
+    customStringTest
+
+    customString
+    GTest::gtest_main
+)
+
+gtest_discover_tests(customStringTest) 

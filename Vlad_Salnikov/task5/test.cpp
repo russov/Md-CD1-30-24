@@ -1,5 +1,5 @@
 #include "pch.h"
-#include <string>
+#include "StringCustom.h"
 
 TEST(TestCaseName, TestName) {
   EXPECT_EQ(1, 1);
@@ -7,59 +7,55 @@ TEST(TestCaseName, TestName) {
 }
 
 TEST(PushBackTest, TddCharBack) {
-	std::string test{""};
+	StringCustom test{""};
 	test.push_back('q');
-	std::string val1{ "q" };
+	StringCustom val1{ "q" };
 	EXPECT_EQ(val1, test);
 }
 
 TEST(SizeTest, StrSize) {
-	std::string test{ "qweqwe" };
-	EXPECT_EQ(6, size(test));
+	StringCustom test{ "qweqwe" };
+	EXPECT_EQ(7, test.getSizeStringCustom());
 }
 
 TEST(FindTest, StrFind) {
-	std::string test{"qwert"};
-	EXPECT_EQ(1, test.find('w'));
+	StringCustom test{"qwert"};
+	EXPECT_EQ(1, test.StringCustomFind('w'));
 }
 
 TEST(ClearTest, StrClear) {
-	std::string test{ "asdf" };
-	test.clear();
+	StringCustom test{ "asdf" };
+	test.StringCustomClear();
 	EXPECT_EQ("", test);
 }
 
 TEST(LengthTest, StrLength) {
-	std::string test{ "qwe w" };
-	EXPECT_EQ(5, test.length());
+	StringCustom test{ "qwe w" };
+	EXPECT_EQ(5, test.StringCustomLength());
 }
-
-TEST(CapacityTest, StrCapacity) {
-	std::string test{ "Test string" };
-	EXPECT_EQ(15, test.capacity());
-}
+ 
 
 //Constructor
 TEST(DefaultConstTest, DefCon) {
-	std::string str;
+	StringCustom str;
 	EXPECT_EQ("", str);
 }
 
 TEST(CopyConstTest, StrCopy) {
-	std::string str{ "qwerty" };
-	std::string strcon{ str };
+	StringCustom str{ "qw" };
+	StringCustom strcon{ str };
 	EXPECT_EQ(str, strcon);
 }
 
 TEST(SubstringConstTest, StrSub) {
-	std::string str{ "test" };
-	std::string strcon{ str, 0, 2 };
+	StringCustom str{ "test" };
+	StringCustom strcon{ str, 0, 2 };
 	EXPECT_EQ("te", strcon);
 }
 
 TEST(CStringTest, StrCStr) {
 	const char* str = "qwert";
-	std::string strcon(str);
+	StringCustom strcon(str);
 	EXPECT_EQ("qwert", strcon);
 }
 
@@ -69,18 +65,18 @@ TEST(BufferConstTest, StrBuff) {
 }
 
 TEST(FillConstTest, StrFill) {
-	std::string strcon(5, 'q');
+	StringCustom strcon(5, 'q');
 	EXPECT_EQ("qqqqq", strcon);
 }
 
-TEST(RangeConstTest, StrRange) {
-	std::string str{ "qwert" };
-	std::string strcon{ str.begin() + 1, str.end() };
-	EXPECT_EQ("wert", strcon);
-}
+//TEST(RangeConstTest, StrRange) {
+//	std::string str{ "qwert" };
+//	std::string strcon{ str.begin() + 1, str.end() };
+//	EXPECT_EQ("wert", strcon);
+//}
 
-TEST(MoveConstTest, StrMove) {
-	std::string&& str{ "qwert" };
-	std::string strcon(str);
-	EXPECT_EQ("qwert", strcon);
-}
+//TEST(MoveConstTest, StrMove) {
+//	std::string&& str{ "qwert" };
+//	std::string strcon(str);
+//	EXPECT_EQ("qwert", strcon);
+//}

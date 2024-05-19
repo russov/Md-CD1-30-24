@@ -31,37 +31,41 @@ std::map<int, int> deck = {
 
 int drawCard(){
     
-    int card = std::rand()%(card_max - card_min + 1) + card_min;
-    while(deck[card] == 0){
+    int card;
+    do {
         card = rand()%(card_max - card_min + 1) + card_min;
-    }
+    } while(deck[card] == 0);
     deck[card] -= 1;
     return card;
 }
 
 void showCards(std::stack<int> *cards, int amount){
-    while (cards->size()){
+    while (cards->size()) {
         std::cout << cards->top() << ' ';
         cards->pop();
     }
     std::cout << std::endl;
     std::cout << "Total amount: " << amount;
-    if (amount > 21){
+    if (amount > game_max) {
         std::cout << " - Overdrawn.";
     }
-    else if (amount == 21){
+    else if (amount == game_max) {
         std::cout << " - Blackjack.";
     }
     std::cout << std::endl;
 }
 
 bool checkForEnd(int *curS, int lastI, int cardCount){
-    if (cardCount >= hand_max)
+    if (cardCount >= hand_max) {
         return true;
-    if (*curS == game_max + 1 && lastI == card_max)
+    }
+    if (*curS == game_max + 1 && lastI == card_max) {
         *curS = game_max;
-    if (*curS >= game_max)
+    }
+    if (*curS >= game_max) {
         return true;
+    }
+        
     return false;
 }
 
@@ -71,27 +75,27 @@ int main() {
     std::srand(std::time(nullptr));
     std::cout << "Game starts" << std::endl;
     // Dealer init
-    std::stack<int> dealer_cards;
-    int dealer_last = drawCard();
-    int dealer_sum = dealer_last;
-    int dealer_cnt = 1;
+    std::stack<int> dealer_cards {};
+    auto dealer_last = drawCard();
+    auto dealer_sum = dealer_last;
+    auto dealer_cnt = 1;
     dealer_cards.push(dealer_last);
     // Player init
-    std::stack<int> player_cards;
-    int player_cnt = 2;
-    int player_sum = drawCard();
-    int player_last = drawCard();
+    std::stack<int> player_cards {};
+    auto player_cnt = 2;
+    auto player_sum = drawCard();
+    auto player_last = drawCard();
     player_cards.push(player_sum);
     player_cards.push(player_last);
     std::cout << "Dealer points: " << dealer_last << std::endl;
     std::cout << "Your points: " << player_sum << " " << player_last << std::endl;
     player_sum += player_last;
     char curchar;
-    bool player_end;
     while (true) {
-        player_end = checkForEnd(&player_sum, player_last, player_cnt);
-        if (player_end)
+        const auto player_end = checkForEnd(&player_sum, player_last, player_cnt);
+        if (player_end) {
             break;
+        }
         std::cout << "Press \'h\' to hit. Press \'s\' to stand" << std::endl;
         std::cin >> curchar;
         if (curchar == 'h' || curchar == 'H'){
@@ -101,19 +105,21 @@ int main() {
             player_cnt++;
             std::cout << "Current value: " << player_last << std::endl;
         }
-        else if (curchar == 's' || curchar == 'S'){
+        else if (curchar == 's' || curchar == 'S') {
             break;
         }
-        else
+        else {
             std::cout << "Wrong input: " << curchar << std::endl;
+        }
     }
     while (dealer_sum < dealer_max && dealer_cnt < hand_max){
         dealer_last = drawCard();
         dealer_sum += dealer_last;
         dealer_cards.push(dealer_last);
         dealer_cnt++;
-        if (checkForEnd(&dealer_sum, dealer_last, dealer_cnt))
+        if (checkForEnd(&dealer_sum, dealer_last, dealer_cnt)) {
             break;
+        }
     }
     std::cout << "Game over" << std::endl;
     std::cout << "Your cards: ";

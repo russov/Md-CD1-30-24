@@ -7,7 +7,7 @@ using namespace std;
 
 double getRandomCard(vector<double>& cards) {
 
-	double card = cards[rand() % cards.size()];
+	auto card = cards[rand() % cards.size()];
 
 	for (int y = 0; y < cards.size(); y++)
 	{
@@ -21,28 +21,43 @@ double getRandomCard(vector<double>& cards) {
 }
 
 string getAnimationCard(double card) {
-	if (card == 10.1) return "J";
-	else if (card == 10.2) return "Q";
-	else if (card == 10.3) return "K";
-	else if (card == 11) return "A";
-	else if (card <= 10) return to_string(int(card));
+
+	double j = 10.1;
+	double q = 10.2;
+	double k = 10.3;
+	double a = 11.0;
+
+	int cardDig = 10;
+
+ if (fabs(card - j) <= fmax(fabs(card), fabs(j))*DBL_EPSILON) return "J";
+ else if (fabs(card - q) <= fmax(fabs(card), fabs(q)) * DBL_EPSILON) return "Q";
+ else if (fabs(card - k) <= fmax(fabs(card), fabs(k)) * DBL_EPSILON) return "K";
+ else if (fabs(card - a) <= fmax(fabs(card), fabs(a)) * DBL_EPSILON) return "A";
+ else if (int(card) <= 10) return to_string(int(card));
 }
 
-void getWin(string person, double rezDealer, double rezPlayer) {
+void getWin(string person, int rezDealer, int rezPlayer) {
 	cout << "The " << person << " Win :" << endl;
-	cout << "Dealer : " + to_string(int(rezDealer)) + " points" << endl;
-	cout << "Player : " + to_string(int(rezPlayer)) + " points" << endl;
+	cout << "Dealer : " + to_string(rezDealer) + " points" << endl;
+	cout << "Player : " + to_string(rezPlayer) + " points" << endl;
 }
 
-void getDraw(double rezDealer, double rezPlayer) {
+void getDraw(int rezDealer, int rezPlayer) {
 	cout << "A Draw!" << endl;
-	cout << "Dealer : " + to_string(int(rezDealer)) + " points" << endl;
-	cout << "Player : " + to_string(int(rezPlayer)) + " points" << endl;
+	cout << "Dealer : " + to_string(rezDealer) + " points" << endl;
+	cout << "Player : " + to_string(rezPlayer) + " points" << endl;
 }
 
 
 void main() {
-	srand(time(0));
+	srand((unsigned int)time(NULL));
+
+	const int checkHit = 1;
+	const int checkPick = 2;
+	const int dealerMaxPoint = 17;
+	const int blackJackAA = 22;
+	const int blackJack21=  21;
+	
 
 	vector<double>cards =
 	{
@@ -61,15 +76,15 @@ void main() {
 		11,11,11,11
 	};
 
-	double firstCardDealer = getRandomCard(cards);
-	double secondCardDealer = getRandomCard(cards);
+	const double firstCardDealer = getRandomCard(cards);
+	const double secondCardDealer = getRandomCard(cards);
 	int rezDealer = int(firstCardDealer + secondCardDealer);
-	bool rezDealerBlackJack = rezDealer == 22 ? true : false;
+	bool rezDealerBlackJack = rezDealer == blackJackAA ? true : false;
 
-	double firstCardPlayer = getRandomCard(cards);
-	double secondCardPlayer = getRandomCard(cards);
+	const double firstCardPlayer = getRandomCard(cards);
+	const double secondCardPlayer = getRandomCard(cards);
 	int rezPlayer = int(firstCardPlayer + secondCardPlayer);
-	bool rezPlayerBlackJack = rezPlayer == 22 ? true : false;
+	bool rezPlayerBlackJack = rezPlayer == blackJackAA ? true : false;
 
 	bool stand = false;
 
@@ -91,37 +106,37 @@ void main() {
 
 		cin >> pick;
 
-		if (pick != int(pick) || (pick != 1 && pick != 2) || !cin) {
+		if (pick != int(pick) || (pick != checkHit && pick != checkPick) || !cin) {
 			cin.clear();
 			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			cout << "ENTER ERROR NUMBER" << endl;
 			continue;
 		}
 
-		if (pick == 1) {
+		if (pick == checkHit) {
 			hitCardPlayer = getRandomCard(cards);
-			rezPlayer += hitCardPlayer;
+			rezPlayer += int(hitCardPlayer);
 			outTextPlayer += "\t|" + getAnimationCard(hitCardPlayer) + "|";
 			cout << outTextPlayer << endl << endl;
 		}
-		else if (pick == 2) {
+		else if (pick == checkPick) {
 			stand = true;
 
 			while (game == true) {
 
-				if (rezDealer >= 17) {
+				if (rezDealer >= dealerMaxPoint) {
 					cout << outTextDealer << endl << endl;
 					game = false;
 				}
 
-				if (rezDealer < 17) {
+				if (rezDealer < dealerMaxPoint) {
 					cout << outTextDealer << endl << endl;
 
 					hitCardDealer = getRandomCard(cards);
-					rezDealer += hitCardDealer;
+					rezDealer += int(hitCardDealer);
 					outTextDealer += "\t|" + getAnimationCard(hitCardDealer) + "|";
 
-					if (rezDealer >= 17) {
+					if (rezDealer >= dealerMaxPoint) {
 						cout << outTextDealer << endl << endl;
 						game = false;
 					}
@@ -129,18 +144,18 @@ void main() {
 			}
 		}
 
-		if (rezPlayer >= 22 && rezPlayerBlackJack == false) {
+		if (rezPlayer >= blackJackAA && rezPlayerBlackJack == false) {
 			cout << "The player loser :" + to_string(int(rezPlayer)) + " points" << endl;
 			break;
 		}
 
-		if (rezDealer >= 22) {
+		if (rezDealer >= blackJackAA) {
 			getWin("Player", rezDealer, rezPlayer);
 			break;
 		}
 
-		if (21 == rezDealer < 22 || rezDealerBlackJack == true) {
-			getWin("Dealer", 21.0, rezPlayer);
+		if ((blackJack21 == (rezDealer < blackJackAA)) || rezDealerBlackJack == true) {
+			getWin("Dealer", blackJack21, rezPlayer);
 			break;
 		}
 

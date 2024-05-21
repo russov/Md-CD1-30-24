@@ -17,11 +17,11 @@ void CreateDeck(std::vector<std::string>& EmptyDeck) {
 void TakeCard(std::vector<std::string>& DeckCards, int& SumDeck) {
 	const int Ace = 11;
 	const int PictureCard = 10;
-	int randomIndex = rand() % DeckCards.size();
+	size_t randomIndex{ static_cast<size_t>(rand()) % DeckCards.size() };
 	const auto CardTaken = DeckCards[randomIndex];
 	DeckCards.erase(DeckCards.begin() + randomIndex);
 	std::cout << "|" << CardTaken << "|" << " ";
-	std::string ValueCard = CardTaken.substr(0, CardTaken.size() - 1);
+	const auto ValueCard{ CardTaken.substr(0, CardTaken.size() - 1) };
 	if (ValueCard == "A") {
 		SumDeck += Ace;
 	}
@@ -49,7 +49,7 @@ void LogicGame(std::vector<std::string>& DeckCards, int& DealerSum, int& PlayerS
 	const int WinStand = 21;
 	const std::string Take = "hit";
 	const std::string NotTake = "stand";
-	std::string AnswerQuestion;
+	std::string AnswerQuestion{};
 	while (true) {
 		if (PlayerSum > WinStand) {
 			std::cout << std::endl << "|Dealer win, you lose!|";
@@ -107,7 +107,7 @@ void LogicGame(std::vector<std::string>& DeckCards, int& DealerSum, int& PlayerS
 
 int main() {
 	srand(static_cast<unsigned int>(time(0)));
-	std::vector<std::string> DeckCards;
+	std::vector<std::string> DeckCards{};
 	int DealerSum = 0;
 	int PlayerSum = 0;
 	std::string PlayAgain = "yes";

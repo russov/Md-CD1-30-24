@@ -54,12 +54,12 @@ bool EndGameNewGame() {
 }
 
 void DisplayPlayerHand(const Player& player) {
-    cout << player.getName() << ':' << endl;
+    cout << player.GetName() << ':' << endl;
     cout << "Hand:";
-    for (const auto& card : player.getHand()) {
+    for (const auto& card : player.GetHand()) {
         cout << '|' << card << '|' << ' ';
     }
-    cout << "\nValue: " << player.getValue() << endl;
+    cout << "\nValue: " << player.GetValue() << endl;
 }
 
 int main() {
@@ -88,6 +88,10 @@ int main() {
             deck.pop_back();
         }
 
+        // Calculate the value of the player's hand right after the initial deal
+        player.ResetValue();
+        player.SetValue(ValueCounter(player.GetHand()));
+
         while (true) {
             system("cls");
             cout << "Dealer " << dealer.GetName() << ':' << endl;
@@ -97,9 +101,6 @@ int main() {
 
             cout << "Player ";
             DisplayPlayerHand(player);
-
-            player.ResetValue();
-            player.SetValue(ValueCounter(player.GetHand()));
 
             if (player.GetValue() > kBlackjack) {
                 cout << "You lose!" << endl;
@@ -126,6 +127,9 @@ int main() {
 
             player.SetHand(deck.back());
             deck.pop_back();
+
+            player.ResetValue();
+            player.SetValue(ValueCounter(player.GetHand()));
         }
 
         if (check_end_game) {
@@ -182,4 +186,5 @@ int main() {
         }
     }
 }
+
 

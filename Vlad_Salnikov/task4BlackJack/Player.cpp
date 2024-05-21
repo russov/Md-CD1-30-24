@@ -1,61 +1,49 @@
 #include "Player.h"
-#include <string>
 #include <iostream>
+#include <string>
 #include <vector>
 
-Player::Player()
-{
-	setName();
-	value_ = 0;
-	hand_.clear();
+Player::Player() {
+    SetName();
+    value_ = 0;
+    hand_.clear();
 }
 
-Player::Player(std::string name)
-{
-	name_ = name;
-	value_ = 0;
-	hand_.clear();
+Player::Player(const std::string& name) {
+    name_ = name;
+    value_ = 0;
+    hand_.clear();
 }
 
-void Player::setName()
-{
-	std::cout << "Enter your name:";
-	std::string name;
-	std::cin >> name;
-	name_ = name;
+void Player::SetName() {
+    std::cout << "Enter your name:";
+    std::cin >> name_;
 }
 
-std::string Player::getName() const
-{
-	return name_;
+std::string Player::GetName() const {
+    return name_;
 }
 
-void Player::setHand(std::string card)
-{
-	hand_.push_back(card);
+void Player::SetHand(const std::string& card) {
+    hand_.push_back(card);
 }
 
-const std::vector<std::string>& Player::getHand() const
-{
-	return hand_;
+const std::vector<std::string>& Player::GetHand() const {
+    return hand_;
 }
 
-void Player::setValue(int cardValue)
-{
-	Player::value_ += cardValue;
+void Player::SetValue(int card_value) {
+    value_ += card_value;
 }
 
-int Player::getValue() const
-{
-	return value_;
+int Player::GetValue() const {
+    return value_;
 }
 
-void Player::resetHand()
-{
-	hand_.clear();
+void Player::ResetHand() {
+    hand_.clear();
 }
 
-void Player::resetValue()
-{
-	value_ = 0;
+void Player::ResetValue() {
+    value_ = 0;
 }

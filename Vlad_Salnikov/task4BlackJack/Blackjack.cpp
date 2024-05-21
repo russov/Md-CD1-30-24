@@ -1,224 +1,185 @@
-﻿#include <iostream>
-#include <vector>
+﻿#include <algorithm>
+#include <iostream>
+#include <limits>
 #include <string>
+#include <vector>
 #include "Player.h"
-#include <algorithm>
+
 using namespace std;
 
-const int blackjack{ 21 };
-const int firstDeal{ 2 };
-const int minDealerValue{ 17 };
-const int highСard{ 10 };
-const int aceValue{ 11 };
+const int kBlackjack = 21;
+const int kFirstDeal = 2;
+const int kMinDealerValue = 17;
+const int kHighCard = 10;
+const int kAceValue = 11;
 
-int valueCounter(const vector<string>& hand)
-{
-	int valueBuffer{0};
-	for (auto n: hand)
-	{
-		if (n == "Jack" || n == "Queen" || n == "King")
-		{
-			valueBuffer += highСard;
-		}
-		else if (n == "Ace")
-		{
-			valueBuffer += aceValue;
-		}else 
-			valueBuffer += stoi(n);
-	}
-	return valueBuffer;
-}
-int input(int num)
-{
-	std::cin >> num;
-	while (std::cin.fail())
-	{
-		std::cout << "Incorrect type\n";
-		std::cin.clear();
-		std::cin.ignore(100000000, '\n');
-		std::cin >> num;
-	}
-	return num;
+int ValueCounter(const vector<string>& hand) {
+    int value_buffer = 0;
+    for (const auto& card : hand) {
+        if (card == "Jack" || card == "Queen" || card == "King") {
+            value_buffer += kHighCard;
+        }
+        else if (card == "Ace") {
+            value_buffer += kAceValue;
+        }
+        else {
+            value_buffer += stoi(card);
+        }
+    }
+    return value_buffer;
 }
 
-int main()
-{
-	Player dealer("Tom");
-	Player player;
+int Input() {
+    int num;
+    while (true) {
+        cin >> num;
+        if (!cin.fail()) {
+            break;
+        }
+        cout << "Incorrect type\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    return num;
+}
 
-	while (true)
-	{
-		bool checkEndGame = false;
-		vector <string> deck{
-	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace",
-	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace",
-	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace",
-	     "2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace" };
-		random_shuffle(deck.begin(), deck.end());
+bool EndGameNewGame() {
+    cout << "For a new game enter 1, for exit enter 0" << endl;
+    int new_game_choice = Input();
+    while (new_game_choice != 0 && new_game_choice != 1) {
+        cout << "Incorrect input" << endl;
+        new_game_choice = Input();
+    }
+    return new_game_choice == 1;
+}
 
-		dealer.resetHand();
-		dealer.resetValue();
-		player.resetHand();
-		player.resetValue();
+void DisplayPlayerHand(const Player& player) {
+    cout << player.getName() << ':' << endl;
+    cout << "Hand:";
+    for (const auto& card : player.getHand()) {
+        cout << '|' << card << '|' << ' ';
+    }
+    cout << "\nValue: " << player.getValue() << endl;
+}
 
-		for (int i = 0; i < firstDeal; i++)
-		{
-			dealer.setHand(deck.back());
-			deck.pop_back();
-			player.setHand(deck.back());
-			deck.pop_back();
-		}
+int main() {
+    Player dealer("Tom");
+    Player player;
 
-		while (true)
-		{
-			system("cls");
-			cout << "Dealer " << dealer.getName() << ':' << endl;
-			cout << "Hand:";
-			for (auto n: dealer.getHand())
-			{
-				cout << '|' << n << '|' << ' ';
-				break;
-			}
-			cout << '|' << '?' << '|' << ' ' << endl;
-			cout << "Value:" << "Unknown" << endl;
+    while (true) {
+        bool check_end_game = false;
+        vector<string> deck{
+            "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace",
+            "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace",
+            "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace",
+            "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"
+        };
+        random_shuffle(deck.begin(), deck.end());
 
-			cout << "Player " << player.getName() << ':' << endl;
-			cout << "Hand:";
-			for (auto n : player.getHand())
-			{
-				cout << '|' << n << '|' << ' ';
-			}
-			cout << "\nValue:";
-			player.resetValue();
-			player.setValue(valueCounter(player.getHand()));
-			cout << player.getValue() << endl;
+        dealer.ResetHand();
+        dealer.ResetValue();
+        player.ResetHand();
+        player.ResetValue();
 
-			if (player.getValue() > blackjack)
-			{
-				cout << "You lose!" << endl;
-				checkEndGame = true;
-				break;
-			}
-			else if (player.getValue() == blackjack)
-			{
-				cout << "You win!" << endl;
-				checkEndGame = true;
-				break;
-			}
+        for (int i = 0; i < kFirstDeal; ++i) {
+            dealer.SetHand(deck.back());
+            deck.pop_back();
+            player.SetHand(deck.back());
+            deck.pop_back();
+        }
 
-			cout << "Enter 1 for Hit, or 2 for Stand, enter 0 to exit game" << endl;
-			int choice{0};
-			choice = input(choice);
-			if (choice == 2)
-			{
-				break;
-			}
-			else if (choice == 0)
-			{
-				return 0;
-			}
+        while (true) {
+            system("cls");
+            cout << "Dealer " << dealer.GetName() << ':' << endl;
+            cout << "Hand: ";
+            cout << '|' << dealer.GetHand()[0] << '|' << '|' << '?' << '|' << endl;
+            cout << "Value: Unknown" << endl;
 
-			player.setHand(deck.back());
-			deck.pop_back();
-		}
+            cout << "Player ";
+            DisplayPlayerHand(player);
 
-		if (checkEndGame)
-		{
-			cout << "For a new game enter 1, for exit enter 0" << endl;
-			int newGameChoice{ 0 };
-			newGameChoice = input(newGameChoice);
-			while (newGameChoice != 0 && newGameChoice != 1)
-			{
-				cout << "Incorrect input" << endl;
-				newGameChoice = input(newGameChoice);
-			}
-			if (newGameChoice == 1)
-			{
-				continue;
-			}
-			else if (newGameChoice == 0)
-			{
-				return 0;
-			}
-		}
+            player.ResetValue();
+            player.SetValue(ValueCounter(player.GetHand()));
 
-		while (true)
-		{
-			system("cls");
-			cout << "Dealer " << dealer.getName() << ':' << endl;
-			cout << "Hand:";
-			for (auto n : dealer.getHand())
-			{
-				cout << '|' << n << '|' << ' ';
-			}
-			cout << "\nValue:";
-			dealer.resetValue();
-			dealer.setValue(valueCounter(dealer.getHand()));
-			cout << dealer.getValue() << endl;
+            if (player.GetValue() > kBlackjack) {
+                cout << "You lose!" << endl;
+                check_end_game = true;
+                break;
+            }
+            else if (player.GetValue() == kBlackjack) {
+                cout << "You win!" << endl;
+                check_end_game = true;
+                break;
+            }
 
-			cout << "Player " << player.getName() << ':' << endl;
-			cout << "Hand:";
-			for (auto n : player.getHand())
-			{
-				cout << '|' << n << '|' << ' ';
-			}
-			cout << "\nValue:";
-			cout << player.getValue() << endl;
+            cout << "Enter 1 for Hit, or 2 for Stand, enter 0 to exit game" << endl;
+            int choice = Input();
+            if (choice == 2) {
+                break;
+            }
+            else if (choice == 0) {
+                return 0;
+            }
+            else if (choice != 1) {
+                continue;
+            }
 
-			if (dealer.getValue() > blackjack)
-			{
-				cout << "You win!" << endl;
-				checkEndGame = true;
-				break;
-			}
-			else if (dealer.getValue() >= minDealerValue)
-			{
-				break;
-			}
-			else if (dealer.getValue() == blackjack)
-			{
-				cout << "You lose!" << endl;
-				checkEndGame = true;
-				break;
-			}
+            player.SetHand(deck.back());
+            deck.pop_back();
+        }
 
-			dealer.setHand(deck.back());
-			deck.pop_back();
-		}
+        if (check_end_game) {
+            if (!EndGameNewGame()) {
+                return 0;
+            }
+            continue;
+        }
 
-		if (!checkEndGame)
-		{
-			if (dealer.getValue() > player.getValue())
-			{
-				cout << "You lose!" << endl;
-				checkEndGame = true;
-			}
-			else
-			{
-				cout << "You win!" << endl;
-				checkEndGame = true;
-			}
-		}
+        while (true) {
+            system("cls");
+            cout << "Dealer ";
+            DisplayPlayerHand(dealer);
 
-		if (checkEndGame)
-		{
-			cout << "For a new game enter 1, for exit enter 0" << endl;
-			int newGameChoice{ 0 };
-			newGameChoice = input(newGameChoice);
-			while (newGameChoice != 0 && newGameChoice != 1)
-			{
-				cout << "Incorrect input" << endl;
-				newGameChoice = input(newGameChoice);
-			}
-			if (newGameChoice == 1)
-			{
-				continue;
-			}
-			else if (newGameChoice == 0)
-			{
-				return 0;
-			}
-		}
-	}
+            dealer.ResetValue();
+            dealer.SetValue(ValueCounter(dealer.GetHand()));
+
+            cout << "Player ";
+            DisplayPlayerHand(player);
+
+            if (dealer.GetValue() > kBlackjack) {
+                cout << "You win!" << endl;
+                check_end_game = true;
+                break;
+            }
+            else if (dealer.GetValue() >= kMinDealerValue) {
+                break;
+            }
+            else if (dealer.GetValue() == kBlackjack) {
+                cout << "You lose!" << endl;
+                check_end_game = true;
+                break;
+            }
+
+            dealer.SetHand(deck.back());
+            deck.pop_back();
+        }
+
+        if (!check_end_game) {
+            if (dealer.GetValue() > player.GetValue()) {
+                cout << "You lose!" << endl;
+                check_end_game = true;
+            }
+            else {
+                cout << "You win!" << endl;
+                check_end_game = true;
+            }
+        }
+
+        if (check_end_game) {
+            if (!EndGameNewGame()) {
+                return 0;
+            }
+        }
+    }
 }
 

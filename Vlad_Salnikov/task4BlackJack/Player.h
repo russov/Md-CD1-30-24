@@ -1,27 +1,27 @@
 #pragma once
+
 #include <string>
 #include <vector>
 
-class Player
-{
+class Player {
 public:
-	explicit Player(std::string);
-	Player();
+    explicit Player(const std::string& name);
+    Player();
 
-	void setName();
-	std::string getName() const;
+    void SetName();
+    std::string GetName() const;
 
-	void setHand(std::string);
-	const std::vector<std::string>& getHand() const;
+    void SetHand(const std::string& card);
+    const std::vector<std::string>& GetHand() const;
 
-	void setValue(int);
-	int getValue() const;
+    void SetValue(int card_value);
+    int GetValue() const;
 
-	void resetHand();
-	void resetValue();
+    void ResetHand();
+    void ResetValue();
+
 private:
-	std::string name_;
-	std::vector <std::string> hand_;
-	int value_;
+    std::string name_;
+    std::vector<std::string> hand_;
+    int value_;
 };
-

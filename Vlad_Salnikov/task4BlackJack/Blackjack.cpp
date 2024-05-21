@@ -88,7 +88,6 @@ int main() {
             deck.pop_back();
         }
 
-        // Calculate the value of the player's hand right after the initial deal
         player.ResetValue();
         player.SetValue(ValueCounter(player.GetHand()));
 

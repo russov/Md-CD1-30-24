@@ -55,18 +55,6 @@ String::String(const String& st, size_t pos, size_t n)
     }
 }
 
-template <class InputIterator> String::String(InputIterator first, InputIterator last)
-{
-    
-    len = last - first;
-    str = new char[len + 1];
-    for (auto it = first; it != last; it++)
-    {
-        str[it - first] = *it;
-    }
-    str[len] = '\0';
-}
-
 String::String(std::initializer_list<char> il)
 {
     len = il.size();
@@ -111,46 +99,93 @@ void String::push_back(char a)
     str = temp;
 }
 
-/*size_t String::find(const String& st, size_t index = 0)
+size_t String::find(const String& st, const size_t index) const
 {
     if (len <= index)
         throw std::out_of_range("out");
-    else if (index > 0)
-    {
-    }
     else
     {
-
+        for (size_t i = index; i < len; i++)
+        {
+            for (size_t j = 0; j < st.length(); j++)
+            {
+                if (str[i + j] == st[j] && (j + 1) == st.length())
+                    return i;
+                else if (str[i + j] == st[j])
+                    continue;
+                else
+                    break;   
+            }
+        }
     }
+    return -1;
 }
 
-size_t String::find(const char* st, size_t index = 0)
+
+size_t String::find(const char* st, const size_t index) const
 {
+    String st_string{ st };
     if (len <= index)
         throw std::out_of_range("out");
-    else if (index > 0)
-    {
-    }
     else
     {
-
+        for (size_t i = index; i < len; i++)
+        {
+            for (size_t j = 0; j < st_string.length(); j++)
+            {
+                if (str[i + j] == st_string[j] && (j+1) == st_string.length())
+                    return i;
+                else if (str[i + j] == st_string[j])
+                    continue;
+                else
+                    break;
+            }
+        }
     }
+    return -1;
 }
 
-size_t String::find(const char c, size_t index = 0)
+size_t String::find(const char* st, const size_t index, const size_t n) const
+{
+    String st_string{ st };
+    if (n == 0 || n >= st_string.length())
+        return -1;
+    if (len <= index)
+        throw std::out_of_range("out");
+    else
+    {
+        for (size_t i = index; i < len; i++)
+        {
+            for (size_t j = 0; j < n; j++)
+            {
+                if (str[i + j] == st_string[j] && j == n - 1)
+                    return i;
+                else if (str[i + j] == st_string[j])
+                    continue;
+                else
+                    break;
+            }
+        }
+    }
+    return -1;
+}
+
+size_t String::find(const char c, size_t index) const
 {
     if (len <= index)
         throw std::out_of_range("out");
-    else if (index > 0)
-    {
-    }
     else
     {
-
+        for (size_t i = index; i < len; i++)
+        {
+            if (str[i] == c)
+                return i;
+        }
     }
-}*/
+    return -1;
+}
 
-bool String::empty()
+bool String::empty() const
 {
     if (str[0] == NULL) 
         return true; 
@@ -188,14 +223,6 @@ String& String::operator=(const char* s)
     return *this;
 }
 
-String operator+(const String& st1, const String& st2)
-{   
-    char* temp = new char[st1.len + st2.len + 1];
-    std::strcpy(temp, st1.str);
-    std::strcpy(temp + st1.len, st2.str);
-    return String{ temp };
-}
-
 char& String::operator[](int i)
 {
     return str[i];
@@ -206,15 +233,6 @@ const char& String::operator[](int i) const
     return str[i];
 }
 
-bool operator<(const String& st1, const String& st2)
-{
-    return (std::strcmp(st1.str, st2.str) < 0);
-}
-
-bool operator>(const String& st1, const String& st2)
-{
-    return st2 < st1;
-}
 
 bool operator==(const String& st1, const String& st2)
 {

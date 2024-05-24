@@ -114,8 +114,8 @@ TEST(StringConstructorTest, Copy_from_iterator_range_constructor)
 	const int LENGTH = 6;
 	const char str[LENGTH] = { "Hello" };
 	const std::vector<char> chars(str, str + LENGTH);
-	//String s1{ chars.begin(), chars.end() };
-	//EXPECT_TRUE(strcmp(str, s1.c_str()) == 0);
+	String s1{ chars.begin(), chars.end() };
+	EXPECT_TRUE(strcmp(str, s1.c_str()) == 0);
 }
 
 TEST(StringConstructorTest, Copy_constructor1)
@@ -170,33 +170,29 @@ TEST(StringSizeTest, SizePositive)
 	EXPECT_TRUE(a.size() == 5);
 }
 
-//TEST(StringFindTest, FindByString)
-//{
-//	const String str("hello world, hello big world");
-//	String str2("hello");
-//
-//	// different member versions of find in the same order as above:
-//	size_t found_first = str.find(str2);
-//	size_t found_second = str.find(str2, found_first + 1);
-//	EXPECT_TRUE(found_first == 0 && found_second == 13);
-//}
+TEST(StringFindTest, FindByString)
+{
+	const String str("hello world, hello big world");
+	String str2("hello");
+	size_t found_first = str.find(str2);
+	size_t found_second = str.find(str2, found_first + 1);
+	EXPECT_TRUE(found_first == 0 && found_second == 13);
+}
 
-//TEST(StringFindTest, FindByCString)
-//{
-//	String str("hello world, hello big world");
-//
-//	// different member versions of find in the same order as above:
-//	size_t found_first = str.find("world");
-//	size_t found_second = str.find("world", found_first + 1, 1);
-//	EXPECT_TRUE(found_first == 6 && found_second == 23);
-//}
+TEST(StringFindTest, FindByCString)
+{
+	String str("hello world, hello big world");
+	size_t found_first = str.find("world");
+	size_t found_second = str.find("world", found_first + 1, 1);
+	EXPECT_TRUE(found_first == 6 && found_second == 23);
+}
 
-//TEST(StringFindTest, FindByChar)
-//{
-//	const String str("hello world, hello big world");
-//	size_t found = str.find(',');
-//	EXPECT_EQ(found, 11);
-//}
+TEST(StringFindTest, FindByChar)
+{
+	const String str("hello world, hello big world");
+	size_t found = str.find(',');
+	EXPECT_EQ(found, 11);
+}
 
 TEST(StringLengthTest, LengthZero)
 {
@@ -224,3 +220,20 @@ TEST(StringAtTest, AtOutOfRange)
 	EXPECT_THROW(a.at(10), std::out_of_range);
 }
 
+TEST(StringEmptyTest, EmptyStr)
+{
+	String a{ "" };
+	EXPECT_TRUE(a.empty());
+}
+
+TEST(StringEmptyTest, EmptyStrNoDef)
+{
+	String a;
+	EXPECT_TRUE(a.empty());
+}
+
+TEST(StringEmptyTest, EmptyStrDef)
+{
+	String a{ "asdasd" };
+	EXPECT_FALSE(a.empty());
+}

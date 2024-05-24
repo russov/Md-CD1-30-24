@@ -11,7 +11,17 @@ class String
         String(const char* s, size_t n); //from character_range bound
         String(const String& st, size_t pos); //from substring unbound
         String(const String& st, size_t pos, size_t n); //from substring bound
-        template <class InputIterator>  String(InputIterator first, InputIterator last); //iterator_range
+        template <class InputIterator>  String(InputIterator first, InputIterator last)
+        {
+
+            len = last - first;
+            str = new char[len + 1];
+            for (auto it = first; it != last; it++)
+            {
+                str[it - first] = *it;
+            }
+            str[len] = '\0';
+        }//iterator_range
         String(const String& st); // copy
         String(String&&); //move
         
@@ -22,10 +32,11 @@ class String
         int size() const { return len; }
         char* c_str() const { return str; }
         void push_back(char a);
-        size_t find(const String& str, size_t index = -1);
-        size_t find(const char* str, size_t index = -1);
-        size_t find(const char c, size_t index = -1);
-        bool String::empty();
+        size_t find(const String& str, const size_t index = 0) const;
+        size_t find(const char* str, const size_t index = 0) const;
+        size_t find(const char* str, const size_t index, const size_t n) const;
+        size_t find(const char c, const size_t index = 0) const;
+        bool String::empty() const;
         char& at(size_t index) const;
 
         String& operator=(const String&);
@@ -34,10 +45,7 @@ class String
         char& operator[](int i);
         const char& operator[](int i) const;
 
-        friend bool operator<(const String& st, const String& st2);
-        friend bool operator>(const String& st1, const String& st2);
         friend bool operator==(const String& st, const String& st2);
-        friend String operator+(const String& st1, const String& st2);
         friend std::ostream& operator<<(std::ostream& os, const String& st2);
 };
 

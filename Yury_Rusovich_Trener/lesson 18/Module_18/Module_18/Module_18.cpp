@@ -21,22 +21,22 @@
 //}
 
 
-#include <iostream>
-#include <thread>
-
-int main() {
-    // Создаем объект потока и передаем ему лямбда-функцию для выполнения
-    std::thread t([]() {
-        std::cout << "Hello from thread!" << std::endl;
-        });
-
-    // Ждем завершения потока
-    t.join();
-
-    std::cout << "Back in main thread" << std::endl;
-
-    return 0;
-}
+//#include <iostream>
+//#include <thread>
+//
+//int main() {
+//    // Создаем объект потока и передаем ему лямбда-функцию для выполнения
+//    std::thread t([]() {
+//        std::cout << "Hello from thread!" << std::endl;
+//        });
+//
+//    // Ждем завершения потока
+//    t.join();
+//
+//    std::cout << "Back in main thread" << std::endl;
+//
+//    return 0;
+//}
 
 
 
@@ -485,7 +485,7 @@ int main() {
 //
 //    return 0;
 //}
-
+//
 //#include <iostream>
 //#include <future>
 //
@@ -498,7 +498,7 @@ int main() {
 //
 //
 //    // Проверяем, завершена ли задача
-//    auto status = future_result.wait_for(std::chrono::seconds(0));
+//    auto status = future_result.wait_for(std::chrono::seconds(3));
 //
 //    if (status == std::future_status::ready) {
 //        // Задача завершена, результат готов
@@ -535,6 +535,7 @@ int main() {
 //
 //    // Устанавливаем результат в объект std::promise
 //    prom.set_value(result);
+//
 //}
 //
 //int main() {
@@ -589,5 +590,159 @@ int main() {
 //    return 0;
 //}
 
+
+
+
+
+
+
+
+
+
+//thread pool
+//#include <iostream>
+//#include <thread>
+//#include <vector>
+//#include <queue>
+//#include <functional>
+//#include <condition_variable>
+//#include <future>
+//
+//class ThreadPool {
+//public:
+//    ThreadPool(size_t numThreads) {
+//        start(numThreads);
+//    }
+//
+//    ~ThreadPool() {
+//        stop();
+//    }
+//
+//    template<class T>
+//    auto enqueue(T task) -> std::future<decltype(task())> {
+//        auto wrapper = std::make_shared<std::packaged_task<decltype(task())()>>(std::move(task));
+//
+//        {
+//            std::unique_lock<std::mutex> lock{ eventMutex };
+//            tasks.emplace([=] {
+//                (*wrapper)();
+//                });
+//        }
+//
+//        eventVar.notify_one();
+//        return wrapper->get_future();
+//    }
+//
+//private:
+//    std::vector<std::thread> threads;
+//    std::condition_variable eventVar;
+//    std::mutex eventMutex;
+//    bool stopping = false;
+//
+//    std::queue<std::function<void()>> tasks;
+//
+//    void start(size_t numThreads) {
+//        for (size_t i = 0; i < numThreads; ++i) {
+//            threads.emplace_back([=] {
+//                while (true) {
+//                    std::function<void()> task;
+//
+//                    {
+//                        std::unique_lock<std::mutex> lock{ eventMutex };
+//
+//                        eventVar.wait(lock, [=] { return stopping || !tasks.empty(); });
+//
+//                        if (stopping && tasks.empty())
+//                            break;
+//
+//                        task = std::move(tasks.front());
+//                        tasks.pop();
+//                    }
+//
+//                    task();
+//                }
+//                });
+//        }
+//    }
+//
+//    void stop() noexcept {
+//        {
+//            std::unique_lock<std::mutex> lock{ eventMutex };
+//            stopping = true;
+//        }
+//
+//        eventVar.notify_all();
+//
+//        for (auto& thread : threads)
+//            thread.join();
+//    }
+//};
+//
+//int main() {
+//    ThreadPool pool{ 4 };
+//
+//    auto future1 = pool.enqueue([] {
+//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//        return 1;
+//        });
+//
+//    auto future2 = pool.enqueue([] {
+//        std::this_thread::sleep_for(std::chrono::seconds(2));
+//        return 2;
+//        });
+//
+//    std::cout << "Result1: " << future1.get() << std::endl;
+//    std::cout << "Result2: " << future2.get() << std::endl;
+//
+//    return 0;
+//}
+
+
+
+
+
+//Использование флагов завершения
+//#include <iostream>
+//#include <thread>
+//#include <atomic>
+//#include <condition_variable>
+//#include <vector>
+//
+//std::atomic<bool> done(false);
+//std::condition_variable cv;
+//std::mutex cv_m;
+//
+//void workerFunction() {
+//    while (!done) {
+//        std::unique_lock<std::mutex> lock(cv_m);
+//        cv.wait(lock, [] { return done.load(); });
+//        // Do some work here
+//        std::cout << "Thread doing work" << std::endl;
+//    }
+//}
+//
+//int main() {
+//    std::vector<std::thread> workers;
+//    for (int i = 0; i < 4; ++i) {
+//        workers.emplace_back(workerFunction);
+//    }
+//
+//    std::this_thread::sleep_for(std::chrono::seconds(2));
+//
+//    // Signal threads to stop
+//    {
+//        std::lock_guard<std::mutex> lock(cv_m);
+//        done = true;
+//    }
+//    cv.notify_all();
+//
+//    for (auto& worker : workers) {
+//        worker.join();
+//    }
+//
+//    std::cout << "Main thread finished" << std::endl;
+//
+//    return 0;
+//}
 
 

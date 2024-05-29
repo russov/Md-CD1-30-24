@@ -515,7 +515,7 @@
 //    try
 //    {
 //        // Здесь мы пишем стейтменты, которые будут генерировать следующее исключение
-//        throw - 1; // типичный стейтмент throw
+//        throw "- 1.0" ; // типичный стейтмент throw
 //    }
 //    catch (int a)
 //    {
@@ -527,7 +527,7 @@
 //        // Любые исключения типа double, сгенерированные в блоке try, приведенном выше, обрабатываются здесь
 //        std::cerr << "We caught an exception of type double" << '\n';
 //    }
-//    catch (const std::string& str) // ловим исключения по константной ссылке
+//    catch (const char* str) // ловим исключения по константной ссылке
 //    {
 //        // Любые исключения типа std::string, сгенерированные внутри блока try, приведенном выше, обрабатываются здесь
 //        std::cerr << "We caught an exception of type std::string" << '\n';
@@ -630,8 +630,8 @@
 //
 //    return 0;
 //}
-
-
+//
+//
 
 
 
@@ -662,6 +662,7 @@
 //классыиисключения
 //#include <iostream>
 //#include <string>
+//#include <array>
 //
 //class ArrayException
 //{
@@ -699,15 +700,15 @@
 //
 //int main()
 //{
-//	ArrayInt array;
+//	std::array array{ 3 };
 //
 //	try
 //	{
 //		int value = array[7];
 //	}
-//	catch (ArrayException& exception)
+//	catch (std::exception& exception)
 //	{
-//		std::cerr << "An array exception occurred (" << exception.getError() << ")\n";
+//		std::cerr << "An array exception occurred (" << exception.what() << ")\n";
 //	}
 //}
 
@@ -766,60 +767,60 @@
 
 
 //собственные классы исключения дочерние от стандартных
-//#include <iostream>
-//#include <string>
-//#include <exception> // для std::exception
-//
-//class ArrayException : public std::exception
-//{
-//private:
-//	std::string m_error;
-//
-//public:
-//	ArrayException(std::string error)
-//		: m_error(error)
-//	{
-//	}
-//
-//
-//	const char* what() const noexcept { return m_error.c_str(); }
-//};
-//
-//class ArrayInt
-//{
-//private:
-//
-//	int m_data[4]; // чтобы не усложнять, укажем значение 4 в качестве длины массива
-//public:
-//	ArrayInt() {}
-//
-//	int getLength() { return 4; }
-//
-//	int& operator[](const int index)
-//	{
-//		if (index < 0 || index >= getLength())
-//			throw ArrayException("Invalid index");
-//
-//		return m_data[index];
-//	}
-//
-//};
-//
-//int main()
-//{
-//	ArrayInt array;
-//
-//	try
-//	{
-//		int value = array[7];
-//	}
-//	catch (ArrayException& exception) // сначала ловим исключения дочернего класса-исключения
-//	{
-//		std::cerr << "An array exception occurred (" << exception.what() << ")\n";
-//	}
-//	catch (std::exception& exception)
-//	{
-//		std::cerr << "Some other std::exception occurred (" << exception.what() << ")\n";
-//	}
-//}
+#include <iostream>
+#include <string>
+#include <exception> // для std::exception
+
+class ArrayException : public std::exception
+{
+private:
+	std::string m_error;
+
+public:
+	ArrayException(std::string error)
+		: m_error(error)
+	{
+	}
+
+
+	const char* what() const noexcept { return m_error.c_str(); }
+};
+
+class ArrayInt
+{
+private:
+
+	int m_data[4]; // чтобы не усложнять, укажем значение 4 в качестве длины массива
+public:
+	ArrayInt() {}
+
+	int getLength() { return 4; }
+
+	int& operator[](const int index)
+	{
+		if (index < 0 || index >= getLength())
+			throw ArrayException("Invalid index");
+
+		return m_data[index];
+	}
+
+};
+
+int main()
+{
+	ArrayInt array;
+
+	try
+	{
+		int value = array[7];
+	}
+	catch (ArrayException& exception) // сначала ловим исключения дочернего класса-исключения
+	{
+		std::cerr << "An array exception occurred (" << exception.what() << ")\n";
+	}
+	catch (std::exception& exception)
+	{
+		std::cerr << "Some other std::exception occurred (" << exception.what() << ")\n";
+	}
+}
 

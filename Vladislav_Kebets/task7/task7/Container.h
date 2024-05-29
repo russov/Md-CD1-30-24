@@ -4,12 +4,12 @@ template <class T>
 class Container
 {
 private:
-	std::vector<T> figures;
+	std::vector<T*> figures;
 public:
 	Container()
 	{}
 
-	void push_back(const T& figure)
+	void push_back(T* figure)
 	{
 		this->figures.push_back(figure);
 	}
@@ -24,12 +24,12 @@ public:
 		return figures.size();
 	}
 
-	const T operator[](const unsigned int& index) const
+	const T* operator[](const unsigned int& index) const
 	{
 		return figures.at(index);
 	}
 
-	T operator[](unsigned int& index) const
+	T* operator[](unsigned int& index) const
 	{
 		return figures.at(index);
 	}

@@ -17,7 +17,7 @@ TEST(TestFigures, FigurePyramid) {
 }
 
 TEST(TestContainer, Container) {
-	Container<Figure*> container;
+	Container<Figure> container;
 	container.push_back(new Sphere(3));
 	container.push_back(new Cylinder(5, 7));
 	container.push_back(new Pyramid(9,2));

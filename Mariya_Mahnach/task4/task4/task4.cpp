@@ -73,7 +73,6 @@ int main()
 	{
 		SayHi();
 		std::srand(time(0));
-
 		Card* deck = NewDeck();
 		std::vector<int> player{}, dealer{};
 		auto scPlayer{ 0 }, scDealer{ 0 };
@@ -159,7 +158,6 @@ int main()
 			std::cout << "--------------------------------\n\n";
 
 			if (scPlayer >= 21 || scDealer >= 21) break;
-
 		}
 		if (scDealer < 21 && scPlayer <= 21)
 		{

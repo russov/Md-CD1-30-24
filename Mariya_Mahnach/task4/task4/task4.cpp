@@ -7,24 +7,51 @@ struct Card
 	int quantity;
 	int score;
 };
-const int n = 13;
+constexpr int n{ 13 };
+constexpr int same_rank{ 4 };
+constexpr int ten_value{ 10 };
+constexpr int max_vallue{ 11 };
 
-Card * NewDeck()
+Card* NewDeck()
 {
-	Card* deck{ new Card[13] };
+	Card* deck{ new Card[n] };
 
 	// card    2 3 4 5 6 7 8 9 10 J Q  K  T
 	// i       0 1 2 3 4 5 6 7 8  9 10 11 12
 
 	for (int i = 0; i < n; i++)
 	{
-		deck[i].quantity = 4;
-		if (i < 8) { deck[i].value = i + 2 + '0'; deck[i].score = 2 + i; }
-		else if (i == 8) { deck[i].value = '1'; deck[i].score = 10; }
-		else if (i == 9) { deck[i].value = 'J'; deck[i].score = 10; }
-		else if (i == 10) { deck[i].value = 'Q'; deck[i].score = 10; }
-		else if (i == 11) { deck[i].value = 'K'; deck[i].score = 10; }
-		else if (i == 12) { deck[i].value = 'T'; deck[i].score = 11; }
+		deck[i].quantity = same_rank;
+		if (i < 8)
+		{
+			deck[i].value = i + 2 + '0';
+			deck[i].score = 2 + i;
+		}
+		else if (i == 8)
+		{
+			deck[i].value = '1';
+			deck[i].score = ten_value;
+		}
+		else if (i == 9)
+		{
+			deck[i].value = 'J';
+			deck[i].score = ten_value;
+		}
+		else if (i == 10)
+		{
+			deck[i].value = 'Q';
+			deck[i].score = 10;
+		}
+		else if (i == 11)
+		{
+			deck[i].value = 'K';
+			deck[i].score = ten_value;
+		}
+		else if (i == 12)
+		{
+			deck[i].value = 'T';
+			deck[i].score = max_vallue;
+		}
 	}
 	std::cout << '\n';
 	return deck;
@@ -42,43 +69,55 @@ void SayHi()
 
 int main()
 {
-	char ans = '1';
-	while (ans=='1')
+	do
 	{
 		SayHi();
 		std::srand(time(0));
 
-		Card *deck = NewDeck();
-		std::vector<int> player, dealer;
-		int scPlayer = 0, scDealer = 0;
-		int cardPl, cardDl1,cardDl2;
+		Card* deck = NewDeck();
+		std::vector<int> player{}, dealer{};
+		auto scPlayer{ 0 }, scDealer{ 0 };
+		int cardPl, cardDl1, cardDl2;
 		int k = 1, size = 1;
 
 		cardPl = std::rand() % n;
 		cardDl1 = std::rand() % n;
 		cardDl2 = std::rand() % n;
 
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; ++i)
 		{
-			if (i == cardPl) { player.push_back(i); deck[i].quantity--; scPlayer += deck[i].score; }
-			if (i == cardDl1) { dealer.push_back(i); deck[i].quantity--; scDealer += deck[i].score; }
-			if (i == cardDl2) deck[i].quantity--; 
+			if (i == cardPl)
+			{
+				player.push_back(i);
+				deck[i].quantity--;
+				scPlayer += deck[i].score;
+			}
+			if (i == cardDl1)
+			{
+				dealer.push_back(i);
+				deck[i].quantity--;
+				scDealer += deck[i].score;
+			}
+			if (i == cardDl2) deck[i].quantity--;
 		}
-		
+
 		std::cout << "--------------------------------\n";
 		std::cout << "Your cards:\tDealer's cards:\n";
-		std::cout << deck[cardPl].value << "\t\t" << deck[cardDl1].value<< '\n';
+		std::cout << deck[cardPl].value;
+		if (deck[cardPl].value == '1') std::cout << '0';
+		std::cout << "\t\t" << deck[cardDl1].value << '\n';
+		if (deck[cardDl1].value == '1') std::cout << '0';
 		std::cout << "Your score:\tDealer's score\n";
 		std::cout << scPlayer << "\t\t" << scDealer << '\n';
 		std::cout << "--------------------------------\n\n";
 
 		while (k)
 		{
-			size++;
 			std::cout << "To take card, enter 1. To end game, enter 0\n";
 			std::cin >> k;
-			if (k != 1) break;
-			
+			if (k == 0) break;
+			else if (k != 1) continue;
+			size++;
 			cardPl = std::rand() % n;
 			while (deck[cardPl].quantity == 0)
 			{
@@ -104,11 +143,11 @@ int main()
 
 			std::cout << "--------------------------------\n";
 			std::cout << "Your cards:\tDealer's cards:\n";
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size; ++i)
 			{
 				std::cout << deck[player[i]].value;
 				if (deck[player[i]].value == '1') std::cout << '0';
-				if (dealer[i] < 13)
+				if (dealer[i] < n)
 				{
 					std::cout << "\t\t" << deck[dealer[i]].value;
 					if (deck[dealer[i]].value == '1') std::cout << '0';
@@ -120,9 +159,14 @@ int main()
 			std::cout << "--------------------------------\n\n";
 
 			if (scPlayer >= 21 || scDealer >= 21) break;
-			
+
 		}
-		if (scDealer < 21 && scPlayer<=21) { std::cout << "Dealer's close card:\n" << deck[cardDl2].value; scDealer += cardDl2; }
+		if (scDealer < 21 && scPlayer <= 21)
+		{
+			std::cout << "Dealer's close card:\n" << deck[cardDl2].value;
+			scDealer += deck[cardDl2].score;
+		}
+		delete deck;
 		std::cout << "\n\nYour score:\tDealer's score\n";
 		std::cout << scPlayer << "\t\t" << scDealer << '\n';
 		std::cout << "\n==============\n||";
@@ -133,7 +177,9 @@ int main()
 		else std::cout << " YOU LOSE ";
 		std::cout << "||\n==============\n";
 		std::cout << "\nEnter 1 to play another time\n";
+		int ans;
 		std::cin >> ans;
-	}
+		if (ans != 1) break;
+	} while (true);
 	std::cout << "Goodbye!";
 }

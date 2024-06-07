@@ -7,7 +7,10 @@ struct Card
 	int quantity;
 	int score;
 };
-constexpr int n = 13;
+constexpr int n{ 13 };
+constexpr int same_rank{ 4 };
+constexpr int ten_value{ 10 };
+constexpr int max_vallue{ 11 };
 
 Card* NewDeck()
 {
@@ -18,7 +21,7 @@ Card* NewDeck()
 
 	for (int i = 0; i < n; i++)
 	{
-		deck[i].quantity = 4;
+		deck[i].quantity = same_rank;
 		if (i < 8)
 		{
 			deck[i].value = i + 2 + '0';
@@ -27,12 +30,12 @@ Card* NewDeck()
 		else if (i == 8)
 		{
 			deck[i].value = '1';
-			deck[i].score = 10;
+			deck[i].score = ten_value;
 		}
 		else if (i == 9)
 		{
 			deck[i].value = 'J';
-			deck[i].score = 10;
+			deck[i].score = ten_value;
 		}
 		else if (i == 10)
 		{
@@ -42,12 +45,12 @@ Card* NewDeck()
 		else if (i == 11)
 		{
 			deck[i].value = 'K';
-			deck[i].score = 10;
+			deck[i].score = ten_value;
 		}
 		else if (i == 12)
 		{
 			deck[i].value = 'T';
-			deck[i].score = 11;
+			deck[i].score = max_vallue;
 		}
 	}
 	std::cout << '\n';
@@ -66,15 +69,14 @@ void SayHi()
 
 int main()
 {
-	char ans = '1';
-	while (ans == '1')
+	do
 	{
 		SayHi();
 		std::srand(time(0));
 
 		Card* deck = NewDeck();
-		std::vector<int> player, dealer;
-		int scPlayer = 0, scDealer = 0;
+		std::vector<int> player{}, dealer{};
+		auto scPlayer{ 0 }, scDealer{ 0 };
 		int cardPl, cardDl1, cardDl2;
 		int k = 1, size = 1;
 
@@ -82,7 +84,7 @@ int main()
 		cardDl1 = std::rand() % n;
 		cardDl2 = std::rand() % n;
 
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; ++i)
 		{
 			if (i == cardPl)
 			{
@@ -141,7 +143,7 @@ int main()
 
 			std::cout << "--------------------------------\n";
 			std::cout << "Your cards:\tDealer's cards:\n";
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size; ++i)
 			{
 				std::cout << deck[player[i]].value;
 				if (deck[player[i]].value == '1') std::cout << '0';
@@ -164,6 +166,7 @@ int main()
 			std::cout << "Dealer's close card:\n" << deck[cardDl2].value;
 			scDealer += deck[cardDl2].score;
 		}
+		delete deck;
 		std::cout << "\n\nYour score:\tDealer's score\n";
 		std::cout << scPlayer << "\t\t" << scDealer << '\n';
 		std::cout << "\n==============\n||";
@@ -174,7 +177,9 @@ int main()
 		else std::cout << " YOU LOSE ";
 		std::cout << "||\n==============\n";
 		std::cout << "\nEnter 1 to play another time\n";
+		int ans;
 		std::cin >> ans;
-	}
+		if (ans != 1) break;
+	} while (true);
 	std::cout << "Goodbye!";
 }

@@ -10,7 +10,7 @@
 #define OUTPUT_FILE "output.txt"
 
 const int maxSize = 5;
-const int varCount = 3;
+const char clrChar = '.';
 const char extChar = '\0';
 
 class Timer
@@ -45,7 +45,7 @@ bool readChar(std::fstream* reader, std::queue<char>*cont, std::mutex* mutex, in
     if ((*reader) >> std::noskipws >> inChar) 
     {
         (*counter) ++;
-        if (inChar == '.') {
+        if (inChar == clrChar) {
             mutex->lock();
             while (!cont->empty())
                 cont->pop();
@@ -60,7 +60,7 @@ bool readChar(std::fstream* reader, std::queue<char>*cont, std::mutex* mutex, in
     }
     
     mutex->lock();
-    cont->push('\0');
+    cont->push(extChar);
     mutex->unlock();
     return false;
 }
@@ -70,7 +70,7 @@ bool writeChar(std::fstream* writer, std::queue<char>*cont, std::mutex* mutex, i
     mutex->lock();
     if (!cont->empty())
     {
-        if (cont->front() == '\0')
+        if (cont->front() == extChar)
             return false;
         *writer << std::noskipws << cont->front();
         (*counter) ++;

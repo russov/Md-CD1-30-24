@@ -218,43 +218,196 @@
 //---------------------------------------------------------------------------------------------------------
 //деструктор
 
-#include <iostream>
-#include <cassert>
+//#include <iostream>
+//#include <cassert>
+//
+//class Massiv
+//{
+//private:
+//	int* m_array;
+//	int m_length;
+//
+//public:
+//	Massiv(int length) // конструктор
+//	{
+//		assert(length > 0);
+//
+//		m_array = new int[length];
+//		m_length = length;
+//	}
+//
+//	~Massiv() // деструктор
+//	{
+//		// Динамически удаляем массив, который выделили ранее
+//		delete[] m_array;
+//	}
+//
+//	void setValue(int index, int value) { m_array[index] = value; }
+//	int getValue(int index) { return m_array[index]; }
+//
+//	int getLength() { return m_length; }
+//};
+//
+//int main()
+//{
+//	Massiv arr(15); // выделяем 15 целочисленных значений
+//	for (int count = 0; count < 15; ++count)
+//		arr.setValue(count, count + 1);
+//
+//	std::cout << "The value of element 7 is " << arr.getValue(7);
+//
+//	return 0;
+//}
 
-class Massiv
+
+
+//----------------------------------------------------------------------------------------------
+//статические переменный класса
+//#include <iostream>
+//
+//class Anything
+//{
+//public:
+//    static int s_value; // объявляем статическую переменную-член
+//    //static const int s_value = 5;
+//    //static constexpr double s_value = 3.4;
+//};
+//
+//int Anything::s_value = 3; // определяем статическую переменную-член
+//
+//int main()
+//{
+//    // Примечание: Мы не создаем здесь никаких объектов класса Anything
+//
+//    Anything::s_value = 4;
+//    std::cout << Anything::s_value << '\n';
+//    return 0;
+//}
+
+
+
+
+
+//использование статических переменных класса
+//#include <iostream>
+//
+//class Anything
+//{
+//private:
+//    static int s_idGenerator;
+//    int m_id;
+//
+//public:
+//    Anything() { m_id = s_idGenerator++; } // увеличиваем значение идентификатора для следующего объекта
+//
+//    int getID() const { return m_id; }
+//};
+//
+//// Мы определяем и инициализируем s_idGenerator несмотря на то, что он объявлен как private.
+//// Это нормально, поскольку определение не подпадает под действия спецификаторов доступа
+//int Anything::s_idGenerator = 1; // начинаем наш ID-генератор со значения 1
+//
+//int main()
+//{
+//    Anything first;
+//    Anything second;
+//    Anything third;
+//
+//    std::cout << first.getID() << '\n';
+//    std::cout << second.getID() << '\n';
+//    std::cout << third.getID() << '\n';
+//    return 0;
+//}
+
+
+
+
+
+// статический метод
+#include <iostream>
+class Anything
 {
 private:
-	int* m_array;
-	int m_length;
-
+    static int s_value;
 public:
-	Massiv(int length) // конструктор
-	{
-		assert(length > 0);
-
-		m_array = new int[length];
-		m_length = length;
-	}
-
-	~Massiv() // деструктор
-	{
-		// Динамически удаляем массив, который выделили ранее
-		delete[] m_array;
-	}
-
-	void setValue(int index, int value) { m_array[index] = value; }
-	int getValue(int index) { return m_array[index]; }
-
-	int getLength() { return m_length; }
+    static int getValue() { return s_value; } // статический метод
 };
+
+int Anything::s_value = 3; // определение статической переменной-члена класса
 
 int main()
 {
-	Massiv arr(15); // выделяем 15 целочисленных значений
-	for (int count = 0; count < 15; ++count)
-		arr.setValue(count, count + 1);
-
-	std::cout << "The value of element 7 is " << arr.getValue(7);
-
-	return 0;
+    std::cout << Anything::getValue() << '\n';
 }
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------
+//Константные методы классов
+//class Anything
+//{
+//public:
+//    int m_value;
+//
+//    Anything() : m_value(0) { }
+//
+//    void setValue(int value) { m_value = value; }
+//    int getValue() { return m_value; }
+//};
+//
+//int main()
+//{
+//    const Anything anything; // вызываем конструктор по умолчанию
+//
+//    anything.m_value = 7; // ошибка компиляции: нарушение const
+//    anything.setValue(7); // ошибка компиляции: нарушение const
+//
+//    //anything.getValue();
+//
+//
+//    return 0;
+//}
+
+//передача объекта по константной ссылке
+//#include <iostream>
+//
+//class Date
+//{
+//private:
+//    int m_day;
+//    int m_month;
+//    int m_year;
+//
+//public:
+//    Date(int day, int month, int year)
+//    {
+//        setDate(day, month, year);
+//    }
+//
+//    void setDate(int day, int month, int year)
+//    {
+//        m_day = day;
+//        m_month = month;
+//        m_year = year;
+//    }
+//
+//    int getDay() { return m_day; }
+//    int getMonth() { return m_month; }
+//    int getYear() { return m_year; }
+//};
+//
+//// Примечание: Мы передаем объект date по константной ссылке, дабы избежать создания копии объекта date
+//void printDate(const Date& date)
+//{
+//    std::cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << '\n';
+//}
+//
+//int main()
+//{
+//    Date date(12, 11, 2018);
+//    printDate(date);
+//
+//    return 0;
+//}

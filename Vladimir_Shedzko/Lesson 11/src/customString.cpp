@@ -167,9 +167,11 @@ size_t CustomString::find(const char inp[], const size_t &startpos) noexcept
 }
 
 void CustomString::resize(const size_t &newsize, char fillchar) {
-    data = (char*)realloc(data, sizeof(char) * (newsize));
-    for (size_t i = data_size; i < newsize; i++)
-        data[i] = fillchar;
+    auto new_data = new char[newsize * 2];
+    if (newsize > 0)
+        std::copy(data, data + newsize, new_data);
+    delete[] data;
+    capacity = newsize * 2;
     data_size = newsize;
 }
 
@@ -191,5 +193,5 @@ void CustomString::reserve(size_t new_capacity) {
 
 CustomString::~CustomString()
 {
-    delete data;
+    delete[] data;
 }

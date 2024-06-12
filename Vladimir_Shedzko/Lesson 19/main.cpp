@@ -17,28 +17,29 @@ class Timer
 {
 public:
     static void start(int waitMsec, std::function<bool(
-        std::fstream*, std::queue<char>*, std::mutex*, int*
-    )> func, std::fstream* stream, std::queue<char>*cont, std::mutex* mutex, int* counter) 
+        std::fstream*, std::queue<char>*, std::unique_lock<std::mutex>*, int*
+    )> func, std::fstream* stream, std::queue<char>*cont, std::unique_lock<std::mutex>* lock, int* counter) 
     {      
         if (stream == nullptr || !stream->is_open()) {
             std:: cout << "input file stream is empty" << std::endl;
             return;
         }
-            if (cont == nullptr) {
+        if (cont == nullptr) {
             std:: cout << "container is null" << std::endl;
             return;
         }
-        if (mutex == nullptr) {
+        if (lock == nullptr) {
             std:: cout << "mutex is null" << std::endl;
             return;
         }
-        while (func(stream, cont, mutex, counter)){
+        while (func(stream, cont, lock, counter)) {
             std::this_thread::sleep_for(std::chrono::milliseconds(waitMsec));
         }
     }
 };
 
-bool readChar(std::fstream* reader, std::queue<char>*cont, std::mutex* mutex, int* counter)
+bool readChar(std::fstream* reader, std::queue<char>*cont, 
+              std::unique_lock<std::mutex>* lock, int* counter)
 {
     char inChar;
     
@@ -46,37 +47,40 @@ bool readChar(std::fstream* reader, std::queue<char>*cont, std::mutex* mutex, in
     {
         (*counter) ++;
         if (inChar == clrChar) {
-            mutex->lock();
+            lock->lock();
             while (!cont->empty())
                 cont->pop();
-            mutex->unlock();
+            lock->unlock();
         }
         else if (cont->size() < maxSize) {
-            mutex->lock();
+            lock->lock();
             cont->push(inChar);
-            mutex->unlock();
+            lock->unlock();
         }        
         return true;
     }
     
-    mutex->lock();
+    lock->lock();
     cont->push(extChar);
-    mutex->unlock();
+    lock->unlock();
     return false;
 }
 
-bool writeChar(std::fstream* writer, std::queue<char>*cont, std::mutex* mutex, int* counter) 
+bool writeChar(std::fstream* writer, std::queue<char>*cont, 
+               std::unique_lock<std::mutex>* lock, int* counter) 
 {   
-    mutex->lock();
+    lock->lock();
     if (!cont->empty())
     {
-        if (cont->front() == extChar)
+        if (cont->front() == extChar) {
+            lock->unlock();
             return false;
+        }
         *writer << std::noskipws << cont->front();
         (*counter) ++;
         cont->pop();
     }
-    mutex->unlock();
+    lock->unlock();
     return true;
 }
 
@@ -92,14 +96,14 @@ int main()
     int write_count {0};
 
     std::mutex mutex;
+    std::unique_lock<std::mutex> lock {mutex, std::defer_lock};
 
     auto container = std::queue<char>{};
-    // Timer::start(read_delay, &read_count, readChar, &fileReader, &container, &mutex);
     std::thread thread1([&](){
-        Timer::start(read_delay, readChar, &fileReader, &container, &mutex, &read_count);
+        Timer::start(read_delay, readChar, &fileReader, &container, &lock, &read_count);
     });
     std::thread thread2 ([&](){
-        Timer::start(read_delay, writeChar, &fileWriter, &container, &mutex, &write_count);
+        Timer::start(read_delay, writeChar, &fileWriter, &container, &lock, &write_count);
     });
     
 

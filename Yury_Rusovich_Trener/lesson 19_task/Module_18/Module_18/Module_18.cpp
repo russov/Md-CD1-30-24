@@ -366,30 +366,30 @@
 
 
 //multimap
-#include <iostream>
-#include <map>
-
-int main() {
-    std::multimap<int, std::string> myMultimap;
-
-    // Добавляем пары ключ-значение
-    myMultimap.insert({ 1, "one" });
-    myMultimap.insert({ 2, "two" });
-    myMultimap.insert({ 2, "another two" });
-    myMultimap.insert({ 2, "another two2" });
-    myMultimap.insert({ 3, "three" });
-
-    // Получаем диапазон итераторов для всех значений с ключом 2
-    auto range = myMultimap.equal_range(2);
-
-    // Выводим все значения
-    std::cout << "Values with key 2:" << std::endl;
-    for (auto it = range.first; it != range.second; ++it) {
-        std::cout << it->second << std::endl;
-    }
-
-    return 0;
-}
+//#include <iostream>
+//#include <map>
+//
+//int main() {
+//    std::multimap<int, std::string> myMultimap;
+//
+//    // Добавляем пары ключ-значение
+//    myMultimap.insert({ 1, "one" });
+//    myMultimap.insert({ 2, "two" });
+//    myMultimap.insert({ 2, "another two" });
+//    myMultimap.insert({ 2, "another two2" });
+//    myMultimap.insert({ 3, "three" });
+//
+//    // Получаем диапазон итераторов для всех значений с ключом 2
+//    auto range = myMultimap.equal_range(2);
+//
+//    // Выводим все значения
+//    std::cout << "Values with key 2:" << std::endl;
+//    for (auto it = range.first; it != range.second; ++it) {
+//        std::cout << it->second << std::endl;
+//    }
+//
+//    return 0;
+//}
 
 
 
@@ -437,8 +437,16 @@ int main() {
 //    for (int count = 0; count < 5; ++count)
 //        myVector.push_back(count);
 //
-//    std::vector<int>::const_iterator it; // объявляем итератор только для чтения
+//
+//
+//
+//    std::vector<int>::iterator it; // объявляем итератор только для чтения
 //    it = myVector.begin(); // присваиваем ему начальный элемент вектора
+//
+//    for (const auto& ptr = myVector.begin(); ptr != myVector.end(); ++it)
+//    {
+//    }
+//
 //    while (it != myVector.end()) // пока итератор не достигнет последнего элемента
 //    {
 //        std::cout << *it << " "; // выводим значение элемента, на который указывает итератор
@@ -453,15 +461,16 @@ int main() {
 
 
 //#include <iostream>
-//#include <list>
+//#include <forward_list>
+//#include <vector>
 //
 //int main()
 //{
-//    std::list<int> myList;
+//    std::forward_list<int> myList;
 //    for (int count = 0; count < 5; ++count)
-//        myList.push_back(count);
+//        myList.push_front(count);
 //
-//    std::list<int>::const_iterator it; // объявляем итератор
+//    std::forward_list<int>::const_iterator it; // объявляем итератор
 //    it = myList.begin(); // присваиваем ему начальный элемент списка
 //    while (it != myList.end()) // пока итератор не достигнет последнего элемента
 //    {
@@ -490,7 +499,7 @@ int main() {
 //    mySet.insert(9);
 //    mySet.insert(2);
 //
-//    std::set<int>::const_iterator it; // объявляем итератор
+//    std::set<int>::iterator it; // объявляем итератор
 //    it = mySet.begin(); // присваиваем ему начальный элемент set-а
 //    while (it != mySet.end()) // пока итератор не достигнет последнего элемента
 //    {
@@ -791,7 +800,7 @@ int main() {
 //#include <string>
 //
 //int main() {
-//    std::string str_num = "42";
+//    std::string str_num = "QQ";
 //    std::string str_long_num = "123123123";
 //
 //    int num = std::stoi(str_num);
@@ -812,7 +821,7 @@ int main() {
 //#include <string>
 //
 //int main() {
-//    std::string str_num = "42";
+//    std::string str_num = "0";
 //    std::string str_float = "3.14";
 //
 //    int num;

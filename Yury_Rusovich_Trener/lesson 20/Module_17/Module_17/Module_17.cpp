@@ -32,7 +32,7 @@
 //    for (int nCount = 0; nCount < 5; ++nCount)
 //        li.push_back(nCount);
 //
-//    std::list<int>::iterator it; // объявляем итератор
+//    std::list<int>::iterator it = li.begin(); // объявляем итератор
 //    it = find(li.begin(), li.end(), 2); // ищем в списке число 2
 //    li.insert(it, 7); // используем алгоритм list::insert() для добавления числа 7 перед числом 2
 //
@@ -104,9 +104,12 @@ int main() {
     std::vector<int> vec1 = { 5, 2, 8, 1, 3 };
 
     //1
-   /* std::sort(vec1.begin(), vec1.end(), [](int a, int b) {
-        return a > b;
-        });*/
+    std::sort(
+        vec1.begin(), 
+        vec1.end(), 
+        [](int a, int b) {
+            return a > b;
+        });
 
     //2
     std::sort(vec1.begin(), vec1.end(), Compare());

@@ -263,26 +263,26 @@
 
 //----------------------------------------------------------------------------------------------
 //статические переменный класса
-//#include <iostream>
-//
-//class Anything
-//{
-//public:
-//    static int s_value; // объявляем статическую переменную-член
-//    //static const int s_value = 5;
-//    //static constexpr double s_value = 3.4;
-//};
-//
-//int Anything::s_value = 3; // определяем статическую переменную-член
-//
-//int main()
-//{
-//    // Примечание: Мы не создаем здесь никаких объектов класса Anything
-//
-//    Anything::s_value = 4;
-//    std::cout << Anything::s_value << '\n';
-//    return 0;
-//}
+#include <iostream>
+
+class Anything
+{
+public:
+    static int s_value; // объявляем статическую переменную-член
+    //static const int s_value = 5;
+    //static constexpr double s_value = 3.4;
+};
+
+int Anything::s_value = 3; // определяем статическую переменную-член
+
+int main()
+{
+    // Примечание: Мы не создаем здесь никаких объектов класса Anything
+
+    Anything::s_value = 4;
+    std::cout << Anything::s_value << '\n';
+    return 0;
+}
 
 
 
@@ -324,21 +324,21 @@
 
 
 // статический метод
-#include <iostream>
-class Anything
-{
-private:
-    static int s_value;
-public:
-    static int getValue() { return s_value; } // статический метод
-};
-
-int Anything::s_value = 3; // определение статической переменной-члена класса
-
-int main()
-{
-    std::cout << Anything::getValue() << '\n';
-}
+//#include <iostream>
+//class Anything
+//{
+//private:
+//    static int s_value;
+//public:
+//    static int getValue() { return s_value; } // статический метод
+//};
+//
+//int Anything::s_value = 3; // определение статической переменной-члена класса
+//
+//int main()
+//{
+//    std::cout << Anything::getValue() << '\n';
+//}
 
 
 

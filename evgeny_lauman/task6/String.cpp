@@ -124,11 +124,11 @@ size_t String::find(const String& st, const size_t index) const
 
 size_t String::find(const char* st, const size_t index) const
 {
-    String st_string{ st };
     if (len <= index)
         throw std::out_of_range("out");
     else
     {
+        String st_string{ st };
         for (size_t i = index; i < len; i++)
         {
             for (size_t j = 0; j < st_string.length(); j++)
@@ -236,7 +236,7 @@ const char& String::operator[](int i) const
 
 bool operator==(const String& st1, const String& st2)
 {
-    return (std::strcmp(st1.str, st2.str) == 0);
+    return !std::strcmp(st1.str, st2.str);
 }
 
 std::ostream& operator<<(std::ostream& os, const String& st)

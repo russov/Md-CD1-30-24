@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 
-#define CARD_DECK_BLACKJACK 2,2,2,2,3,3,3,3,4,4,4,4,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,11,11,11,11
-
 enum BlackJackMoves
 {
 	START_GAME,
@@ -15,34 +13,43 @@ enum BlackJackMoves
 
 int getCard(std::vector<int> &card_deck)
 {
-		srand(time(NULL));
-		int index = rand() % card_deck.size();
-		int rand_card = card_deck[index];
-		card_deck.erase(card_deck.begin() + index);
-		return rand_card;
+	srand(time(NULL));
+	const int index = rand() % card_deck.size();
+	const int rand_card = card_deck[index];
+	card_deck.erase(card_deck.begin() + index);
+	return rand_card;
 }
 
-void runDialog(BlackJackMoves &move)
+enum BlackJackMoves runDialog()
 {
 	std::cout << "ИГРОК, ВЗЯТЬ еще (yes/no)? ";
-	std::string answer("");
+	std::string answer{ "" };
 	while (!(answer == "yes" || answer == "no"))
 	{
 		std::cin >> answer;
 		if (answer == "yes")
-			move = BlackJackMoves::HIT_PLAYER;
+		{
+			return BlackJackMoves::HIT_PLAYER;
+		}
 		else if (answer == "no")
-			move = BlackJackMoves::STAND_PLAYER;
+		{
+			return BlackJackMoves::STAND_PLAYER;
+		}
 		else
+		{
 			std::cout << "Неверный ввод" << std::endl;
+		}
 	}
 }
 
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	std::vector<int> card_deck{ CARD_DECK_BLACKJACK };
-	int player_points(0), diller_points(0);
+	const std::vector<int> DEFAULT_CARD_DECK_BLACKJACK{ 2,2,2,2,3,3,3,3,4,4,4,4,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,11,11,11,11 };
+	const int STOP_POINTS{ 17 };
+	const int WIN_POINTS{ 21 };
+	std::vector<int> card_deck{ DEFAULT_CARD_DECK_BLACKJACK };
+	int player_points{ 0 }, diller_points{ 0 };
 	auto move = BlackJackMoves::START_GAME;
 	do
 	{
@@ -54,7 +61,7 @@ int main()
 				player_points += getCard(card_deck);
 				player_points += getCard(card_deck);
 				std::cout << "ИГРОК: сумма очков = " << player_points << std::endl;
-				runDialog(move);
+				move = runDialog();
 				break;
 			}
 			case BlackJackMoves::HIT_PLAYER:
@@ -67,7 +74,9 @@ int main()
 					move = BlackJackMoves::END_GAME;
 				}
 				else
-					runDialog(move);
+				{
+					move = runDialog();
+				}
 				break;
 			}
 			case BlackJackMoves::STAND_PLAYER:
@@ -80,15 +89,19 @@ int main()
 			{
 				diller_points += getCard(card_deck);
 				std::cout << "ДИЛЛЕР: сумма очков = " << diller_points << std::endl;
-				if(diller_points < 17)
+				if (diller_points < STOP_POINTS)
+				{
 					move = BlackJackMoves::HIT_DILLER;
-				else if(diller_points > 21)
+				}
+				else if(diller_points > WIN_POINTS)
 				{
 					std::cout << "ИГРОК - ПОБЕДИЛ, поздравляем! " << std::endl;
 					move = BlackJackMoves::END_GAME;
 				}
 				else
+				{
 					move = BlackJackMoves::STAND_DILLER;
+				}
 				break;
 
 			}

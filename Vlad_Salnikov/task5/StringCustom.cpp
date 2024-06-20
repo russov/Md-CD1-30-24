@@ -50,25 +50,16 @@ StringCustom::StringCustom(const char* cstr)
 
 StringCustom::StringCustom(const char* cstr, int n)
 {
-	int strsize{ 0 };
-	for (auto i = 0;; i++)
-	{
-		++strsize;
-		if (cstr[i] == '\0')
-		{
-			break;
-		}
-	}
-	if (n > strsize)
-	{
+	size_t len = std::strlen(cstr);
+
+	if (n > len) {
 		throw std::out_of_range("Out of range");
 	}
 
+	this->strsize = n;
 	this->s = new char[n + 1];
-	for (int i = 0; i < n; i++)
-	{
-		this->s[i] = cstr[i];
-	}
+
+	std::strncpy(this->s, cstr, n);
 	this->s[n] = '\0';
 }
 

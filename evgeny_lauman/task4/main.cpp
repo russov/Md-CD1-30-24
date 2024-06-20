@@ -68,7 +68,7 @@ int main()
 			{
 				player_points += getCard(card_deck);
 				std::cout << "ИГРОК: сумма очков = " << player_points << std::endl;
-				if (player_points > 21)
+				if (player_points > WIN_POINTS)
 				{
 					std::cout << "ИГРОК - ПРОИГРАЛ, повезет в другой раз! " << std::endl;
 					move = BlackJackMoves::END_GAME;

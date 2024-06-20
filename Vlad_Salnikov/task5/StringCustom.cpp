@@ -2,8 +2,9 @@
 #include "StringCustom.h"
 #include <iostream>
 
-StringCustom::StringCustom()
+StringCustom::StringCustom() 
 {
+	s = new char[strsize] {'\0'};
 }
 
 StringCustom::~StringCustom()
@@ -15,7 +16,6 @@ StringCustom::~StringCustom()
 StringCustom::StringCustom(const StringCustom& str)
 {
 	this->setSizeStringCustom(str.getSizeStringCustom());
-	this->arrayDelete();
 	this->s = new char[this->getSizeStringCustom() + 1];
 	for (auto i = 0; i < this->getSizeStringCustom(); i++)
 	{
@@ -37,22 +37,14 @@ StringCustom::StringCustom(const StringCustom& str, int pos, int len)
 
 StringCustom::StringCustom(const char* cstr)
 {
-	int cstrsize{ 0 };
-	for (auto i = 0;; i++)
-	{
-		if (cstr[i] == '\0')
-		{
-			break;
-		}
-		++cstrsize;
-	}
-	setSizeStringCustom(cstrsize + 1);
+	if (cstr) {
+		size_t cstrSize = std::strlen(cstr) + 1; 
+		setSizeStringCustom(cstrSize);
+ 
+		this->s = new char[getSizeStringCustom()]; 
 
-	this->arrayDelete();
-	this->s = new char[this->getSizeStringCustom()] {'\0'};
-	for (int i = 0; i < strsize; i++)
-	{
-		this->s[i] = cstr[i];
+		
+		std::strcpy(this->s, cstr);
 	}
 }
 
@@ -69,15 +61,15 @@ StringCustom::StringCustom(const char* cstr, int n)
 	}
 	if (n > strsize)
 	{
-		n = strsize;
+		throw std::out_of_range("Out of range");
 	}
 
-	this->s = new char[strsize];
+	this->s = new char[n + 1];
 	for (int i = 0; i < n; i++)
 	{
 		this->s[i] = cstr[i];
 	}
-	this->s[this->getSizeStringCustom() - 1] = '\0';
+	this->s[n] = '\0';
 }
 
 StringCustom::StringCustom(int n, char c)
@@ -93,7 +85,10 @@ StringCustom::StringCustom(int n, char c)
 
 StringCustom::StringCustom(StringCustom&& str) noexcept
 {
-	//str = std::move(s);
+	s = str.s;
+	setArraySizeStringCustom(str.getSizeStringCustom());
+	str.s = nullptr;
+	str.setArraySizeStringCustom(0);
 }
 
 char StringCustom::getCharStringCustom(int num) const
@@ -171,7 +166,7 @@ int StringCustom::fastCountCstr(const char* cstr) const
 	return cstrsize;
 }
 
-int StringCustom::StringCustomFind(char c)
+int StringCustom::StringCustomFind(char c) const
 {
 	for (auto i = 0; i < this->getSizeStringCustom(); i++)
 	{
@@ -184,8 +179,47 @@ int StringCustom::StringCustomFind(char c)
 	return 0;
 }
 
-void StringCustom::arrayDelete()
-{
+void StringCustom::append(const StringCustom& other) {
+	int newSize = strsize + other.strsize - 1;
+	char* newS = new char[newSize];
+	std::strcpy(newS, s);
+	std::strcat(newS, other.s);
 	delete[] s;
-	s = nullptr;
+	s = newS;
+	strsize = newSize;
+}
+
+void StringCustom::append(const char* cstr) {
+	if (!cstr) return;
+	int cstrLen = std::strlen(cstr);
+	int newSize = strsize + cstrLen;
+	char* newS = new char[newSize];
+	std::strcpy(newS, s);
+	std::strcat(newS, cstr);
+	delete[] s;
+	s = newS;
+	strsize = newSize;
+}
+
+void StringCustom::clear() {
+	delete[] s;
+	s = new char[1] {'\0'};
+	strsize = 1;
+}
+
+int StringCustom::find(char c) const {
+	return StringCustomFind(c);
+}
+
+size_t StringCustom::length() const {
+	return strsize - 1;
+}
+
+size_t StringCustom::size() const {
+	return strsize;
+}
+
+void StringCustom::sortStringCustom()
+{
+	std::sort(s, s + strsize - 1);
 }

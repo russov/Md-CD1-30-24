@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "StringCustom.h"
+#include <vector>
 
 TEST(TestCaseName, TestName) {
   EXPECT_EQ(1, 1);
@@ -69,14 +70,51 @@ TEST(FillConstTest, StrFill) {
 	EXPECT_EQ("qqqqq", strcon);
 }
 
-//TEST(RangeConstTest, StrRange) {
-//	std::string str{ "qwert" };
-//	std::string strcon{ str.begin() + 1, str.end() };
-//	EXPECT_EQ("wert", strcon);
-//}
+TEST(RangeConstTest, StrRange) {
+	std::string str{ "qwert" };
+	std::string strcon{ str.begin() + 1, str.end() };
+	EXPECT_EQ("wert", strcon);
+}
 
-//TEST(MoveConstTest, StrMove) {
-//	std::string&& str{ "qwert" };
-//	std::string strcon(str);
-//	EXPECT_EQ("qwert", strcon);
-//}
+TEST(MoveConstTest, StrMove) {
+	std::string&& str{ "qwert" };
+	std::string strcon(str);
+	EXPECT_EQ("qwert", strcon);
+}
+TEST(StringCustomTest, AppendStringCustom) {
+	StringCustom str1("Hello");
+	StringCustom str2("World");
+	str1.append(str2);
+	ASSERT_STREQ(str1.c_str(), "HelloWorld");
+}
+
+// Тесты для метода append(const char* cstr)
+TEST(StringCustomTest, AppendCString) {
+	StringCustom str("Hello");
+	str.append(", World");
+	ASSERT_STREQ(str.c_str(), "Hello, World");
+}
+
+TEST(StringCustomTest, Clear) {
+	StringCustom str("Hello");
+	str.clear();
+	ASSERT_STREQ(str.c_str(), "");
+}
+
+TEST(StringCustomTest, FindExistingChar) {
+	StringCustom str("Hello, World");
+	ASSERT_EQ(str.find('o'), 4);
+}
+
+TEST(StringCustomTest, LengthAndSize) {
+	StringCustom str("Hello");
+	ASSERT_EQ(str.length(), 5);
+	ASSERT_EQ(str.size(), 6);
+}
+
+TEST(StringCustomSortStringTest, SortString) {
+	StringCustom str("acdb");
+	str.sortStringCustom();
+
+	ASSERT_STREQ(str.c_str(), "abcd");
+}

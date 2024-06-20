@@ -1,4 +1,5 @@
 #pragma once
+
 class StringCustom
 {
 public:
@@ -8,7 +9,6 @@ public:
 	explicit StringCustom(const char* cstr);
 	explicit StringCustom(const char* cstr, int n);
 	explicit StringCustom(int n, char c);
-	//template <class InputIterator>  StringCustom(InputIterator first, InputIterator last);
 	explicit StringCustom(StringCustom&& str) noexcept;
 
 	char getCharStringCustom(int) const;
@@ -17,65 +17,58 @@ public:
 	void setSizeStringCustom(int);
 	void setArraySizeStringCustom(int);
 	int StringCustomSize();
-	int StringCustomFind(char c);
+	int StringCustomFind(char c) const;
 	void StringCustomClear();
 	int StringCustomLength();
 	int fastCountCstr(const char* cstr) const;
-	void arrayDelete();
+
+	void append(const StringCustom& other);
+	void append(const char* cstr);
+	void clear();
+	int find(char c) const;
+	size_t length() const;
+	size_t size() const;
+	void sortStringCustom();
 
 
-	friend bool operator==(const StringCustom& str1, const StringCustom& str2)
-	{
-		if (str1.getSizeStringCustom() != str2.getSizeStringCustom())
-		{
-			return false;
-		}
 
-		for (auto i = 0; i < str1.strsize; i++)
-		{
-			if (str1.getCharStringCustom(i) != str2.getCharStringCustom(i))
-			{
-				return false;
-			}
-		}
 
-		return true;
+	const char* c_str() const {
+		return s;
 	}
-	friend bool operator==(const char* cstr, const StringCustom& str2)
-	{
-		StringCustom str1(cstr);
-		if (str1.getSizeStringCustom() != str2.getSizeStringCustom())
-		{
+	
+	bool equals(const char* cstr) const {
+		if (cstr == nullptr) {
 			return false;
 		}
 
-		for (auto i = 0; i < str1.getSizeStringCustom(); i++)
-		{
-			if (str1.getCharStringCustom(i) != str2.getCharStringCustom(i))
-			{
-				return false;
-			}
+		size_t cstrSize = std::strlen(cstr) + 1;
+
+		if (getSizeStringCustom() != cstrSize) {
+			return false;
 		}
 
-		return true;
+		return std::strcmp(s, cstr) == 0;
 	}
-	friend bool operator==(const StringCustom& str1, const char* cstr)
-	{
-		StringCustom str2(cstr);
-		if (str1.strsize != str2.strsize)
-		{
-			return false;
-		}
 
-		for (auto i = 0; i < str1.strsize; i++)
-		{
-			if (str1.s[i] != str2.s[i])
-			{
-				return false;
-			}
-		}
-		
-		return true;
+	bool equals(const StringCustom& other) const {
+		return equals(other.c_str());
+	}
+
+	friend bool operator==(const StringCustom& str1, const StringCustom& str2) {
+		return str1.equals(str2);
+	}
+
+	friend bool operator==(const char* cstr, const StringCustom& str2) {
+		return str2.equals(cstr);
+	}
+
+	friend bool operator==(const StringCustom& str1, const char* cstr) {
+		return str1.equals(cstr);
+	}
+
+	friend bool operator<(const StringCustom& str1, const StringCustom& str2) {
+		return std::strcmp(str1.s, str2.s) < 0;
 	}
 
 	~StringCustom();

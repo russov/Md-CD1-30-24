@@ -31,3 +31,26 @@ TEST(GeometricFigureTest, AllOnceVolumeValue) {
 	EXPECT_NEAR(check_volume1, figures[1]->VolumeValue(), 1e-7);
 	EXPECT_NEAR(check_volume2, figures[2]->VolumeValue(), 1e-7);
 }
+
+TEST(ArrayPointersTest, FigureIndexInside) {
+	ArrayPointers<GeometricFigure> figures;
+	figures.Add(new Sphere(20));
+	figures.Add(new Cylinder(20, 30));
+	figures.Add(new Pyramid(30, 20));
+	EXPECT_NO_THROW({
+		GeometricFigure* value1 = figures[0];
+		GeometricFigure* value2 = figures[1];
+		GeometricFigure* value3 = figures[2];
+		});
+}
+
+TEST(ArrayPointersTest, FigureIndexOut) {
+	ArrayPointers<GeometricFigure> figures;
+	figures.Add(new Sphere(20));
+	figures.Add(new Cylinder(20, 30));
+	figures.Add(new Pyramid(30, 20));
+	EXPECT_THROW({
+		GeometricFigure* value = figures[3];}, 
+		std::out_of_range
+		);
+}

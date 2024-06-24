@@ -61,9 +61,7 @@ public:
         if (index >= elements_.size()) {
             throw std::out_of_range("Outside!"); // If it is outside the limits, an exception will be thrown
         }
-        else {
-            return elements_[index];
-        }
+        return elements_[index]; 
     }
     size_t Size() const { // Getting the vector size
         return elements_.size();

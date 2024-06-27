@@ -1,8 +1,7 @@
 #pragma once
-
+#pragma comment (lib, "ws2_32.lib")
 #include <string>
 #include <WS2tcpip.h>
-#pragma comment (lib, "ws2_32.lib")
 
 class TCPServer 
 {

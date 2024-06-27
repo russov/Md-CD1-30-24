@@ -1,11 +1,19 @@
 #include <iostream>
-#include "ChatClient.h"
 #include <string>
-#include <sstream>
 #include <WS2tcpip.h>
+#include "ChatClient.h"
+#include "json/json.hpp"
 #pragma comment (lib, "ws2_32.lib")
 
+using json = nlohmann::json;
 using namespace std;
+
+enum messageType
+{
+	SIGNUP,
+	LOGIN,
+	DATASEND
+};
 
 int main() 
 {
@@ -30,15 +38,13 @@ int main()
 			std::string messageToSend; 
 			if (client->joinChat == false) 
 			{
-				std::ostringstream ss;
-				ss << client->username << ": " << msg;
-				messageToSend = ss.str();
+				auto j = json{ {"username", client->username}, {"data", msg}, {"type", messageType::DATASEND} };
+				messageToSend = to_string(j);
 			}
 			else if (client->joinChat == true) 
 			{
-				std::ostringstream ss; 
-				ss << client->username << " joined the chat!"; 
-				messageToSend = ss.str(); 
+				auto j = json{ {"username", client->username}, {"data", "joined the chat!"}, {"type", messageType::DATASEND} };
+				messageToSend = to_string(j);
 				client->joinChat = false; 
 			}
 			client->sendMsg(messageToSend);

@@ -1,7 +1,16 @@
-#include "ChatServer.h"
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "ChatServer.h"
+#include "json/json.hpp"
+using json = nlohmann::json;
+
+enum messageType
+{
+	SIGNUP,
+	LOGIN,
+	DATASEND
+};
 
 TCPServer::TCPServer(std::string ipAddress, int port)
 	: listenerIPAddress(ipAddress), listenerPort(port) {}
@@ -95,9 +104,6 @@ void TCPServer::run()
 				{	//Case 1: accept new connection.
 					SOCKET client = accept(listeningSocket, nullptr, nullptr);
 					FD_SET(client, &master);		//add new socket
-					const std::string welcome = "Welcome to Chat.\n";
-					send(client, welcome.c_str(), welcome.size() + 1, 0);
-					std::cout << "New user joined the chat." << std::endl;
 				}
 				else 
 				{	//Case 2: receive a msg.	
@@ -110,23 +116,34 @@ void TCPServer::run()
 					}
 					else 
 					{
-						for (int i = 0; i < master.fd_count; i++) 
-						{	
-							SOCKET outSock = master.fd_array[i];	
-							if (outSock != listeningSocket) 
+						std::string recived{ buf, size_t(bytesReceived)};
+						json msg{ json::parse(recived) };
+						enum messageType type{ msg["type"] };
+						std::string username{ msg["username"] };
+						std::string data{ msg["data"] };
+						
+						if (type == messageType::DATASEND)
+						{
+							for (int i = 0; i < master.fd_count; i++)
 							{
-								if (outSock == sock) 
-								{	
-									std::string msgSent = "Message delivered.";
-									send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
-								}
-								else 
-								{	
-									send(outSock, buf, bytesReceived, 0);
+								SOCKET outSock = master.fd_array[i];
+								if (outSock != listeningSocket)
+								{
+									std::string msgSent{};
+									if (outSock == sock)
+									{
+										msgSent = "Message delivered.";
+										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+									}
+									else
+									{
+										msgSent = username + ": " + data;
+										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+									}
 								}
 							}
+							std::cout << username + ": " + data << std::endl;
 						}
-						std::cout << std::string(buf, 0, bytesReceived) << std::endl;
 					}
 				}
 			}

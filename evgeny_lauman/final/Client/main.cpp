@@ -43,7 +43,7 @@ int main()
 			}
 			else if (client->joinChat == true) 
 			{
-				auto j = json{ {"username", client->username}, {"data", "joined the chat!"}, {"type", messageType::DATASEND} };
+				auto j = json{ {"username", client->username}, {"data", ""}, {"type", messageType::LOGIN} };
 				messageToSend = to_string(j);
 				client->joinChat = false; 
 			}

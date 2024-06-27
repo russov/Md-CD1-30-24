@@ -79,6 +79,8 @@ void TCPServer::run()
 	const int MAX_BUFFER_SIZE = 4096;
 	char buf[MAX_BUFFER_SIZE];
 	SOCKET listeningSocket = createSocket();
+	SQLiteDatabase db{ "MyDb.db" };
+	db.openDatabase();
 	while (true) 
 	{
 		if (listeningSocket == INVALID_SOCKET) 
@@ -124,6 +126,7 @@ void TCPServer::run()
 						
 						if (type == messageType::DATASEND)
 						{
+							db.addMsg(username, data);
 							for (int i = 0; i < master.fd_count; i++)
 							{
 								SOCKET outSock = master.fd_array[i];
@@ -144,15 +147,37 @@ void TCPServer::run()
 							}
 							std::cout << username + ": " + data << std::endl;
 						}
+						else if (type == messageType::LOGIN)
+						{
+							std::cout << username + ": joined the chat!" << std::endl;
+							for (int i = 0; i < master.fd_count; i++)
+							{
+								SOCKET outSock = master.fd_array[i];
+								if (outSock != listeningSocket)
+								{
+									std::string msgSent{};
+									if (outSock == sock)
+									{
+										msgSent = "SUCCESS login as: " + username;
+										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+										//send last 10 messages
+										msgSent = db.getLast10Msg();
+										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+									}
+									else
+									{
+										msgSent = username + ": joined the chat!";
+										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+									}
+								}
+							}
+
+						}
 					}
 				}
 			}
 		}
 	}
-}
-
-void TCPServer::sendMsg(int clientSocket, std::string msg) {
-	send(clientSocket, msg.c_str(), msg.size() + 1, 0);
 }
 
 void TCPServer::cleanupWinsock() {

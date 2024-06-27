@@ -2,6 +2,7 @@
 #pragma comment (lib, "ws2_32.lib")
 #include <string>
 #include <WS2tcpip.h>
+#include "Database.h"
 
 class TCPServer 
 {
@@ -13,7 +14,6 @@ public:
 	TCPServer(std::string ipAddress, int port);
 	~TCPServer(); 
 
-	void sendMsg(int clientSocket, std::string msg);
 	bool initWinsock(); 
 	void run();
 	void cleanupWinsock(); 

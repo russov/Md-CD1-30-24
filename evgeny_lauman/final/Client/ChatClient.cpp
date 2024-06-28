@@ -77,7 +77,7 @@ void TCPClient::threadRecv()
 	}
 }
 
-void TCPClient::connectSock() 
+bool TCPClient::connectSock() 
 {
 	serverSocket = createSocket();
 	int connResult = connect(serverSocket, (sockaddr*)&hint, sizeof(hint));
@@ -86,8 +86,9 @@ void TCPClient::connectSock()
 		cout << "Error: can't connect to server." << endl;
 		closesocket(serverSocket);
 		WSACleanup();
-		return;
+		return false;
 	}
+	return true;
 }
 
 void TCPClient::sendMsg(string txt) 

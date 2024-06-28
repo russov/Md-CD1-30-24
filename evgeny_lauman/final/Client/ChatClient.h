@@ -18,7 +18,7 @@ public:
 	TCPClient();
 	~TCPClient();
 	bool initWinsock(); 
-	void connectSock();
+	bool connectSock();
 	void sendMsg(std::string txt);
 	std::thread recvThread;
 	void threadRecv();

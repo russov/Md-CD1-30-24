@@ -176,6 +176,28 @@ void TCPServer::run()
 								}
 							}
 						}
+						else if (type == messageType::SIGNUP)
+						{
+							std::string msgSent{};
+							std::cout << username + ": SIGNING!" << std::endl;
+							std::string password{ msg["password"] };
+							if (db.existsUser(username))
+							{
+								msgSent = "ERROR SIGNUP: " + username + " is already used!";
+							}
+							else
+							{
+								if (db.addUser(username, password))
+								{
+									msgSent = "SUCCESS SIGNUP: " + username;
+								}
+								else
+								{
+									msgSent = "ERROR SIGNUP: " + username;
+								}
+							}
+							sendMsg(sock, msgSent);
+						}
 					}
 				}
 			}

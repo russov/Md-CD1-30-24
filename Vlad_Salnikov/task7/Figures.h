@@ -34,8 +34,6 @@ public:
     }
 };
 
-
-
 class Figure {
 public:
     virtual double volume() const = 0;
@@ -46,7 +44,11 @@ class Sphere : public Figure {
 private:
     double radius;
 public:
-    Sphere(double r) : radius(r) {}
+    Sphere(double r) : radius(r) {
+        if (radius < 0) {
+            throw std::invalid_argument("Radius cannot be negative");
+        }
+    }
     double volume() const override {
         return (4.0 / 3.0) * M_PI * std::pow(radius, 3);
     }
@@ -57,7 +59,11 @@ private:
     double radius;
     double height;
 public:
-    Cylinder(double r, double h) : radius(r), height(h) {}
+    Cylinder(double r, double h) : radius(r), height(h) {
+        if (radius < 0 || height < 0) {
+            throw std::invalid_argument("Radius and height cannot be negative");
+        }
+    }
     double volume() const override {
         return M_PI * std::pow(radius, 2) * height;
     }
@@ -68,7 +74,11 @@ private:
     double base_area;
     double height;
 public:
-    Pyramid(double b, double h) : base_area(b), height(h) {}
+    Pyramid(double b, double h) : base_area(b), height(h) {
+        if (base_area < 0 || height < 0) {
+            throw std::invalid_argument("Base area and height cannot be negative");
+        }
+    }
     double volume() const override {
         return (1.0 / 3.0) * base_area * height;
     }

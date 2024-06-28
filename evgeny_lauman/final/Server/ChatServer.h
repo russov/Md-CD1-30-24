@@ -18,6 +18,6 @@ public:
 	bool initWinsock(); 
 	void run();
 	void cleanupWinsock(); 
-	void sendMsg(SOCKET outSock, std::string txt);
+	void sendMsg(SOCKET outSock, std::string txt, std::string access = "Unauthorized");
 	std::string encryptData(std::string input);
 };

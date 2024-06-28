@@ -2,6 +2,8 @@
 #include <string>
 #include <thread>
 #include <WS2tcpip.h>
+#include "json/json.hpp"
+using json = nlohmann::json;
 #pragma comment (lib, "ws2_32.lib")
 
 class TCPClient
@@ -21,7 +23,7 @@ public:
 	bool connectSock();
 	void sendMsg(std::string txt);
 	std::thread recvThread;
-	void threadRecv();
+	void threadRecv(bool& isAuthorized);
 	std::string encryptData(std::string input);
 	std::string username;
 	bool joinChat = true;

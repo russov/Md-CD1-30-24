@@ -82,6 +82,21 @@ bool SQLiteDatabase::existsUser(std::string user)
 		return true;
 }
 
+bool SQLiteDatabase::loginUser(std::string user, std::string password)
+{
+	char* error;
+	sqlite3_stmt* stmt;
+	std::string query{ "select COUNT(*) from USERS WHERE username='" + user + "' and password='" + password + "'"};
+	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0);
+	sqlite3_step(stmt);
+	int count{ sqlite3_column_int(stmt,0) };
+
+	if (count == 0)
+		return false;
+	else
+		return true;
+}
+
 std::string SQLiteDatabase::getLast10Msg()
 {
 	std::string result{ "" };

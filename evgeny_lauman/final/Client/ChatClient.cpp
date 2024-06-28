@@ -57,7 +57,7 @@ SOCKET TCPClient::createSocket()
 	return sock;
 }
 
-void TCPClient::threadRecv() 
+void TCPClient::threadRecv(bool& isAuthorized)
 {
 
 	recvThreadRunning = true;
@@ -70,9 +70,27 @@ void TCPClient::threadRecv()
 		if (bytesReceived > 0) 
 		{	
 			std::string recived{ buf, size_t(bytesReceived - 1) };
-			std::string decrypted{ encryptData(recived) };
 			//for decrypt also use function encryptData
-			std::cout << decrypted << std::endl;
+			std::string decrypted{ encryptData(recived) };
+			json msg{ json::parse(decrypted) };
+			std::string access{ msg["access"] };
+			std::string data{ msg["data"] };
+			if (joinChat == true)
+			{
+				if (access == "Unauthorized")
+				{
+					std::cout << data << std::endl;
+					int pos = data.find("SUCCESS login");
+					if (data.find("SUCCESS login") != std::string::npos)
+					{
+						isAuthorized = true;
+					}
+				}
+			}
+			else
+			{
+				std::cout << data << std::endl;
+			}
 		}
 	}
 }

@@ -17,5 +17,6 @@ public:
 	bool addMsg(std::string user, std::string msg);
 	bool addUser(std::string user, std::string password);
 	bool existsUser(std::string user);
+	bool loginUser(std::string user, std::string password);
 	std::string getLast10Msg();
 };

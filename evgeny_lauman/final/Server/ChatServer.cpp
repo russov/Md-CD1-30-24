@@ -140,12 +140,12 @@ void TCPServer::run()
 									if (outSock == sock)
 									{
 										msgSent = "Message delivered.";
-										sendMsg(outSock, msgSent);
+										sendMsg(outSock, msgSent, "Authorized");
 									}
 									else
 									{
 										msgSent = username + ": " + data;
-										sendMsg(outSock, msgSent);
+										sendMsg(outSock, msgSent, "Authorized");
 									}
 								}
 							}
@@ -153,27 +153,37 @@ void TCPServer::run()
 						}
 						else if (type == messageType::LOGIN)
 						{
-							std::cout << username + ": joined the chat!" << std::endl;
-							for (int i = 0; i < master.fd_count; i++)
+							std::string password{ msg["password"] };
+							if (db.loginUser(username, password))
 							{
-								SOCKET outSock = master.fd_array[i];
-								if (outSock != listeningSocket)
+								std::cout << username + ": joined the chat!" << std::endl;
+								for (int i = 0; i < master.fd_count; i++)
 								{
-									std::string msgSent{};
-									if (outSock == sock)
+									SOCKET outSock = master.fd_array[i];
+									if (outSock != listeningSocket)
 									{
-										msgSent = "SUCCESS login as: " + username;
-										sendMsg(outSock, msgSent);
-										msgSent = db.getLast10Msg();
-										std::cout << msgSent;
-										sendMsg(outSock, msgSent);
-									}
-									else
-									{
-										msgSent = username + ": joined the chat!";
-										sendMsg(outSock, msgSent);
+										std::string msgSent{};
+										if (outSock == sock)
+										{
+											msgSent = "SUCCESS login as: " + username;
+											sendMsg(outSock, msgSent);
+											msgSent = db.getLast10Msg();
+											std::cout << msgSent;
+											sendMsg(outSock, msgSent);
+										}
+										else
+										{
+											msgSent = username + ": joined the chat!";
+											sendMsg(outSock, msgSent, "Authorized");
+										}
 									}
 								}
+							}
+							else
+							{
+								std::cout << username + ": LOGIN ERROR" << std::endl;
+								std::string msgSent = "ERROR LOGIN: " + username + " check your username/password";
+								sendMsg(sock, msgSent);
 							}
 						}
 						else if (type == messageType::SIGNUP)
@@ -209,11 +219,22 @@ void TCPServer::cleanupWinsock() {
 	WSACleanup();
 }
 
-void TCPServer::sendMsg(SOCKET outSock, std::string txt)
+void TCPServer::sendMsg(SOCKET outSock, std::string txt, std::string access)
 {
 	if (!txt.empty() && outSock != INVALID_SOCKET)
 	{
-		std::string encrypted = encryptData(txt);
+		std::string encrypted{};
+		
+		if (access == "Authorized")
+		{
+			auto j = json{ {"data", txt}, {"access", "Authorized"} };
+			encrypted = encryptData(to_string(j));
+		}
+		else if (access == "Unauthorized")
+		{
+			auto j = json{ {"data", txt}, {"access", "Unauthorized"} };
+			encrypted = encryptData(to_string(j));
+		}
 		send(outSock, encrypted.c_str(), encrypted.size() + 1, 0);
 	}
 }

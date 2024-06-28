@@ -20,7 +20,7 @@ using namespace std;
 
 mutex mtx;
 
-void readFromFile(vector<char>& buffer, bool& readFinish, int& itRead)
+void readFromFile(vector<char>& buffer, atomic_bool& readFinish, int& itRead)
 {
     ifstream readChar{ "textRead.txt" };
     if (!readChar.is_open())
@@ -29,14 +29,18 @@ void readFromFile(vector<char>& buffer, bool& readFinish, int& itRead)
         return;
     }
 
+    Timer readTimer(100);
     char c;
-    Timer read{ 100 };
 
-    while (readChar.get(c))
-    {
-        read.stop();  
+    while (true)
+    { 
+        bool success{false};
 
-        lock_guard<mutex> lock(mtx);
+        readTimer.stop([&] { success = static_cast<bool>(readChar.get(c)); });
+
+        if (!success) {
+            break;
+        }
 
         if (c == '\n' || c == ' ')
         {
@@ -46,11 +50,13 @@ void readFromFile(vector<char>& buffer, bool& readFinish, int& itRead)
 
         if (c == '.')
         {
+            lock_guard<mutex> lock(mtx);
             buffer.clear();
             itRead++;
             continue;
         }
 
+        lock_guard<mutex> lock(mtx);
         if (buffer.size() < 5)
         {
             buffer.push_back(c);
@@ -66,34 +72,37 @@ void readFromFile(vector<char>& buffer, bool& readFinish, int& itRead)
     readChar.close();
 }
 
-void writeToFile(vector<char>& buffer, bool& readFinish, int& itWrite)
+void writeFunk(vector<char>& buffer, atomic_bool& readFinish, int& itWrite, ofstream& writeChar, bool& tick)
 {
-    ofstream writeChar{"textWrite.txt"};
+    lock_guard<mutex> lock(mtx);
+
+    if (!buffer.empty())
+    {
+        writeChar << buffer.front();
+        buffer.erase(buffer.begin());
+        itWrite++;
+    }
+    else if (readFinish)
+    {
+        tick = false;
+        return;
+    }
+}
+
+void writeToFile(vector<char>& buffer, atomic_bool& readFinish, int& itWrite)
+{
+    ofstream writeChar{ "textWrite.txt" };
     if (!writeChar.is_open())
     {
         cout << "Unable to open output file.\n";
         return;
     }
 
-    Timer write{ 150 };
-
-    while (true)
+    Timer write(150);
+    bool tick{ true };
+    while (tick)
     {
-        {
-            lock_guard<mutex> lock(mtx);
-
-            if (!buffer.empty())
-            {
-                writeChar << buffer.front();
-                buffer.erase(buffer.begin());
-                itWrite++;
-            }
-            else if (readFinish)
-            {
-                break;  
-            }
-        }
-        write.stop();  
+        write.stop(writeFunk, ref(buffer), ref(readFinish), ref(itWrite), ref(writeChar), ref(tick));
     }
 
     writeChar.close();
@@ -102,7 +111,7 @@ void writeToFile(vector<char>& buffer, bool& readFinish, int& itWrite)
 int main()
 {
     vector<char> buffer;
-    bool readFinish{false};
+    atomic_bool readFinish{false};
     int itRead{ 0 }, itWrite{ 0 };
 
     thread readThread(readFromFile, ref(buffer), ref(readFinish), ref(itRead));

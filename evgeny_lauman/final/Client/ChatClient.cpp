@@ -69,7 +69,10 @@ void TCPClient::threadRecv()
 		int bytesReceived = recv(serverSocket, buf, 4096, 0);	
 		if (bytesReceived > 0) 
 		{	
-			std::cout << string(buf, 0, bytesReceived) << std::endl;
+			std::string recived{ buf, size_t(bytesReceived - 1) };
+			std::string decrypted{ encryptData(recived) };
+			//for decrypt also use function encryptData
+			std::cout << decrypted << std::endl;
 		}
 	}
 }
@@ -91,6 +94,17 @@ void TCPClient::sendMsg(string txt)
 {
 	if (!txt.empty() && serverSocket != INVALID_SOCKET) 
 	{
-		send(serverSocket, txt.c_str(), txt.size() + 1, 0);
+		std::string encrypted = encryptData(txt);
+		send(serverSocket, encrypted.c_str(), encrypted.size() + 1, 0);
 	}
+}
+
+std::string TCPClient::encryptData(std::string input)
+{
+	std::string output{ "" };
+	for (int i = 0; i < input.length(); i++)
+	{
+		output.push_back(input[i] ^ key[i % key.length() + 1]);
+	}
+	return output;
 }

@@ -10,6 +10,7 @@ private:
 	SOCKET createSocket();
 	std::string listenerIPAddress;
 	int listenerPort;
+	const std::string key = "THE@LAst#project!";
 public:
 	TCPServer(std::string ipAddress, int port);
 	~TCPServer(); 
@@ -17,4 +18,6 @@ public:
 	bool initWinsock(); 
 	void run();
 	void cleanupWinsock(); 
+	void sendMsg(SOCKET outSock, std::string txt);
+	std::string encryptData(std::string input);
 };

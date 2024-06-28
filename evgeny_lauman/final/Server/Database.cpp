@@ -73,14 +73,14 @@ std::string SQLiteDatabase::getLast10Msg()
 	char* error;
 	sqlite3_stmt* stmt;
 	const int count = 10;
-	std::string query{ "select username, message from CHAT ORDER BY id DESC LIMIT " + std::to_string(count) };
+	std::string query{ "select username, message, timestamp from CHAT ORDER BY id DESC LIMIT " + std::to_string(count) };
 	sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, 0);
-	for (int i = 0; i < count; i++)
+	while(sqlite3_step(stmt) != SQLITE_DONE)
 	{
-		sqlite3_step(stmt);
 		std::string username{ (const char*)sqlite3_column_text(stmt,0) };
-		std::string message{ (const char*)sqlite3_column_text(stmt,0) };
-		result = username + ": " + message + "\n" + result;
+		std::string message{ (const char*)sqlite3_column_text(stmt,1) };
+		std::string timestamp{ (const char*)sqlite3_column_text(stmt,2) };
+		result = timestamp + "\t" + username + ": " + message + "\n" + result;
 	}
 	return result;
 }

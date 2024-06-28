@@ -118,8 +118,12 @@ void TCPServer::run()
 					}
 					else 
 					{
-						std::string recived{ buf, size_t(bytesReceived)};
-						json msg{ json::parse(recived) };
+						std::string recived{ buf, size_t(bytesReceived - 1)};
+						//decrypt recived
+						std::cout << "ENCRYPTED: " << recived << std::endl;
+						std::string decrypted{ encryptData(recived) };
+						std::cout << "DECRYPTED: " << decrypted << std::endl;
+						json msg{ json::parse(decrypted) };
 						enum messageType type{ msg["type"] };
 						std::string username{ msg["username"] };
 						std::string data{ msg["data"] };
@@ -136,12 +140,12 @@ void TCPServer::run()
 									if (outSock == sock)
 									{
 										msgSent = "Message delivered.";
-										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+										sendMsg(outSock, msgSent);
 									}
 									else
 									{
 										msgSent = username + ": " + data;
-										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+										sendMsg(outSock, msgSent);
 									}
 								}
 							}
@@ -159,19 +163,18 @@ void TCPServer::run()
 									if (outSock == sock)
 									{
 										msgSent = "SUCCESS login as: " + username;
-										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
-										//send last 10 messages
+										sendMsg(outSock, msgSent);
 										msgSent = db.getLast10Msg();
-										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+										std::cout << msgSent;
+										sendMsg(outSock, msgSent);
 									}
 									else
 									{
 										msgSent = username + ": joined the chat!";
-										send(outSock, msgSent.c_str(), msgSent.size() + 1, 0);
+										sendMsg(outSock, msgSent);
 									}
 								}
 							}
-
 						}
 					}
 				}
@@ -182,5 +185,24 @@ void TCPServer::run()
 
 void TCPServer::cleanupWinsock() {
 	WSACleanup();
+}
+
+void TCPServer::sendMsg(SOCKET outSock, std::string txt)
+{
+	if (!txt.empty() && outSock != INVALID_SOCKET)
+	{
+		std::string encrypted = encryptData(txt);
+		send(outSock, encrypted.c_str(), encrypted.size() + 1, 0);
+	}
+}
+
+std::string TCPServer::encryptData(std::string input)
+{
+	std::string output{ "" };
+	for (int i = 0; i < input.length(); i++)
+	{
+		output.push_back(input[i] ^ key[i % key.length() + 1]);
+	}
+	return output;
 }
 

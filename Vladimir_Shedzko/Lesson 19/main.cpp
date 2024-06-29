@@ -107,8 +107,8 @@ int main()
     });
     
 
-    thread1.join();
-    thread2.join();
+    // thread1.join();
+    // thread2.join();
 
     fileReader.close();
     fileWriter.close();

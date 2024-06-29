@@ -6,6 +6,7 @@
 #include <cassert>
 #include <stdexcept>
 
+template<class fig = Figure>
 class Container
 {
 public:
@@ -17,17 +18,17 @@ public:
 
     size_t capacity() const;
 
-    Figure pop_back();
+    fig pop_back();
 
-    void push_back(const Figure& value);
+    void push_back(const fig& value);
 
-    const Figure& operator [](long _index) const;
+    const fig& operator [](long _index) const;
 
 private:
 
     void reserve(size_t new_capacity);
 
-    Figure* data;
+    fig* data;
     size_t data_size;
     size_t data_capacity;
 };

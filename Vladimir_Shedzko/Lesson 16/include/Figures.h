@@ -14,6 +14,7 @@ public:
 class Sphere : public Figure
 {
 public:
+    Sphere();
     Sphere(const float _radius);
 
     virtual float volume() const override;
@@ -25,6 +26,7 @@ protected:
 class Cylinder : public Sphere
 {
 public:
+    Cylinder();
     Cylinder(const float _radius, const float _height);
 
     virtual float volume() const override;
@@ -36,6 +38,7 @@ protected:
 class Pyramid : public Cylinder
 {
 public:
+    Pyramid();
     Pyramid(const float _radius, const float _height);
 
     virtual float volume() const override;

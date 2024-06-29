@@ -7,7 +7,7 @@ include(GoogleTest)
 include(CTest)
 include(FetchContent)
 
-enable_testing()
+enable_testing() 
 
 FetchContent_Declare(
   googletest

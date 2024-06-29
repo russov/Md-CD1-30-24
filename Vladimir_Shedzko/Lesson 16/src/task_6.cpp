@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <math.h>
-#include <corecrt_math_defines.h>
 
 #include "Container.h"
 float truncate(float n, int precision) {
@@ -35,7 +34,7 @@ TEST(ContainerEmpty, empty) {
 }
 
 TEST(ContainerPushBack, pushBack) {
-    Container cont {};
+    Container<Pyramid> cont {};
     Pyramid pyramid {5, 10};
 
     cont.push_back(pyramid);
@@ -43,31 +42,30 @@ TEST(ContainerPushBack, pushBack) {
 }
 
 TEST(ContainerPopBack, popBack) {
-    Container cont {};
-    Pyramid pyramid {5, 10};
-    Cylinder cylinder {5, 10};
+    Container<Cylinder> cont {};
+    Cylinder cylinder1 {5, 10};
+    Cylinder cylinder2 {15, 10};
 
-    cont.push_back(pyramid);
-    cont.push_back(cylinder);
-    cont.pop_back();
-    EXPECT_TRUE( truncate(cont.pop_back().volume(), 9), truncate(cylinder.volume(), 9));
+    cont.push_back(cylinder1);
+    cont.push_back(cylinder2);
+    EXPECT_EQ( truncate(cont.pop_back().volume(), 9), truncate(cylinder2.volume(), 9));
     EXPECT_EQ(cont.size(), 1);
 }
 
 TEST(ContainerIndex, index) {
-    Container cont{};
+    Container<Pyramid> cont{};
     
-    Pyramid pyramid {5, 10};
-    Cylinder cylinder {5, 10};
-    Sphere sphere {5};
+    Pyramid pyramid1 {5, 10};
+    Pyramid pyramid2 {10, 10};
+    Pyramid pyramid3 {10, 20};
 
-    cont.push_back(pyramid);
-    cont.push_back(cylinder);
-    cont.push_back(sphere);
+    cont.push_back(pyramid1);
+    cont.push_back(pyramid2);
+    cont.push_back(pyramid3);
     
-    EXPECT_EQ(truncate(cont[0].volume(), 9), truncate(pyramid.volume(), 9));
-    EXPECT_EQ(truncate(cont[1].volume(), 9), truncate(cylinder.volume(), 9));
-    EXPECT_EQ(truncate(cont[2].volume(), 9), truncate(sphere.volume(), 9));
+    EXPECT_EQ(truncate(cont[0].volume(), 9), truncate(pyramid1.volume(), 9));
+    EXPECT_EQ(truncate(cont[1].volume(), 9), truncate(pyramid2.volume(), 9));
+    EXPECT_EQ(truncate(cont[2].volume(), 9), truncate(pyramid3.volume(), 9));
 
     EXPECT_THROW(cont[5], std::out_of_range);
 }

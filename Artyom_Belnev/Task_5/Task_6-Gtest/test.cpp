@@ -57,8 +57,8 @@ TEST(StringPushBackTest, PushBack) {
     strTest.push_back('!');
     EXPECT_EQ(strTest, "Task5!");
 }
- 
- 
+
+
 TEST(StringSizeTest, Size) {
     MyString strTest = "Task5";
     EXPECT_EQ(strTest.size(), 5);
@@ -69,7 +69,7 @@ TEST(StringOperatorBracketsTest, BracketOperator) {
     char c = strTest[4];
     EXPECT_EQ(c, '5');
 }
- 
+
 TEST(StringCompareTest, Compare) {
     string strTest1 = "Task";
     string strTest2 = "Task";
@@ -77,7 +77,7 @@ TEST(StringCompareTest, Compare) {
     EXPECT_EQ(result, 0);
 }
 
- TEST(StringSubstrTest, Substring) {
+TEST(StringSubstrTest, Substring) {
     string strTest = "Task5 gtest";
     string sub = strTest.substr(6);
     EXPECT_EQ(sub, "gtest");

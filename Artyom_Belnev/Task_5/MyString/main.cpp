@@ -29,7 +29,7 @@ public:
 
 	~MyString()
 	{
-		delete[] this->str;
+		if (this->str != nullptr) delete[] this->str; 
 	}
 
 	MyString(const MyString& other)
@@ -89,16 +89,18 @@ public:
 			newStr.str[i] = other.str[j];
 		}
 
-		newStr.str[thisLength + otherLength] = '\0';
+		delete[] this->str;
+		
+		this->str = newStr.str;
 
-		return newStr.str;
+		return  *this;
 	}
 
 	int size() {
 		return length;
 	}
 
-	int compare(const MyString& other) {
+	bool compare(const MyString& other) {
 		int thisLength = strlen(this->str);
 		int otherLength = strlen(other.str);
 
@@ -117,33 +119,35 @@ public:
 		int pos = 0;
 
 		int thisLength = strlen(this->str);
-		
+
 		int subLength = strlen(other.str);
 
 		int count = 0;
 
-		for (int i = 0; i < thisLength; i++)
-		{
+		for (int i = 0; i <= thisLength - subLength; i++) { 
 			if (this->str[i] == other.str[0]) {
 
-				for (int y = 1; y <= subLength; y++) {
-					if (this->str[i + y] == other.str[y]) count++;
-
+				for (int y = 0; y < subLength; y++) {
+					if (this->str[i + y] == other.str[y]) {
+						count++;
+					}
 				}
 
-				if (count == subLength - 1) {
-					return i+1;
+				if (count == subLength) {
+					return i;
 				}
 				else {
 					count = 0;
 				}
 			}
 		}
-		return npos;
+		return npos; 
 	}
 
+
+
 	void push_back(char ch) {
-		char* newStr = new char[this->length+2];
+		char* newStr = new char[this->length + 2];
 
 		for (int i = 0; i < this->length; i++)
 		{
@@ -163,7 +167,7 @@ public:
 
 		for (int i = 0; i < this->length; i++)
 		{
-			if(i >= pos) newStr[i] = this->str[cout++];
+			if (i >= pos) newStr[i] = this->str[cout++];
 		}
 
 		newStr[this->length] = '\0';
@@ -173,7 +177,7 @@ public:
 	}
 
 
-	bool operator ==(const MyString& other) const 
+	bool operator ==(const MyString& other) const
 	{
 		if (this->length != other.length)
 		{
@@ -197,6 +201,8 @@ public:
 
 	char& operator [](int index)
 	{
+		if (index < 0 || index >= length) throw std::out_of_range("Index out of range");
+
 		return this->str[index];
 	}
 

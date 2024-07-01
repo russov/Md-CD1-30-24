@@ -1,56 +1,75 @@
 #include <iostream>
 #include <vector>
-#include <string>
+#include <cmath>
 
 using namespace std;
 
-class Sphere {
-private:
-	string name = "Sphere";
-public:
-	string getName() const {
-		return name;
-	}
-};
+const double PI = 3.14;
 
-class Cylinder {
-private:
-	string name = "Cylinder";
-public:
-	string getName() const {
-		return name;
-	}
-};
-
-class Pyramid {
-private:
-	string name = "Pyramid";
-public:
-	string getName() const {
-		return name;
-	}
-};
 
 template<typename T>
 class Array {
 private:
 	vector<T*> elements;
-	
-	size_t length = 0;
 
 public:
-
-	T& operator[](int index) {
-		return *elements[index];
-	}
+	Array() {}
 
 	void add(T* object) {
 		elements.push_back(object);
-		length = elements.size();
 	}
 
 	int size() {
-		return length;
+		return elements.size();
+	}
+
+	T* operator[](int index) {
+		if (index >= elements.size()) throw out_of_range("Index out of range");
+
+		return elements[index];
+	}
+
+	virtual ~Array() {}
+};
+
+class Figure {
+public:
+	virtual double Square() const = 0;
+
+	virtual ~Figure() {}
+};
+
+class Sphere : public Figure {
+private:
+	double radius;
+public:
+	Sphere(double radius) : radius(radius) {}
+
+	double Square() const override {
+		return 4 * PI * pow(radius, 2);
 	}
 };
 
+class Cylinder : public Figure {
+private:
+	double radius;
+	double height;
+public:
+	Cylinder(double radius, double height) : radius(radius), height(height) {}
+
+	double Square() const override {
+		return 2 * PI * radius * height;
+	}
+};
+
+class Pyramid : public Figure {
+private:
+	double side;
+	double apothem;
+public:
+	Pyramid(double side, double apothem) : side(side), apothem(apothem) {}
+
+	double Square() const override {
+		return pow(side, 2) + 2 * side * apothem;
+	}
+};

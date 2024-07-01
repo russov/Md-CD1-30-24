@@ -32,7 +32,7 @@ public:
     void push(char c) {
         lock_guard<mutex> lock(mtx);
         if (c == '.') buffer.clear();
-        buffer.push_back(c);
+        if (buffer.size() < BUFFER_SIZE) buffer.push_back(c);
     }
 
     char pop() {

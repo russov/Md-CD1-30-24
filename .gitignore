@@ -347,6 +347,13 @@ tmtags
 
 ##### VisualStudioCode
 .vscode/*
+<<<<<<< HEAD
+=======
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+>>>>>>> bfaf80d8de89c9f1fdf28b2b130f64637f71612c
 *.code-workspace
 
 # Local History for Visual Studio Code

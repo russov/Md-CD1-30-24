@@ -1,0 +1,4 @@
+Looking for a Maintainer
+As you might have noticed, this project is not maintained any more (I have moved to different technologies and are not even working as a developer any more). Since it still has a few features which the MS clone (which is still developed and delivered with Visual Studio) does not support, there still seems to be some interest in the project. Thus, if anybody wants to take over this project, please get in touch - I will certainly try to get you up and running!
+Google Test Adapter
+Google Test Adapter (GTA) is a Visual Studio extension providing test discovery and execution of C++ tests written with the Google Test framework.
